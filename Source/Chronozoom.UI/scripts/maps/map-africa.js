@@ -17,6 +17,8 @@
         * Creates datepicker based on given JQuery instance of div
         */
         MapAfrica.prototype.initialize = function () {
+            CZ.Map.prototype.initialize.call(this);
+
             var width = _this.$map.width(),
                 height = _this.$map.height(),
                 svg = this.map.append("svg"),

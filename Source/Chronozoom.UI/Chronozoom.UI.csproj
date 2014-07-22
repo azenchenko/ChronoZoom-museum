@@ -1105,6 +1105,8 @@
     <Content Include="css\cz.css.map">
       <DependentUpon>cz.less</DependentUpon>
     </Content>
+    <Content Include="images\arrow-navigation-back.png" />
+    <Content Include="images\mapview.svg" />
     <Content Include="scripts\authoring-ui.min.js">
       <DependentUpon>authoring-ui.js</DependentUpon>
     </Content>

@@ -1,23 +1,35 @@
 ﻿var CZ;
 (function (CZ) {
     var Map = (function () {
+        var _opts = {
+            closeBtnClass: "map-close-btn"
+        },
+            _this;
+
         function Map(mapDiv) {
-            this.mapDiv = mapDiv,
+            this.mapDiv = mapDiv;
             this.map = null;
             this.$map = null;
             this.geoMapLayer;
-
-            this.init();
+            this.$closeBtn = null;
         }
 
         /**
          * Creates datepicker based on given JQuery instance of div
          */
-        Map.prototype.init = function () {
-            var that = this;
+        Map.prototype.initialize = function () {
+            _this = this;
 
             this.map = d3.select(this.mapDiv);
             this.$map = $(this.map[0]);
+            this.$closeBtn = $("<div></div>", {
+                class: _opts.closeBtnClass,
+                title: "Close the map view"
+            });
+
+            this.$closeBtn.appendTo(this.$map)
+                          .on("click", onCloseBtnClick);
+
         };
 
         /**
@@ -52,6 +64,13 @@
          */
         Map.prototype.hideMapAreaInfo = function () {
             
+        };
+
+        /**
+         * Close map view button click handler.
+         */
+        var onCloseBtnClick = function (event) {
+            Map.prototype.hide.call(_this);
         };
 
         return Map;

@@ -1045,6 +1045,46 @@ var CZ;
                     };
                 }
 
+                // initialize map view button
+                if (typeof this.mapViewBtn === "undefined" && this.titleObject.width !== 0) {
+                    btnX = this.x + this.width - 1.0 * this.titleObject.height;
+                    btnY = this.titleObject.y + 0.15 * this.titleObject.height;
+
+                    this.mapViewBtn = VCContent.addImage(
+                        this,
+                        layerid,
+                        id + "__mapView",
+                        btnX, 
+                        btnY,
+                        0.7 * this.titleObject.height,
+                        0.7 * this.titleObject.height,
+                        "/images/mapview.svg"
+                    );
+                    this.mapViewBtn.reactsOnMouse = true;
+
+                    this.mapViewBtn.onmouseclick = function () {
+                        var africaMap = new CZ.MapAfrica(CZ.Common.mapLayerSelector);
+                        africaMap.show();
+
+                        return true;
+                    };
+
+                    this.mapViewBtn.onmousehover = function () {
+                        this.parent.settings.strokeStyle = "yellow";
+                    };
+
+                    this.mapViewBtn.onmouseunhover = function () {
+                        this.parent.settings.strokeStyle = timelineinfo.strokeStyle ? timelineinfo.strokeStyle : CZ.Settings.timelineBorderColor;
+                    };
+
+                    // remove event handlers to prevent their stacking
+                    this.mapViewBtn.onRemove = function () {
+                        this.onmousehover = undefined;
+                        this.onmouseunhover = undefined;
+                        this.onmouseclick = undefined;
+                    };
+                }
+
                 if (this.settings.hoverAnimationDelta) {
                     if (this.settings.gradientOpacity == 0 || this.settings.gradientOpacity == 1)
                         this.settings.hoverAnimationDelta = undefined;
