@@ -1,0 +1,44 @@
+﻿body {
+}
+
+#map-layer {
+    display: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: absolute;
+    top: 38px;
+    right: 0;
+    bottom: 25px;
+    left: 0;
+    z-index: 160;
+}
+
+#map-layer svg {
+    background: white;
+}
+
+
+.subunit-boundary {
+      fill: none;
+      stroke: #553;
+    }
+
+.subunit { 
+    fill: #bbb;
+    transition: fill ease-in 0.3s;
+
+}
+
+.subunit:hover{
+    fill: yellow;
+}
+
+.subunit-label {
+    fill: #222;
+    font-size: 3px;
+    font-weight: 300;
+    text-anchor: middle;
+    font-family: "Verdana";
+    pointer-events: none;
+}

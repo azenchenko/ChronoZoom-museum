@@ -51,6 +51,12 @@
     <script type="text/javascript" src="/scripts/external/jquery.dotdotdot.js"></script>
     <script type="text/javascript" src="/scripts/external/audiojs/audiojs/audio.min.js"></script>
     <script type="text/javascript" src="/scripts/external/jquery.autonumeric-1.9.24.min.js"></script>
+
+    <!-- D3 and topojson for map view. -->
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+
+
     <script type="text/javascript">
 
         function AddCSS(path)
@@ -84,7 +90,7 @@
             document.getElementsByTagName("head")[0].appendChild(script);
         }
 
-        AddCSS('/css/cz.css');
+        AddCSS('/css/cz.min.css');
 
         if (!Modernizr.canvas)
         {
@@ -114,6 +120,7 @@
             AddScript("/scripts/uiloader.js");
             AddScript("/scripts/dates.js");
             AddScript("/scripts/media.js");
+            AddScript("/scripts/maps/map-africa.js");
             AddScript("/scripts/plugins/error-plugin.js");
             AddScript("/scripts/plugins/utility-plugins.js");
             AddScript("/scripts/extensions/extensions.js");
@@ -251,6 +258,7 @@
             </div>
             <div id="timeSeriesContainer" style="display: none;"></div>
         </div>
+        <div id="map-layer"><!-- Layer for map view. --></div>
         <div id="bibliographyBack" class="biblBack">
             <div id="bibliographyOut" class="biblOuterWindow">
                 <div id="bibliography" class="biblWindow">
