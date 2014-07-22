@@ -91,6 +91,13 @@ namespace Chronozoom.Entities
         [Column(TypeName = "bit")]
         public bool ToIsCirca { get; set; }
 
+
+        /// <summary>
+        /// The name of the map to use. Eg.: "Africa", "World", ...
+        /// </summary>
+        [DataMember(Name = "mapType")]
+        public string MapType { get; set; }
+
         /// <summary>
         /// ???
         /// </summary>

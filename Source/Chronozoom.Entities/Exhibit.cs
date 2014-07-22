@@ -62,6 +62,12 @@ namespace Chronozoom.Entities
         public DateTime UpdatedTime { get; set; }
 
         /// <summary>
+        /// The ID of an area of the map where this exhibit is located.
+        /// </summary>
+        [DataMember(Name = "mapAreaId")]
+        public string MapAreaId { get; set; }
+
+        /// <summary>
         /// Specifies the collection of content items that is associated with the exhibit.
         /// </summary>
         [DataMember(Name = "contentItems")]
