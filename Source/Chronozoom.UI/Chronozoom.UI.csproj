@@ -1176,6 +1176,7 @@
       <DependentUpon>layout.js</DependentUpon>
     </Content>
     <Content Include="scripts\maps\map-africa.js" />
+    <Content Include="scripts\maps\map.js" />
     <Content Include="scripts\media.min.js">
       <DependentUpon>media.js</DependentUpon>
     </Content>

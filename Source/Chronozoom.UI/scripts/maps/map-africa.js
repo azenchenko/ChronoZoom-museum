@@ -1,26 +1,24 @@
 ﻿var CZ;
 (function (CZ) {
     var MapAfrica = (function () {
+        var _this;
+
         function MapAfrica(mapDiv) {
-            this.mapDiv = mapDiv,
-            this.map = null;
-            this.$map = null;
-            this.geoMapLayer;
+            _this = this;
+
+            this.base = CZ.Map;
+            this.base(mapDiv);
 
             this.initialize();
         }
+        MapAfrica.prototype = new CZ.Map();
 
         /**
         * Creates datepicker based on given JQuery instance of div
         */
         MapAfrica.prototype.initialize = function () {
-            var that = this;
-
-            this.map = d3.select(this.mapDiv);
-            this.$map = $(this.map[0]);
-
-            var width = that.$map.width(),
-                height = that.$map.height(),
+            var width = _this.$map.width(),
+                height = _this.$map.height(),
                 svg = this.map.append("svg"),
                 active = d3.select(null);
 
@@ -60,7 +58,7 @@
                 svg.call(zoom) // delete this line to disable free zooming
                     .call(zoom.event);
 
-                that.geoMapLayer.selectAll(".subunit")
+                _this.geoMapLayer.selectAll(".subunit")
                                 .data(topojson.feature(map, map.objects.africa_countries).features)
                                 .enter().append("path")
                                 .attr("class", function (d) {
@@ -71,7 +69,7 @@
                                 })
                                 .on("click", onClicked);
 
-                that.geoMapLayer.selectAll(".place-label")
+                _this.geoMapLayer.selectAll(".place-label")
                                 .data(topojson.feature(map, map.objects.africa_countries).features)
                                 .enter().append("text")
                                 .attr("class", function (d) { return "subunit-label " + d.id; })
@@ -79,7 +77,7 @@
                                 .attr("dy", ".35em")
                                 .text(function (d) { return d.properties.name; });
 
-                that.geoMapLayer.append("path")
+                _this.geoMapLayer.append("path")
                                 .datum(topojson.mesh(map, map.objects.africa_countries, function (a, b) { return a !== b; }))
                                 .attr("class", "subunit-boundary")
                                 .attr("d", path);
@@ -97,16 +95,16 @@
                         scale = .95 / Math.max(dx / width, dy / height),
                         translate = [width / 2 - scale * x, height / 2 - scale * y];
 
-                    that.geoMapLayer.transition()
+                    _this.geoMapLayer.transition()
                         .duration(750)
                         .style("stroke-width", 1.5 / scale + "px")
                         .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
                 }
 
                 function onZoomed() {
-                    that.geoMapLayer.style("stroke-width", 1.5 / d3.event.scale + "px");
-                    that.geoMapLayer.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-                    that.geoMapLayer.selectAll(".subunit-label").style("font-size", 15 / d3.event.scale + "px");
+                    _this.geoMapLayer.style("stroke-width", 1.5 / d3.event.scale + "px");
+                    _this.geoMapLayer.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+                    _this.geoMapLayer.selectAll(".subunit-label").style("font-size", 15 / d3.event.scale + "px");
                 }
 
                 // If the drag behavior prevents the default click,
@@ -119,7 +117,7 @@
                     active.classed("active", false);
                     active = d3.select(null);
 
-                    that.geoMapLayer.transition()
+                    _this.geoMapLayer.transition()
                         .duration(750)
                         .call(zoom.translate([0, 0]).scale(1).event);
                 }
@@ -130,20 +128,21 @@
         * Show map.
         */
         MapAfrica.prototype.show = function (args) {
-            this.$map.show();
+            CZ.Map.prototype.show.call(this, args);
         };
 
         /**
         * Hide map.
         */
         MapAfrica.prototype.hide = function () {
-            this.$map.hide();
+            CZ.Map.prototype.show.call(this, args);
         };
 
         /**
         * Removes map object
         */
         MapAfrica.prototype.destroy = function () {
+        
         };
 
         return MapAfrica;
