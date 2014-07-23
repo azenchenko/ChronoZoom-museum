@@ -449,6 +449,7 @@ var CZ;
                 strokeStyle: tlColor,
                 regime: timeline.Regime,
                 endDate: timeline.endDate,
+                mapType: timeline.mapType,
                 opacity: 0
             });
 
@@ -469,6 +470,7 @@ var CZ;
                         guid: childInfodot.id,
                         title: childInfodot.title,
                         date: childInfodot.time,
+                        mapAreaId: childInfodot.mapAreaId,
                         opacity: 1
                     });
                 });

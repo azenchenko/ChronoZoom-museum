@@ -819,6 +819,10 @@ var CZ;
             this.settings.outline = true;
             this.type = 'timeline';
 
+            this.mapType = timelineinfo.mapType;
+            this.exhibits = [];
+            this.mapViewEnabled = null;
+
             this.endDate = timelineinfo.endDate;
 
             var width = timelineinfo.timeEnd - timelineinfo.timeStart;
@@ -962,6 +966,18 @@ var CZ;
             @remarks The method is implemented for each particular VirtualCanvas element.
             */
             this.render = function (ctx, visibleBox, viewport2d, size_p, opacity) {
+                // Initializing mapViewEnabled flag, since this is the first time when children elements are added to timeline.
+                // Map view is enabled if mapType isn't "none" and at least one exhibit of this timeline has not null mapAreaId.
+                if (this.mapViewEnabled == null) {
+                    this.exhibits = this.children.filter(function (child) {
+                        return child.type === "infodot";
+                    });
+
+                    this.mapViewEnabled = this.mapType !== "none" && this.exhibits.filter(function (exhibit) {
+                                                                         return exhibit.mapAreaId != null;
+                                                                     }).length > 0;
+                }
+
                 this.titleObject.initialized = false; //disable CanvasText initialized (rendered) option by default
 
                 if (this.settings.hoverAnimationDelta) {
@@ -1046,7 +1062,7 @@ var CZ;
                 }
 
                 // initialize map view button
-                if (typeof this.mapViewBtn === "undefined" && this.titleObject.width !== 0) {
+                if (this.mapViewEnabled && typeof this.mapViewBtn === "undefined" && this.titleObject.width !== 0) {
                     btnX = this.x + this.width - 1.0 * this.titleObject.height;
                     btnY = this.titleObject.y + 0.15 * this.titleObject.height;
 
@@ -2278,6 +2294,8 @@ var CZ;
             this.infodotDescription = infodotDescription;
             this.title = infodotDescription.title;
             this.opacity = typeof infodotDescription.opacity !== 'undefined' ? infodotDescription.opacity : 1;
+
+            this.mapAreaId = infodotDescription.mapAreaId;
 
             contentItems.sort(function (a, b) {
                 if (typeof a.order !== 'undefined' && typeof b.order === 'undefined')
