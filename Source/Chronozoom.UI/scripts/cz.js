@@ -169,14 +169,15 @@ var CZ;
             
             return true;
             */
-            // can't edit if no profile, no display name, no supercollection or no collection
-            if (!profile || !profile.DisplayName || !CZ.Service.superCollectionName || !CZ.Service.collectionName) {
-                return false;
-            }
 
             // override - anyone can edit the sandbox
             if (CZ.Service.superCollectionName.toLowerCase() === "sandbox" && CZ.Service.superCollectionName.toLowerCase() === "sandbox") {
                 return true;
+            }
+
+            // can't edit if no profile, no display name, no supercollection or no collection
+            if (!profile || !profile.DisplayName || !CZ.Service.superCollectionName || !CZ.Service.collectionName) {
+                return false;
             }
 
             // if here then logged in and on a page (other than sandbox) with a supercollection and collection
