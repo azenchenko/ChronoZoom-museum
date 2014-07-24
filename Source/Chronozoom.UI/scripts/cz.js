@@ -174,7 +174,7 @@ var CZ;
             */
 
             // override - anyone can edit the sandbox
-            if (CZ.Service.superCollectionName.toLowerCase() === "sandbox" && CZ.Service.superCollectionName.toLowerCase() === "sandbox") {
+            if (CZ.Service.superCollectionName && CZ.Service.superCollectionName.toLowerCase() === "sandbox") {
                 return true;
             }
 
