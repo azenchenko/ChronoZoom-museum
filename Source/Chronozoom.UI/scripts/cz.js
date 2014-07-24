@@ -44,27 +44,30 @@ var CZ;
     (function (HomePageViewModel) {
         // Contains mapping: CSS selector -> html file.
         var _uiMap = {
-            "#header-edit-form": "/ui/header-edit-form.html",
-            "#auth-edit-timeline-form": "/ui/auth-edit-timeline-form.html",
-            "#auth-edit-exhibit-form": "/ui/auth-edit-exhibit-form.html",
-            "#auth-edit-contentitem-form": "/ui/auth-edit-contentitem-form.html",
-            "$('<div></div>')": "/ui/contentitem-listbox.html",
-            "#profile-form": "/ui/header-edit-profile-form.html",
-            "#login-form": "/ui/header-login-form.html",
-            "#auth-edit-tours-form": "/ui/auth-edit-tour-form.html",
-            "$('<div><!--Tours Authoring--></div>')": "/ui/tourstop-listbox.html",
-            "#toursList": "/ui/tourslist-form.html",
-            "$('<div><!--Tours list item --></div>')": "/ui/tour-listbox.html",
-            "#timeSeriesContainer": "/ui/timeseries-graph-form.html",
-            "#timeSeriesDataForm": "/ui/timeseries-data-form.html",
-            "#message-window": "/ui/message-window.html",
-            "#header-search-form": "/ui/header-search-form.html",
-            "#header-session-expired-form": "/ui/header-session-expired-form.html",
-            "#tour-caption-form": "/ui/tour-caption-form.html",
-            "#mediapicker-form": "/ui/mediapicker-form.html",
-            "#start-page": "/ui/start-page.html",
-            "#auth-edit-collection-form": "/ui/auth-edit-collection-form.html",
-            "#auth-edit-collection-editors": "/ui/auth-edit-collection-editors.html"
+            "#header-edit-form": "/ui/header-edit-form.html",                                   // 0
+            "#auth-edit-timeline-form": "/ui/auth-edit-timeline-form.html",                     // 1
+            "#auth-edit-exhibit-form": "/ui/auth-edit-exhibit-form.html",                       // 2
+            "#auth-edit-contentitem-form": "/ui/auth-edit-contentitem-form.html",               // 3
+            "$('<div></div>')": "/ui/contentitem-listbox.html",                                 // 4
+            "#profile-form": "/ui/header-edit-profile-form.html",                               // 5
+            "#login-form": "/ui/header-login-form.html",                                        // 6
+            "#auth-edit-tours-form": "/ui/auth-edit-tour-form.html",                            // 7
+            "$('<div><!--Tours Authoring--></div>')": "/ui/tourstop-listbox.html",              // 8
+            "#toursList": "/ui/tourslist-form.html",                                            // 9
+            "$('<div><!--Tours list item --></div>')": "/ui/tour-listbox.html",                 // 10
+            "#timeSeriesContainer": "/ui/timeseries-graph-form.html",                           // 11
+            "#timeSeriesDataForm": "/ui/timeseries-data-form.html",                             // 12
+            "#message-window": "/ui/message-window.html",                                       // 13
+            "#header-search-form": "/ui/header-search-form.html",                               // 14
+            "#header-session-expired-form": "/ui/header-session-expired-form.html",             // 15
+            "#tour-caption-form": "/ui/tour-caption-form.html",                                 // 16
+            "#mediapicker-form": "/ui/mediapicker-form.html",                                   // 17
+            "#start-page": "/ui/start-page.html",                                               // 18
+            "#auth-edit-collection-form": "/ui/auth-edit-collection-form.html",                 // 19
+            "#auth-edit-collection-editors": "/ui/auth-edit-collection-editors.html",           // 20
+            "#auth-edit-map-view-form": "/ui/auth-edit-map-view-form.html",                     // 21
+            "$('<div><!-- New Map Event Listbox --></div>')": "/ui/new-map-event-listbox.html", // 22
+            "$('<div><!-- Events On Map Listbox --></div>')": "/ui/events-on-map-listbox.html"  // 23
         };
 
         (function (FeatureActivation) {
@@ -561,6 +564,33 @@ var CZ;
                             }
                         });
                         form.show(noAnimation);
+                    },
+
+                    showEditMapViewForm: function (timeline, prevForm) {
+                        var form = new CZ.UI.FormEditMapView(forms[21], {
+                            prevForm: prevForm,
+                            navBackBtn: ".cz-form-nav",
+                            newMapEventForm: {
+                                container: ".cz-form-new-map-event",
+                                titleTextblock: ".cz-form-title",
+                                emptyListPlaceholder: ".cz-form-msg-placeholder",
+                                eventsListBox: ".cz-form-new-map-event .cz-listbox",
+                                eventsListBoxTemplate: forms[22]
+                            },
+                            currentMapEventsForm: {
+                                container: ".cz-form-current-map-events",
+                                titleTextblock: ".cz-form-title",
+                                emptyListPlaceholder: ".cz-form-msg-placeholder",
+                                eventsListBox: ".cz-form-current-map-events .cz-listbox",
+                                eventsListBoxTemplate: forms[23]
+                            },
+                            context: {
+                                timeline: timeline
+                            }
+                        });
+
+                        form.show();
+                        /* TODO: FILL THIS WITH REAL FORM */
                     }
                 });
 

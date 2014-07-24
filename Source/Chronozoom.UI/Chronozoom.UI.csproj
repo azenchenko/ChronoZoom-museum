@@ -1068,6 +1068,9 @@
     <Content Include="css\datepicker.min.css">
       <DependentUpon>datepicker.less</DependentUpon>
     </Content>
+    <Content Include="css\forms.min.css">
+      <DependentUpon>forms.less</DependentUpon>
+    </Content>
     <Content Include="css\map.min.css">
       <DependentUpon>map.less</DependentUpon>
     </Content>
@@ -1275,6 +1278,8 @@
     <Content Include="ui\auth-edit-exhibit-form.min.js">
       <DependentUpon>auth-edit-exhibit-form.js</DependentUpon>
     </Content>
+    <Content Include="ui\auth-edit-map-view-form.html" />
+    <Content Include="ui\auth-edit-map-view-form.js" />
     <Content Include="ui\auth-edit-timeline-form.min.js">
       <DependentUpon>auth-edit-timeline-form.js</DependentUpon>
     </Content>
@@ -1320,6 +1325,8 @@
     <Content Include="scripts\extensions\rinplayer.min.js.map">
       <DependentUpon>rinplayer.js</DependentUpon>
     </Content>
+    <Content Include="ui\events-on-map-listbox.html" />
+    <Content Include="ui\events-on-map-listbox.js" />
     <Content Include="ui\header-edit-form.min.js">
       <DependentUpon>header-edit-form.js</DependentUpon>
     </Content>
@@ -1338,6 +1345,7 @@
     <Content Include="ui\header-session-expired-form.min.js">
       <DependentUpon>header-session-expired-form.js</DependentUpon>
     </Content>
+    <Content Include="ui\new-map-event-listbox.js" />
     <Content Include="ui\mediapicker-form.min.js">
       <DependentUpon>mediapicker-form.js</DependentUpon>
     </Content>
@@ -1401,6 +1409,7 @@
     <Content Include="ui\message-window.min.js.map">
       <DependentUpon>message-window.js</DependentUpon>
     </Content>
+    <Content Include="ui\new-map-event-listbox.html" />
     <Content Include="ui\start-page.min.js">
       <DependentUpon>start-page.js</DependentUpon>
     </Content>
@@ -1445,6 +1454,7 @@
     </Content>
     <Content Include="maps-topojson\africa.json" />
     <Content Include="css\map.less" />
+    <Content Include="css\forms.less" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

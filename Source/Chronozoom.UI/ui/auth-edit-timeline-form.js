@@ -24,10 +24,18 @@ var CZ;
                 this.titleInput = container.find(formInfo.titleInput);
                 this.errorMessage = container.find(formInfo.errorMessage);
 
+                this.mapViewBtn = container.find(".cz-map-view");
+
                 this.timeline = formInfo.context;
 
                 this.saveButton.off();
                 this.deleteButton.off();
+
+                this.mapViewBtn.on("click", function () {
+                    _this.hide(true);
+
+                    CZ.Authoring.showEditMapViewForm(_this.timeline, _this);
+                });
 
                 this.titleInput.focus(function () {
                     _this.titleInput.hideError();
@@ -157,6 +165,22 @@ var CZ;
 
                 CZ.Common.vc.virtualCanvas("showNonRootVirtualSpace");
             };
+
+            FormEditTimeline.prototype.hide = function () {
+                var _this = this;
+
+                this.errorMessage.empty();
+
+                _super.prototype.close.call(this, {
+                    effect: "slide",
+                    direction: "left",
+                    duration: 500,
+                    complete: function () {
+                        _this.titleInput.hideError();
+                    }
+                });
+            };
+
             return FormEditTimeline;
         })(CZ.UI.FormUpdateEntity);
         UI.FormEditTimeline = FormEditTimeline;

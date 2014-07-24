@@ -136,8 +136,8 @@
         /**
         * Hide map.
         */
-        MapAfrica.prototype.hide = function () {
-            CZ.Map.prototype.show.call(this, args);
+        MapAfrica.prototype.hide = function (args) {
+            CZ.Map.prototype.hide.call(this, args);
         };
 
         /**

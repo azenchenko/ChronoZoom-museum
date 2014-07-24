@@ -126,6 +126,12 @@
     margin-left: 0px;
 }
 
+.cz-form-minor {
+    position: absolute;
+    z-index: 100000001;
+    cursor: default;
+}
+
 /***********************************************************
 
                         Custom Forms
@@ -693,4 +699,60 @@
     width: 75px;
     margin-left: 10px;
     margin-right: 10px;
+}
+
+/* Timeline Map View Edit Form. */
+.cz-form-map-view-edit {
+    // top: @headerHeight + @headerBreadcrumbsHeight - @headerBreadcrumbsTopMargin;
+    top: @headerHeight;
+    right: 0;
+    left: 0;
+}
+
+.cz-form-new-map-event,
+.cz-form-current-map-events {
+    position: absolute;
+    top: 0;
+    width: 300px;
+
+    .cz-form-content {
+        .box-sizing;
+        width: 300px;
+
+        .cz-form-msg-placeholder {
+            margin: 1em 0;
+        }
+    }
+}
+
+.cz-form-new-map-event {
+    left: 0;
+}
+
+.cz-form-current-map-events {
+    right: 0;
+}
+
+.cz-map-event-listitem-icon
+{
+    min-height: 3.5em;
+}
+
+    .cz-map-event-listitem-icon > img
+    {
+        margin-top: 5/16em;
+        width: 3.125em;
+        height: 3.125em;
+        margin-right: 0.625em;
+        float: left;
+    }
+
+.cz-map-event-listitem-content {
+    .cz-map-event-listitem-title {
+
+    }
+
+    .cz-map-event-listitem-year {
+        text-align: right;
+    }
 }

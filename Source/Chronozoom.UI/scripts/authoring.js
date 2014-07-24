@@ -51,6 +51,7 @@ var CZ;
         Authoring.showEditExhibitForm = null;
         Authoring.showEditContentItemForm = null;
         Authoring.showEditTourForm = null;
+        Authoring.showEditMapViewForm = null;
         Authoring.showMessageWindow = null;
         Authoring.hideMessageWindow = null;
 
@@ -444,6 +445,8 @@ var CZ;
             Authoring.showEditContentItemForm = formHandlers && formHandlers.showEditContentItemForm || function () {
             };
             Authoring.showEditTourForm = formHandlers && formHandlers.showEditTourForm || function () {
+            };
+            Authoring.showEditMapViewForm = formHandlers && formHandlers.showEditMapViewForm || function () {
             };
             Authoring.showMessageWindow = formHandlers && formHandlers.showMessageWindow || function (mess, title) {
             };
