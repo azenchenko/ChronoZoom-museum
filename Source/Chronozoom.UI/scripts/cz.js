@@ -152,6 +152,13 @@ var CZ;
             }
         ];
 
+        var _formEditMapView;
+
+        $("body").on("mapareaclicked", function (event, data) {
+            console.log(data.mapAreaId);
+            _formEditMapView.addMapEvent();
+        });
+
         HomePageViewModel.rootCollection;
 
         function UserCanEditCollection(profile) {
@@ -448,7 +455,7 @@ var CZ;
                             deleteButton: ".cz-form-delete",
                             addStopButton: ".cz-form-tour-addstop",
                             titleInput: ".cz-form-title",
-                            tourStopsListBox: "#stopsList",
+                            tourStopsListbox: "#stopsList",
                             tourStopsTemplate: forms[8],
                             context: tour
                         });
@@ -515,7 +522,7 @@ var CZ;
                             titleInput: ".cz-form-item-title",
                             datePicker: ".cz-form-time",
                             createArtifactButton: ".cz-form-create-artifact",
-                            contentItemsListBox: ".cz-listbox",
+                            contentItemsListbox: ".cz-listbox",
                             errorMessage: ".cz-form-errormsg",
                             saveButton: ".cz-form-save",
                             deleteButton: ".cz-form-delete",
@@ -533,7 +540,7 @@ var CZ;
                             titleInput: ".cz-form-item-title",
                             datePicker: ".cz-form-time",
                             createArtifactButton: ".cz-form-create-artifact",
-                            contentItemsListBox: ".cz-listbox",
+                            contentItemsListbox: ".cz-listbox",
                             errorMessage: ".cz-form-errormsg",
                             saveButton: ".cz-form-save",
                             deleteButton: ".cz-form-delete",
@@ -567,30 +574,29 @@ var CZ;
                     },
 
                     showEditMapViewForm: function (timeline, prevForm) {
-                        var form = new CZ.UI.FormEditMapView(forms[21], {
+                        _formEditMapView = new CZ.UI.FormEditMapView(forms[21], {
                             prevForm: prevForm,
                             navBackBtn: ".cz-form-nav",
                             newMapEventForm: {
                                 container: ".cz-form-new-map-event",
-                                titleTextblock: ".cz-form-title",
-                                emptyListPlaceholder: ".cz-form-msg-placeholder",
-                                eventsListBox: ".cz-form-new-map-event .cz-listbox",
-                                eventsListBoxTemplate: forms[22]
+                                titleTextblock: ".cz-form-new-map-event .cz-form-title",
+                                emptyListPlaceholder: ".cz-form-new-map-event .cz-form-msg-placeholder",
+                                eventsListbox: ".cz-form-new-map-event .cz-listbox",
+                                eventsListboxTemplate: forms[22]
                             },
                             currentMapEventsForm: {
                                 container: ".cz-form-current-map-events",
-                                titleTextblock: ".cz-form-title",
-                                emptyListPlaceholder: ".cz-form-msg-placeholder",
-                                eventsListBox: ".cz-form-current-map-events .cz-listbox",
-                                eventsListBoxTemplate: forms[23]
+                                titleTextblock: ".cz-form-current-map-events .cz-form-title",
+                                emptyListPlaceholder: ".cz-form-current-map-events .cz-form-msg-placeholder",
+                                eventsListbox: ".cz-form-current-map-events .cz-listbox",
+                                eventsListboxTemplate: forms[23]
                             },
                             context: {
                                 timeline: timeline
                             }
                         });
 
-                        form.show();
-                        /* TODO: FILL THIS WITH REAL FORM */
+                        _formEditMapView.show();
                     }
                 });
 

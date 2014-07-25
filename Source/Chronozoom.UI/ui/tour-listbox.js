@@ -10,13 +10,13 @@ var __extends = this.__extends || function (d, b) {
 var CZ;
 (function (CZ) {
     (function (UI) {
-        var TourListBox = (function (_super) {
-            __extends(TourListBox, _super);
-            function TourListBox(container, listItemContainer, contentItems, takeTour, editTour) {
+        var TourListbox = (function (_super) {
+            __extends(TourListbox, _super);
+            function TourListbox(container, listItemContainer, contentItems, takeTour, editTour) {
                 this.takeTour = takeTour;
                 this.editTour = editTour;
 
-                var listBoxInfo = {
+                var listboxInfo = {
                     context: contentItems,
                     sortableSettings: null
                 };
@@ -34,9 +34,9 @@ var CZ;
                 };
 
                 listItemsInfo.default.ctor = TourListItem;
-                _super.call(this, container, listBoxInfo, listItemsInfo);
+                _super.call(this, container, listboxInfo, listItemsInfo);
             }
-            Object.defineProperty(TourListBox.prototype, "TakeTour", {
+            Object.defineProperty(TourListbox.prototype, "TakeTour", {
                 get: function () {
                     return this.takeTour;
                 },
@@ -44,16 +44,16 @@ var CZ;
                 configurable: true
             });
 
-            Object.defineProperty(TourListBox.prototype, "EditTour", {
+            Object.defineProperty(TourListbox.prototype, "EditTour", {
                 get: function () {
                     return this.editTour;
                 },
                 enumerable: true,
                 configurable: true
             });
-            return TourListBox;
-        })(UI.ListBoxBase);
-        UI.TourListBox = TourListBox;
+            return TourListbox;
+        })(UI.ListboxBase);
+        UI.TourListbox = TourListbox;
 
         var TourListItem = (function (_super) {
             __extends(TourListItem, _super);

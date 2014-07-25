@@ -21,7 +21,7 @@ var CZ;
                 this.titleInput = container.find(formInfo.titleInput);
                 this.datePicker = new CZ.UI.DatePicker(container.find(formInfo.datePicker));
                 this.createArtifactButton = container.find(formInfo.createArtifactButton);
-                this.contentItemsListBox = new CZ.UI.ContentItemListBox(container.find(formInfo.contentItemsListBox), formInfo.contentItemsTemplate, formInfo.context.contentItems);
+                this.contentItemsListbox = new CZ.UI.ContentItemListbox(container.find(formInfo.contentItemsListbox), formInfo.contentItemsTemplate, formInfo.context.contentItems);
                 this.errorMessage = container.find(formInfo.errorMessage);
                 this.saveButton = container.find(formInfo.saveButton);
                 this.deleteButton = container.find(formInfo.deleteButton);
@@ -75,13 +75,13 @@ var CZ;
                         return _this.onSave();
                     });
 
-                    this.contentItemsListBox.itemDblClick(function (item, index) {
+                    this.contentItemsListbox.itemDblClick(function (item, index) {
                         return _this.onContentItemDblClick(item, index);
                     });
-                    this.contentItemsListBox.itemRemove(function (item, index) {
+                    this.contentItemsListbox.itemRemove(function (item, index) {
                         return _this.onContentItemRemoved(item, index);
                     });
-                    this.contentItemsListBox.itemMove(function (item, indexStart, indexStop) {
+                    this.contentItemsListbox.itemMove(function (item, indexStart, indexStop) {
                         return _this.onContentItemMove(item, indexStart, indexStop);
                     });
                 } else if (this.mode === "editExhibit") {
@@ -116,13 +116,13 @@ var CZ;
                         return _this.onDelete();
                     });
 
-                    this.contentItemsListBox.itemDblClick(function (item, index) {
+                    this.contentItemsListbox.itemDblClick(function (item, index) {
                         return _this.onContentItemDblClick(item, index);
                     });
-                    this.contentItemsListBox.itemRemove(function (item, index) {
+                    this.contentItemsListbox.itemRemove(function (item, index) {
                         return _this.onContentItemRemoved(item, index);
                     });
-                    this.contentItemsListBox.itemMove(function (item, indexStart, indexStop) {
+                    this.contentItemsListbox.itemMove(function (item, indexStart, indexStop) {
                         return _this.onContentItemMove(item, indexStart, indexStop);
                     });
                 } else {
@@ -260,7 +260,7 @@ var CZ;
                         var that = _this;
                         var errCI = CZ.Authoring.erroneousContentItemsList(error.responseText);
                         errCI.forEach(function (contentItemIndex) {
-                            var item = that.contentItemsListBox.items[contentItemIndex];
+                            var item = that.contentItemsListbox.items[contentItemIndex];
                             item.container.find(".cz-listitem").css("border-color", "red");
                         });
                         errorMessage = "(1/" + errCI.length + ") " + JSON.parse(error.responseText).errorMessage;
@@ -296,7 +296,7 @@ var CZ;
                     idx = -1;
                 }
 
-                var item = this.contentItemsListBox.items[idx];
+                var item = this.contentItemsListbox.items[idx];
                 item.container.find(".cz-listitem").css("border-color", "#c7c7c7");
 
                 if (idx >= 0) {
@@ -381,7 +381,7 @@ var CZ;
                     duration: 500,
                     complete: function () {
                         _this.datePicker.remove();
-                        _this.contentItemsListBox.clear();
+                        _this.contentItemsListbox.clear();
                         _this.titleInput.hideError();
                     }
                 });

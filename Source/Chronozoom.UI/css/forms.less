@@ -723,6 +723,14 @@
             margin: 1em 0;
         }
     }
+
+    .cz-listitem {
+        cursor: pointer;
+
+        &.selected {
+            border: 2px solid yellow;
+        }
+    }
 }
 
 .cz-form-new-map-event {
@@ -752,7 +760,24 @@
 
     }
 
-    .cz-map-event-listitem-year {
+    .cz-map-event-listitem-footer {
+        height: 11/8em;
+    }
+
+    .cz-map-event-listitem-date {
+        font-weight: bold;
+        font-size: 0.9em;
+        color: #555;
         text-align: right;
+    }
+
+    .cz-listitem-remove-btn {
+        float: left;
+    }
+}
+
+.cz-form-current-map-events {
+    .cz-map-event-listitem-date {
+        float: right;
     }
 }

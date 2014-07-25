@@ -10,11 +10,11 @@ var __extends = this.__extends || function (d, b) {
 var CZ;
 (function (CZ) {
     (function (UI) {
-        var ContentItemListBox = (function (_super) {
-            __extends(ContentItemListBox, _super);
-            function ContentItemListBox(container, listItemContainer, contentItems) {
+        var ContentItemListbox = (function (_super) {
+            __extends(ContentItemListbox, _super);
+            function ContentItemListbox(container, listItemContainer, contentItems) {
                 var self = this;
-                var listBoxInfo = {
+                var listboxInfo = {
                     context: contentItems,
                     sortableSettings: {
                         forcePlaceholderSize: true,
@@ -48,18 +48,18 @@ var CZ;
                 };
 
                 listItemsInfo.default.ctor = ContentItemListItem;
-                _super.call(this, container, listBoxInfo, listItemsInfo);
+                _super.call(this, container, listboxInfo, listItemsInfo);
             }
-            ContentItemListBox.prototype.remove = function (item) {
+            ContentItemListbox.prototype.remove = function (item) {
                 for (var i = this.items.indexOf(item) + 1; i < this.items.length; i++)
                     if (this.items[i].data && this.items[i].data.order)
                         this.items[i].data.order--;
 
                 _super.prototype.remove.call(this, item);
             };
-            return ContentItemListBox;
-        })(UI.ListBoxBase);
-        UI.ContentItemListBox = ContentItemListBox;
+            return ContentItemListbox;
+        })(UI.ListboxBase);
+        UI.ContentItemListbox = ContentItemListbox;
 
         var ContentItemListItem = (function (_super) {
             __extends(ContentItemListItem, _super);

@@ -8,11 +8,11 @@
 var CZ;
 (function (CZ) {
     (function (UI) {
-        var CurrentMapEventsListBox = (function (_super) {
-            __extends(CurrentMapEventsListBox, _super);
-            function CurrentMapEventsListBox(container, listItemContainer, exhibits) {
+        var CurrentMapEventsListbox = (function (_super) {
+            __extends(CurrentMapEventsListbox, _super);
+            function CurrentMapEventsListbox(container, listItemContainer, exhibits) {
                 var self = this;
-                var listBoxInfo = {
+                var listboxInfo = {
                     context: exhibits
                 };
 
@@ -22,7 +22,7 @@ var CZ;
                         uiMap: {
                             iconImg: ".cz-map-event-listitem-icon > img",
                             titleTextblock: ".cz-map-event-listitem-title",
-                            descrTextblock: ".cz-map-event-listitem-year",
+                            dateTextblock: ".cz-map-event-listitem-date",
                             removeBtn: ".cz-listitem-remove-btn"
                         }
                     }
@@ -30,9 +30,10 @@ var CZ;
 
                 listItemsInfo.default.ctor = CurrentMapEventListItem;
 
-                _super.call(this, container, listBoxInfo, listItemsInfo);
+                _super.call(this, container, listboxInfo, listItemsInfo);
             }
-            CurrentMapEventsListBox.prototype.remove = function (item) {
+
+            CurrentMapEventsListbox.prototype.remove = function (item) {
                 for (var i = this.items.indexOf(item) + 1; i < this.items.length; i++)
                     if (this.items[i].data && this.items[i].data.order)
                         this.items[i].data.order--;
@@ -40,27 +41,45 @@ var CZ;
                 _super.prototype.remove.call(this, item);
             };
 
-            return CurrentMapEventsListBox;
-        })(UI.ListBoxBase);
-        UI.CurrentMapEventsListBox = CurrentMapEventsListBox;
+
+
+            return CurrentMapEventsListbox;
+        })(UI.ListboxBase);
+        UI.CurrentMapEventsListbox = CurrentMapEventsListbox;
 
         var CurrentMapEventListItem = (function (_super) {
             __extends(CurrentMapEventListItem, _super);
+
+
+            function onRemoveBtnClicked (event) {
+                var item = event.data.item;
+
+                item.container.trigger("mapeventremoved", item)
+            }
 
             function CurrentMapEventListItem(parent, container, uiMap, context) {
                 var _this = this;
                 _super.call(this, parent, container, uiMap, context);
 
+                var date = CZ.Dates.convertCoordinateToYear(this.data.infodotDescription.date);
+                // ,iconSrc = CZ.Settings.contentItemThumbnailBaseUri + 'x3/' + this.data.contentItems[0].guid + '.png'
+
                 this.iconImg = this.container.find(uiMap.iconImg);
                 this.titleTextblock = this.container.find(uiMap.titleTextblock);
-                this.yearTextblock = this.container.find(uiMap.yearTextblock);
+                this.dateTextblock = this.container.find(uiMap.dateTextblock);
                 this.removeBtn = this.container.find(uiMap.removeBtn);
 
+                this.removeBtn.on("click", {
+                    item: this
+                }, onRemoveBtnClicked);
+
                 this.iconImg.attr("onerror", "this.src='/images/Temp-Thumbnail2.png';");
-                this.iconImg.attr("src", this.data.uri);
+                this.iconImg.attr("src", this.data.contentItems[0].uri);
+                // this.iconImg.attr("src", iconSrc);
                 this.titleTextblock.text(this.data.title);
-                this.yearTextblock.text(this.data.year);
+                this.dateTextblock.text(date.year + " " + date.regime);
             }
+
             return CurrentMapEventListItem;
         })(UI.ListItemBase);
         UI.CurrentMapEventListItem = CurrentMapEventListItem;

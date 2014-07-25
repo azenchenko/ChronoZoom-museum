@@ -86,21 +86,29 @@
 
                 function onClicked(d) {
                     if (active.node() === this) return resetViewport();
-                    active.classed("active", false);
-                    active = d3.select(this).classed("active", true);
+                    
+                    if (CZ.Authoring.isActive) {
+                    _this.$map.trigger("mapareaclicked", {
+                            mapAreaId: d.id
+                        });
+                    }
+                    else {
+                        active.classed("active", false);
+                        active = d3.select(this).classed("active", true);
 
-                    var bounds = path.bounds(d),
-                        dx = bounds[1][0] - bounds[0][0],
-                        dy = bounds[1][1] - bounds[0][1],
-                        x = (bounds[0][0] + bounds[1][0]) / 2,
-                        y = (bounds[0][1] + bounds[1][1]) / 2,
-                        scale = .95 / Math.max(dx / width, dy / height),
-                        translate = [width / 2 - scale * x, height / 2 - scale * y];
+                        var bounds = path.bounds(d),
+                            dx = bounds[1][0] - bounds[0][0],
+                            dy = bounds[1][1] - bounds[0][1],
+                            x = (bounds[0][0] + bounds[1][0]) / 2,
+                            y = (bounds[0][1] + bounds[1][1]) / 2,
+                            scale = .95 / Math.max(dx / width, dy / height),
+                            translate = [width / 2 - scale * x, height / 2 - scale * y];
 
-                    _this.geoMapLayer.transition()
-                        .duration(750)
-                        .style("stroke-width", 1.5 / scale + "px")
-                        .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+                        _this.geoMapLayer.transition()
+                            .duration(750)
+                            .style("stroke-width", 1.5 / scale + "px")
+                            .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+                    }
                 }
 
                 function onZoomed() {

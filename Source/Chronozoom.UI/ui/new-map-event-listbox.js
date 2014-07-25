@@ -8,11 +8,16 @@
 var CZ;
 (function (CZ) {
     (function (UI) {
-        var NewMapEventListBox = (function (_super) {
-            __extends(NewMapEventListBox, _super);
-            function NewMapEventListBox(container, listItemContainer, exhibits) {
+        var NewMapEventListbox = (function (_super) {
+            __extends(NewMapEventListbox, _super);
+
+            var _this;
+
+            function NewMapEventListbox(container, listItemContainer, exhibits) {
                 var self = this;
-                var listBoxInfo = {
+                _this = this;
+
+                var listboxInfo = {
                     context: exhibits
                 };
 
@@ -22,26 +27,69 @@ var CZ;
                         uiMap: {
                             iconImg: ".cz-map-event-listitem-icon > img",
                             titleTextblock: ".cz-map-event-listitem-title",
-                            dateTextblock: ".cz-map-event-listitem-year"
+                            dateTextblock: ".cz-map-event-listitem-date"
                         }
                     }
                 };
 
+                this.listboxSelectedItem = null;
+                this.listboxSelectedItemIndex = -1;
                 listItemsInfo.default.ctor = NewMapEventListItem;
 
-                _super.call(this, container, listBoxInfo, listItemsInfo);
+                _super.call(this, container, listboxInfo, listItemsInfo);
+
+                this.initialize();
             }
-            NewMapEventListBox.prototype.remove = function (item) {
-                for (var i = this.items.indexOf(item) + 1; i < this.items.length; i++)
+
+            NewMapEventListbox.prototype.initialize = function () {
+                this.itemClick(function (item, index) {
+                    this.container.find(".selected").removeClass("selected");
+
+                    this.items[index].container.find(".cz-listitem").addClass("selected");
+
+                    // this.
+
+                    this.listboxSelectedItem = item;
+                    this.listboxSelectedItemIndex = index;
+                });
+
+                this.itemRemove(function (index) {
+                    if (_this.items.length === 0) {
+                        _this.container.trigger("emptylistbox", "newMapEventListbox");
+                    }
+                });
+
+                this.itemAdd(function () {
+
+                });
+            };
+
+            NewMapEventListbox.prototype.remove = function (item) {
+                for (var i = this.items.indexOf(item) + 1; i < this.items.length; i++) {
                     if (this.items[i].data && this.items[i].data.order)
                         this.items[i].data.order--;
+
+                    if (this.listboxSelectedItem === item) {
+                        this.listboxSelectedItem = null;
+                        this.listboxSelectedItemIndex = -1;
+                    }
+                }
 
                 _super.prototype.remove.call(this, item);
             };
 
-            return NewMapEventListBox;
-        })(UI.ListBoxBase);
-        UI.NewMapEventListBox = NewMapEventListBox;
+            NewMapEventListbox.prototype.removeAt = function (index) {
+                CZ.UI.ListboxBase.prototype.removeAt.call(this, index);
+
+                if (index === this.listboxSelectedItemIndex) {
+                    this.listboxSelectedItem = null;
+                    this.listboxSelectedItemIndex = -1;
+                }
+            };
+
+            return NewMapEventListbox;
+        })(UI.ListboxBase);
+        UI.NewMapEventListbox = NewMapEventListbox;
 
         var NewMapEventListItem = (function (_super) {
             __extends(NewMapEventListItem, _super);
@@ -61,6 +109,7 @@ var CZ;
                 this.titleTextblock.text(this.data.title);
                 this.dateTextblock.text(date.year + " " + date.regime);
             }
+
             return NewMapEventListItem;
         })(UI.ListItemBase);
         UI.NewMapEventListItem = NewMapEventListItem;
