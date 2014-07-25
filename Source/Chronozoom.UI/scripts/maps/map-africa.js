@@ -9,23 +9,29 @@
             this.base = CZ.Map;
             this.base(mapDiv);
 
-            this.initialize();
+            this.initialize("Africa");
         }
         MapAfrica.prototype = new CZ.Map();
 
         /**
-        * Creates datepicker based on given JQuery instance of div
-        */
-        MapAfrica.prototype.initialize = function () {
-            CZ.Map.prototype.initialize.call(this);
+         * Creates datepicker based on given JQuery instance of div
+         */
+        MapAfrica.prototype.initialize = function (mapType) {
+            if (!CZ.Map.prototype.initialize.call(this, arguments[0])) {
+                this.geoMapLayer = d3.select(this.mapDiv)
+                    .select("g");
+
+                return false;
+            }
 
             var width = _this.$map.width(),
                 height = _this.$map.height(),
-                svg = this.map.append("svg"),
+                svg = d3.select(this.mapDiv)
+                    .select("svg"),
                 active = d3.select(null);
 
-            this.geoMapLayer = svg.append("g")
-                .style("stroke-width", "1.5px");
+            this.geoMapLayer = d3.select(this.mapDiv)
+                .select("g");
 
             d3.json("maps-topojson/africa.json", function (error, map) {
                 if (error) {
@@ -135,24 +141,17 @@
         };
 
         /**
-        * Show map.
-        */
+         * Show map.
+         */
         MapAfrica.prototype.show = function (args) {
             CZ.Map.prototype.show.call(this, args);
         };
 
         /**
-        * Hide map.
-        */
+         * Hide map.
+         */
         MapAfrica.prototype.hide = function (args) {
             CZ.Map.prototype.hide.call(this, args);
-        };
-
-        /**
-        * Removes map object
-        */
-        MapAfrica.prototype.destroy = function () {
-        
         };
 
         return MapAfrica;

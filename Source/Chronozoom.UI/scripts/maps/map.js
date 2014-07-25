@@ -17,19 +17,38 @@
         /**
          * Creates datepicker based on given JQuery instance of div
          */
-        Map.prototype.initialize = function () {
+        Map.prototype.initialize = function (mapType) {
             _this = this;
 
             this.map = d3.select(this.mapDiv);
             this.$map = $(this.map[0]);
-            this.$closeBtn = $("<div></div>", {
-                class: _opts.closeBtnClass,
-                title: "Close the map view"
-            });
 
-            this.$closeBtn.appendTo(this.$map)
-                          .on("click", onCloseBtnClick);
+            var _mapType = this.$map.attr("data-map-type") || null;
 
+            if (this.$map.find("." + _opts.closeBtnClass).length === 0) {
+                this.$closeBtn = $("<div></div>", {
+                    class: _opts.closeBtnClass,
+                    title: "Close the map view"
+                });
+
+                this.$closeBtn.appendTo(this.$map)
+                              .on("click", onCloseBtnClick);
+            }
+
+            if (_mapType !== mapType) {
+                this.destroy();
+
+                svg = this.map.append("svg");
+                svg.append("g")
+                    .style("stroke-width", "1.5px");
+
+                this.$map.attr("data-map-type", mapType);
+            }
+            else {
+                return false;
+            }
+
+            return true;
         };
 
         /**
@@ -47,9 +66,14 @@
         };
 
         /**
-         * Removes map object
+         * Removes map object.
          */
         Map.prototype.destroy = function () {
+            d3.select(this.mapDiv)
+                .select("svg")
+                .remove();
+
+            this.$map.removeAttr("data-map-type");
         };
 
         /**

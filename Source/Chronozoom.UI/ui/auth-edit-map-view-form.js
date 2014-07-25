@@ -112,6 +112,8 @@ var CZ;
                     direction: "left",
                     duration: 500,
                     complete: function () {
+                        _this.newMapEventForm.eventsListbox.clear();
+                        _this.currentMapEventsForm.eventsListbox.clear();
                     }
                 });
             };

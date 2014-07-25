@@ -30,6 +30,7 @@ var CZ;
 
                 this.saveButton.off();
                 this.deleteButton.off();
+                this.mapViewBtn.off();
 
                 this.mapViewBtn.on("click", function () {
                     _this.hide(true);

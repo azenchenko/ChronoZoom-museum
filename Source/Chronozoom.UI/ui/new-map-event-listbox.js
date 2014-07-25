@@ -47,8 +47,6 @@ var CZ;
 
                     this.items[index].container.find(".cz-listitem").addClass("selected");
 
-                    // this.
-
                     this.listboxSelectedItem = item;
                     this.listboxSelectedItemIndex = index;
                 });
