@@ -52,6 +52,7 @@ var CZ;
         Common.initialContent = null;
 
         Common.mapLayerSelector = "#map-layer";
+        Common.map;
 
         /* Initialize the JQuery UI Widgets
         */
@@ -62,6 +63,9 @@ var CZ;
             CZ.VirtualCanvas.initialize();
             Common.vc = $('#vc');
             Common.vc.virtualCanvas();
+
+            Common.map = new CZ.Map(Common.mapLayerSelector);
+            Common.map.init();
         }
         Common.initialize = initialize;
 

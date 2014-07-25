@@ -11,15 +11,15 @@ var CZ;
             __extends(FormEditMapView, _super);
 
             var _this,
-                africa;
+                map;
 
             // We only need to add additional initialization in constructor.
             function FormEditMapView(container, formInfo) {
                 _this = this;
                 _super.call(this, container, formInfo);
 
-                africa = new CZ.MapAfrica(CZ.Common.mapLayerSelector);
-                africa.show();
+                map = CZ.Map.prototype.MapAfrica.call(CZ.Common.map);
+                map.show();
 
                 this.$navBackBtn = this.container.find(formInfo.navBackBtn);
                 this.timeline = formInfo.context.timeline;
@@ -124,7 +124,7 @@ var CZ;
             var onNavBackClicked = function (event) {
                 _this.back();
 
-                africa.hide();
+                map.hide();
             };
 
             return FormEditMapView;

@@ -3,8 +3,7 @@
     var Map = (function () {
         var _opts = {
             closeBtnClass: "map-close-btn"
-        },
-            _this;
+        };
 
         function Map(mapDiv) {
             this.mapDiv = mapDiv;
@@ -12,43 +11,27 @@
             this.$map = null;
             this.geoMapLayer;
             this.$closeBtn = null;
+            this.mapType = null;
         }
 
         /**
          * Creates datepicker based on given JQuery instance of div
          */
-        Map.prototype.initialize = function (mapType) {
-            _this = this;
-
+        Map.prototype.init = function () {
             this.map = d3.select(this.mapDiv);
             this.$map = $(this.map[0]);
 
-            var _mapType = this.$map.attr("data-map-type") || null;
+            this.$closeBtn = $("<div></div>", {
+                class: _opts.closeBtnClass,
+                title: "Close the map view"
+            });
 
-            if (this.$map.find("." + _opts.closeBtnClass).length === 0) {
-                this.$closeBtn = $("<div></div>", {
-                    class: _opts.closeBtnClass,
-                    title: "Close the map view"
-                });
+            this.$closeBtn.appendTo(this.$map)
+                .on("click", this, onCloseBtnClick);
 
-                this.$closeBtn.appendTo(this.$map)
-                              .on("click", onCloseBtnClick);
-            }
-
-            if (_mapType !== mapType) {
-                this.destroy();
-
-                svg = this.map.append("svg");
-                svg.append("g")
-                    .style("stroke-width", "1.5px");
-
-                this.$map.attr("data-map-type", mapType);
-            }
-            else {
-                return false;
-            }
-
-            return true;
+            svg = this.map.append("svg");
+            this.geoMapLayer = svg.append("g")
+                .style("stroke-width", "1.5px");
         };
 
         /**
@@ -74,6 +57,17 @@
                 .remove();
 
             this.$map.removeAttr("data-map-type");
+            this.$closeBtn.remove();
+            this.mapType = null;
+        };
+
+        /**
+         * Clears map paths.
+         */
+        Map.prototype.clearMap = function () {
+            $(this.geoMapLayer[0]).empty()
+                .off();
+            this.mapType = null;
         };
 
         /**
@@ -94,7 +88,7 @@
          * Close map view button click handler.
          */
         var onCloseBtnClick = function (event) {
-            Map.prototype.hide.call(_this);
+            Map.prototype.hide.call(event.data);
         };
 
         return Map;
