@@ -161,6 +161,9 @@
             if (data === this.mapData) {
                 return;
             }
+
+            this.mapData = data;
+            this.generateTooltips();
         };
 
         Map.prototype.initInfoPanel = function() {
@@ -174,13 +177,65 @@
             this.$contentContainer = this.$infoPanel.find(".content-container");
         };
 
+        Map.prototype.generateTooltips = function () {
+            var ids = [],
+                $container,
+                template = $("#MapTooltipExhibitTemplate .tooltip-exhibit-container"),
+                _this = this;
+
+            // Create list of ids for map areas that are in mapData.
+            this.mapData.forEach(function (item) {
+                if (item.mapAreaId && ids.indexOf(item.mapAreaId === -1)) {
+                    ids.push(item.mapAreaId);
+                }
+            });
+
+            // Create tooltip for every map area contains all exhibits associated with this map area.
+            ids.forEach(function (id) {
+                var _$container = $("<div></div>");
+
+                _this.mapData.filter(function (mapItem) {
+                    return mapItem.mapAreaId && mapItem.mapAreaId === id;
+                }).forEach(function (mapItem) {
+                    var $tooltipItem = template.clone(true, true),
+                        date = CZ.Dates.convertCoordinateToYear(mapItem.infodotDescription.date);
+
+                    $tooltipItem.on("click", {
+                            id: mapItem.mapAreaId,
+                            info: mapItem.contentItems,
+                            title: mapItem.infodotDescription.title + " (" + date.year + " " + date.regime + ")"
+                        },
+                        CZ.Common.map.showMapAreaInfo)
+                        .attr("data-description", mapItem.infodotDescription.title)
+                        .attr("data-date", date.year + " " + date.regime)
+                        .find("img")
+                            .attr("src", mapItem.contentItems[0].uri);
+
+                    $tooltipItem.appendTo(_$container);
+                });
+
+                // Hack to add 'selected' class to subunit.
+                // Html tag contains too much data in attrs, so $.addClass doesn't work.
+                var _class = $(".subunit[data-id='" + id + "']").attr("class");
+                $(".subunit[data-id='" + id + "']").attr("class", _class + " selected");
+
+                $(_this.geoMapLayer.select(".subunit[data-id='" + id + "']"))
+                    .tooltipster({
+                        content: _$container,
+                        interactive: true
+                    });
+            });
+        };
+
         /**
          * Removes data associated with map areas.
          */
         Map.prototype.clearData = function () {
             this.mapData = null;
 
-            // TODO: remove event handlers etc.
+            // TODO: remove tooltipster from elements that were initialized before,
+            //       remove data attrs associated with exhibits data,
+            //       remove event handlers
         };
 
         /**
