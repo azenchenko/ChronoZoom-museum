@@ -56,10 +56,6 @@ var CZ;
                         _this.container.trigger("emptylistbox", "newMapEventListbox");
                     }
                 });
-
-                this.itemAdd(function () {
-
-                });
             };
 
             NewMapEventListbox.prototype.remove = function (item) {

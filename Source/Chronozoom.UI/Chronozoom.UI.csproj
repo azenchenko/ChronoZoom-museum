@@ -1071,6 +1071,9 @@
     <Content Include="css\forms.min.css">
       <DependentUpon>forms.less</DependentUpon>
     </Content>
+    <Content Include="css\map.css">
+      <DependentUpon>map.less</DependentUpon>
+    </Content>
     <Content Include="css\map.min.css">
       <DependentUpon>map.less</DependentUpon>
     </Content>
@@ -1110,6 +1113,7 @@
       <DependentUpon>cz.less</DependentUpon>
     </Content>
     <Content Include="images\arrow-navigation-back.png" />
+    <Content Include="images\close.png" />
     <Content Include="images\mapview.svg" />
     <Content Include="scripts\authoring-ui.min.js">
       <DependentUpon>authoring-ui.js</DependentUpon>
@@ -1457,6 +1461,9 @@
     <Content Include="maps-topojson\africa.json" />
     <Content Include="css\map.less" />
     <Content Include="css\forms.less" />
+    <Content Include="css\map.css.map">
+      <DependentUpon>map.css</DependentUpon>
+    </Content>
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

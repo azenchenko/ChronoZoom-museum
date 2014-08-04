@@ -573,7 +573,7 @@ var CZ;
                         form.show(noAnimation);
                     },
 
-                    showEditMapViewForm: function (timeline, prevForm) {
+                    showEditMapViewForm: function (timeline, prevForm, onMapExhibits) {
                         _formEditMapView = new CZ.UI.FormEditMapView(forms[21], {
                             prevForm: prevForm,
                             navBackBtn: ".cz-form-nav",
@@ -592,7 +592,8 @@ var CZ;
                                 eventsListboxTemplate: forms[23]
                             },
                             context: {
-                                timeline: timeline
+                                timeline: timeline,
+                                onMapExhibits: onMapExhibits
                             }
                         });
 

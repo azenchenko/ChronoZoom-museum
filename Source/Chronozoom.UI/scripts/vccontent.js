@@ -974,30 +974,9 @@ var CZ;
                         return child.type === "infodot";
                     });
 
-                    var _this = this;
-                    Object.keys(localStorage).forEach(function (key) {
-                        if (_this.id === key) {
-                            var mapExhs = JSON.parse(localStorage.getItem(key));
-
-                            _this.exhibits.forEach(function (item) {
-                                var idFound = mapExhs.filter(function (_item) {
-                                    return "e" + _item.id === item.id;
-                                });
-
-                                if (idFound.length) {
-                                    item.mapAreaId = idFound[0].mapAreaId;
-                                }
-                            });
-                        }
-                    });
-
-                    this.mapViewEnabled = /*this.mapType !== "none" && */this.exhibits.filter(function (exhibit) {
+                    this.mapViewEnabled = this.mapType !== "none" && this.exhibits.filter(function (exhibit) {
                                                                          return exhibit.mapAreaId != null;
                                                                      }).length > 0;
-
-                    this.mapViewEnabled = true;
-
-                    // if ()
                 }
 
                 this.titleObject.initialized = false; //disable CanvasText initialized (rendered) option by default
@@ -1104,10 +1083,8 @@ var CZ;
                         var exhibits = this.parent.exhibits.filter(function (item) {
                                 return item.mapAreaId !== null;
                             });
-                        // CZ.Map.prototype.MapAfrica.call(CZ.Common.map, exhibits);
-                        CZ.Map.prototype.MapAfrica.call(CZ.Common.map, this.parent.exhibits, this.parent);
 
-                        // africaMap.loadData(exhibits);
+                        CZ.Map.prototype.MapAfrica.call(CZ.Common.map, this.parent.exhibits, this.parent);
                         CZ.Common.map.show();
 
                         return true;
@@ -1126,6 +1103,7 @@ var CZ;
                         this.onmousehover = undefined;
                         this.onmouseunhover = undefined;
                         this.onmouseclick = undefined;
+                        delete this.parent.mapViewBtn;
                     };
                 }
 

@@ -18,17 +18,54 @@ var CZ;
                 _this = this;
                 _super.call(this, container, formInfo);
 
-                map = CZ.Map.prototype.MapAfrica.call(CZ.Common.map, formInfo.context.timeline.exhibits, formInfo.context.timeline);
+                var exhibits = [];
+
+                if (typeof formInfo.context.onMapExhibits !== "undefined" && formInfo.context.onMapExhibits.length > 0) {
+                    exhibits = formInfo.context.onMapExhibits;
+                }
+                else {
+                    exhibits = formInfo.context.timeline.exhibits;
+                }
+
+                map = CZ.Map.prototype.MapAfrica.call(CZ.Common.map, exhibits, formInfo.context.timeline);
                 map.show();
 
                 this.$navBackBtn = this.container.find(formInfo.navBackBtn);
                 this.timeline = formInfo.context.timeline;
-                this.mapEvents = this.timeline.exhibits.filter(function (exhibit) {
-                    return exhibit.mapAreaId !== null;
-                });
-                this.notMapEvents = this.timeline.exhibits.filter(function (item) {
-                    return item.mapAreaId === null;
-                })
+
+                // Show modified exhibit date in case if user returned back to map view during current timeline editing session.
+                if (typeof formInfo.context.onMapExhibits !== "undefined" && formInfo.context.onMapExhibits.length > 0) {
+                    var tempIds = [];
+
+                    tempIds = formInfo.context.onMapExhibits.filter(function (exhibit) {
+                            return exhibit.mapAreaId !== null;
+                        })
+                        .map(function (exhibit) {
+                            return exhibit.id;
+                        });
+                    this.mapEvents = this.timeline.exhibits.filter(function (exhibit) {
+                        return tempIds.indexOf(exhibit.guid) !== -1;
+                    });
+
+                    tempIds = formInfo.context.onMapExhibits.filter(function (exhibit) {
+                            return exhibit.mapAreaId === null;
+                        })
+                        .map(function (exhibit) {
+                            return exhibit.id;
+                        });
+                    this.notMapEvents = this.timeline.exhibits.filter(function (exhibit) {
+                        return tempIds.indexOf(exhibit.guid) !== -1;
+                    });
+                }
+                // Showing exhibit data from timeline because opening map view for the first time in this timeline editing session.
+                else {
+                    this.mapEvents = this.timeline.exhibits.filter(function (exhibit) {
+                        return exhibit.mapAreaId !== null;
+                    });
+                    this.notMapEvents = this.timeline.exhibits.filter(function (exhibit) {
+                        return exhibit.mapAreaId === null;
+                    });
+                }
 
                 this.newMapEventForm = {
                     $container: this.container.find(formInfo.newMapEventForm.container),
@@ -56,9 +93,22 @@ var CZ;
             }
 
             FormEditMapView.prototype.initialize = function () {
-                if (this.mapEvents.length === 0) {
+                if (this.mapEvents.length > 0) {
+                    this.currentMapEventsForm.$eventsListbox.show();
+                    this.currentMapEventsForm.$emptyListPlaceholder.hide();
+                }
+                else {
                     this.currentMapEventsForm.$eventsListbox.hide();
                     this.currentMapEventsForm.$emptyListPlaceholder.show();
+                }
+
+                if (this.notMapEvents.length > 0) {
+                    this.newMapEventForm.$eventsListbox.show();
+                    this.newMapEventForm.$emptyListPlaceholder.hide();
+                }
+                else {
+                    this.newMapEventForm.$eventsListbox.hide();
+                    this.newMapEventForm.$emptyListPlaceholder.show();
                 }
 
                 this.$navBackBtn.on("click", onNavBackClicked);
@@ -87,7 +137,6 @@ var CZ;
                     }
                     catch (ex) {
                     }
-                    // $(".subunit[data-id='" + id + "']").removeClass("selected");
 
                     if (_this.currentMapEventsForm.eventsListbox.items.length === 0) {
                         _this.currentMapEventsForm.$eventsListbox.hide();
@@ -107,7 +156,7 @@ var CZ;
 
                 this.newMapEventForm.eventsListbox.removeAt(index);
                 this.currentMapEventsForm.eventsListbox.add(item.data, mapAreaId);
-// data("data-map-area-id")
+
                 if (this.currentMapEventsForm.eventsListbox.items.length > 0) {
                     this.currentMapEventsForm.$eventsListbox.show();
                     this.currentMapEventsForm.$emptyListPlaceholder.hide();
@@ -144,6 +193,13 @@ var CZ;
                             id: item.data.guid,
                             mapAreaId: item.container.attr("data-map-area-id")
                         };
+                    });
+
+                    _this.newMapEventForm.eventsListbox.items.map(function (item) {
+                        return _onMapExhibits.push({
+                            id: item.data.guid,
+                            mapAreaId: null
+                        });
                     });
 
                     _this.prevForm.onMapExhibits = _onMapExhibits;

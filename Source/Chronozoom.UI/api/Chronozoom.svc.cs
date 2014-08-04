@@ -890,6 +890,7 @@ namespace Chronozoom.UI
                     Timeline newTimeline = new Timeline { Id = newTimelineGuid, Title = timelineRequest.Title, Regime = timelineRequest.Regime };
                     newTimeline.FromYear = timelineRequest.FromYear;
                     newTimeline.ToYear = timelineRequest.ToYear;
+                    newTimeline.MapType = timelineRequest.MapType;
                     newTimeline.Collection = collection;
 
                     // Update parent timeline.
@@ -918,6 +919,7 @@ namespace Chronozoom.UI
                 {
                     Guid updateTimelineGuid = timelineRequest.Id;
                     Timeline updateTimeline = storage.Timelines.Find(updateTimelineGuid);
+
                     if (updateTimeline == null)
                     {
                         SetStatusCode(HttpStatusCode.NotFound, ErrorDescription.TimelineNotFound);
@@ -928,6 +930,14 @@ namespace Chronozoom.UI
                     {
                         SetStatusCode(HttpStatusCode.Unauthorized, ErrorDescription.UnauthorizedUser);
                         return Guid.Empty;
+                    }
+
+                    if (timelineRequest.OnMapExhibits != null)
+                    {
+                        foreach (MapExhibitRaw exhibit in timelineRequest.OnMapExhibits)
+                        {
+                            storage.Exhibits.Find(exhibit.Id).MapAreaId = exhibit.MapAreaId;
+                        }
                     }
 
                     TimelineRaw parentTimelineRaw = storage.GetParentTimelineRaw(updateTimeline.Id);
@@ -943,6 +953,7 @@ namespace Chronozoom.UI
                     updateTimeline.Regime = timelineRequest.Regime;
                     updateTimeline.FromYear = timelineRequest.FromYear;
                     updateTimeline.ToYear = timelineRequest.ToYear;
+                    updateTimeline.MapType = timelineRequest.MapType;
                     returnValue = updateTimelineGuid;
                 }
                 storage.SaveChanges();
@@ -1094,7 +1105,9 @@ namespace Chronozoom.UI
                     // Update the exhibit fields
                     updateExhibit.Title         = exhibitRequest.Title;
                     updateExhibit.Year          = exhibitRequest.Year;
+#if RELEASE
                     updateExhibit.UpdatedBy     = storage.Users.Where(u => user.Id == user.Id).FirstOrDefault();
+#endif
                     updateExhibit.UpdatedTime   = DateTime.UtcNow;  // force timestamp update even if no changes have been made since save is still requested and someone else could've edited in meantime
                     returnValue.ExhibitId       = exhibitRequest.Id;
 
@@ -1991,6 +2004,7 @@ namespace Chronozoom.UI
         /// </summary>
         public string GetExhibitLastUpdate(string exhibitId)
         {
+#if RELEASE
             return ApiOperation(delegate(User user, Storage storage)
             {
                 string rv = "";
@@ -2004,6 +2018,9 @@ namespace Chronozoom.UI
 
                 return rv;
             });
+#else
+            return new DateTime(1970, 1, 1).ToString("yyyy/MM/dd HH:mm:ss");
+#endif
         }
 
         /// <summary>

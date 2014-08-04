@@ -32,11 +32,12 @@ var CZ;
                 this.deleteButton.off();
                 this.mapViewBtn.off();
 
-                this.mapViewBtn.on("click", function () {
-                    _this.hide(true);
+                this.mapViewBtn.show()
+                    .on("click", function () {
+                        _this.hide(true);
 
-                    CZ.Authoring.showEditMapViewForm(_this.timeline, _this);
-                });
+                        CZ.Authoring.showEditMapViewForm(_this.timeline, _this, _this.onMapExhibits);
+                    });
 
                 this.titleInput.focus(function () {
                     _this.titleInput.hideError();
@@ -75,6 +76,10 @@ var CZ;
                     this.endDate.setDate(this.timeline.endDate, true);
                 } else {
                     this.endDate.setDate(this.timeline.x + this.timeline.width, true);
+                }
+
+                if (this.timeline.exhibits.length === 0) {
+                    this.mapViewBtn.hide();
                 }
 
                 this.saveButton.click(function (event) {
