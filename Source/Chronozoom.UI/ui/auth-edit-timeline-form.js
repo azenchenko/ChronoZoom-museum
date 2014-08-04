@@ -98,26 +98,30 @@ var CZ;
                         var self = _this;
 
                         _this.saveButton.prop('disabled', true);
+
+                        _this.timeline.onMapExhibits = _this.onMapExhibits;
+
                         CZ.Authoring.updateTimeline(_this.timeline, {
                             title: _this.titleInput.val(),
                             start: _this.startDate.getDate(),
-                            end: _this.endDate.getDate()
-                        }).then(function (success) {
+                            end: _this.endDate.getDate(),
+                            onMapExhibits: _this.onMapExhibits
+                        });//.then(function (success) {
                             self.isCancel = false;
                             self.close();
 
                             //Move to new created timeline
                             self.timeline.onmouseclick();
-                        }, function (error) {
-                            if (error !== undefined && error !== null) {
-                                self.errorMessage.text(error).show().delay(7000).fadeOut();
-                            } else {
-                                self.errorMessage.text("Sorry, internal server error :(").show().delay(7000).fadeOut();
-                            }
-                            console.log(error);
-                        }).always(function () {
+                        // }, function (error) {
+                        //     if (error !== undefined && error !== null) {
+                        //         self.errorMessage.text(error).show().delay(7000).fadeOut();
+                        //     } else {
+                        //         self.errorMessage.text("Sorry, internal server error :(").show().delay(7000).fadeOut();
+                        //     }
+                        //     console.log(error);
+                        // }).always(function () {
                             _this.saveButton.prop('disabled', false);
-                        });
+                        // });
                     }
                 });
 

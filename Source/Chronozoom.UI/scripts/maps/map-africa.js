@@ -5,7 +5,7 @@
             projection,
             path;
 
-        Map.prototype.MapAfrica = function () {
+        Map.prototype.MapAfrica = function (mapData, timeline) {
             _this = this;
 
             this.width = _this.$map.width();
@@ -14,19 +14,33 @@
                     .select("svg");
             this.active = d3.select(null);
 
-            if (this.mapType === "Africa") {
-                return this;
-            }
+            // if (this.mapType === "Africa") {
+            //     return this;
+            // }
 
             this.clearMap();
-            this.mapType = "Africa";
+            // this.mapType = "Africa";
 
-            loadData();
+            this.mapData = mapData || [];
+
+            this.$title.text(timeline.title);
+            this.$start.text(CZ.Dates.convertCoordinateToYear(timeline.x).year + " " + CZ.Dates.convertCoordinateToYear(timeline.x).regime);
+
+            if (timeline.endDate === 9999) {
+                this.$end.text("Present");
+            }
+            else {
+                this.$end.text(CZ.Dates.convertCoordinateToYear(timeline.endDate).year + " " + CZ.Dates.convertCoordinateToYear(timeline.endDate).regime);
+            }
+
+            loadData(this.mapData);
+
+            this._ids = [];
 
             return this;
         };
 
-        function loadData () {
+        function loadData (mapData) {
             d3.json("maps-topojson/africa.json", function (error, map) {
                 if (error) {
                     return console.error(error);
@@ -71,6 +85,10 @@
                     })
                     .on("click", onClicked);
 
+                _this.geoMapLayer.selectAll(".subunit")[0].forEach(function (item) {
+                    _this._ids.push($(item).attr("data-id"));
+                });
+
                 _this.geoMapLayer.selectAll(".place-label")
                     .data(topojson.feature(map, map.objects.africa_countries).features)
                     .enter().append("text")
@@ -83,7 +101,57 @@
                     .datum(topojson.mesh(map, map.objects.africa_countries, function (a, b) { return a !== b; }))
                     .attr("class", "subunit-boundary")
                     .attr("d", path);
-            });
+
+                var template = $("#MapTooltipExhibitTemplate .tooltip-exhibit-container");
+
+                var _aids = [];
+
+                mapData.forEach(function (item) {
+                    if (item.mapAreaId && _aids.indexOf(item.mapAreaId === -1)) {
+                        _aids.push(item.mapAreaId);
+                    }
+                });
+
+                var $con = $("<div></div>");
+
+                _aids.forEach(function (_item) {
+                    $con = $("<div></div>");
+
+                    mapData.filter(function (__item) {
+                        return __item.mapAreaId === _item && __item.mapAreaId;
+                    }).forEach(function (item) {
+                        var it = template.clone(true, true);
+                        it.attr("data-description", item.infodotDescription.title);
+                        it.attr("data-date", CZ.Dates.convertCoordinateToYear(item.infodotDescription.date).year + " " + CZ.Dates.convertCoordinateToYear(item.infodotDescription.date).regime);
+                        it.find("img").attr("src", item.contentItems[0].uri);
+
+                        it.on("click", {
+                            id: item.mapAreaId,
+                            info: item.contentItems,
+                            title: item.infodotDescription.title + " (" + CZ.Dates.convertCoordinateToYear(item.infodotDescription.date).year +
+                                " " + CZ.Dates.convertCoordinateToYear(item.infodotDescription.date).regime + ")"
+                        }, CZ.Common.map.showMapAreaInfo);
+
+                        it.appendTo($con);
+                    });
+
+                    var cl = $(".subunit[data-id='" + _item + "']").attr("class");
+                    $(".subunit[data-id='" + _item + "']").attr("class", cl +" selected");
+
+                    $(_this.geoMapLayer.select(".subunit[data-id='" + _item + "']")).tooltipster({
+                            content: $con,
+                            interactive: true
+                        })
+                        .addClass("selected");
+                    });
+                });
+
+                
+                // $(_this.geoMapLayer.select(".subunit[data-id='" + item.mapAreaId + "']")).tooltipster({
+                //     content: $con,
+                //     interactive: true});
+                // _this.loadData(mapData);
+            // });
         }
 
         function onClicked(d) {

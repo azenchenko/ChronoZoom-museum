@@ -156,7 +156,7 @@ var CZ;
 
         $("body").on("mapareaclicked", function (event, data) {
             console.log(data.mapAreaId);
-            _formEditMapView.addMapEvent();
+            _formEditMapView.addMapEvent(data.mapAreaId);
         });
 
         HomePageViewModel.rootCollection;

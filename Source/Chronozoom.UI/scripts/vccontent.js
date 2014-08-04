@@ -427,7 +427,7 @@ var CZ;
                 if (element.children[i].id == id)
                     return element.children[i];
             }
-            throw "There is no child with id [" + id + "]";
+            return null;
         }
         VCContent.getChild = getChild;
         ;
@@ -969,13 +969,35 @@ var CZ;
                 // Initializing mapViewEnabled flag, since this is the first time when children elements are added to timeline.
                 // Map view is enabled if mapType isn't "none" and at least one exhibit of this timeline has not null mapAreaId.
                 if (this.mapViewEnabled == null) {
+
                     this.exhibits = this.children.filter(function (child) {
                         return child.type === "infodot";
                     });
 
-                    this.mapViewEnabled = this.mapType !== "none" && this.exhibits.filter(function (exhibit) {
+                    var _this = this;
+                    Object.keys(localStorage).forEach(function (key) {
+                        if (_this.id === key) {
+                            var mapExhs = JSON.parse(localStorage.getItem(key));
+
+                            _this.exhibits.forEach(function (item) {
+                                var idFound = mapExhs.filter(function (_item) {
+                                    return "e" + _item.id === item.id;
+                                });
+
+                                if (idFound.length) {
+                                    item.mapAreaId = idFound[0].mapAreaId;
+                                }
+                            });
+                        }
+                    });
+
+                    this.mapViewEnabled = /*this.mapType !== "none" && */this.exhibits.filter(function (exhibit) {
                                                                          return exhibit.mapAreaId != null;
                                                                      }).length > 0;
+
+                    this.mapViewEnabled = true;
+
+                    // if ()
                 }
 
                 this.titleObject.initialized = false; //disable CanvasText initialized (rendered) option by default
@@ -988,48 +1010,48 @@ var CZ;
                 this.base_render(ctx, visibleBox, viewport2d, size_p, opacity);
 
                 // initialize add favorite button if user is authorized
-                if (CZ.Settings.isAuthorized === true && typeof this.favoriteBtn === "undefined" && this.titleObject.width !== 0) {
-                    var btnX = this.x + this.width - 1.0 * this.titleObject.height;
-                    var btnY = this.titleObject.y + 0.15 * this.titleObject.height;
+                // if (CZ.Settings.isAuthorized === true && typeof this.favoriteBtn === "undefined" && this.titleObject.width !== 0) {
+                //     var btnX = this.x + this.width - 1.0 * this.titleObject.height;
+                //     var btnY = this.titleObject.y + 0.15 * this.titleObject.height;
 
-                    this.favoriteBtn = VCContent.addImage(this, layerid, id + "__favorite", btnX, btnY, 0.7 * this.titleObject.height, 0.7 * this.titleObject.height, "/images/star.svg");
-                    this.favoriteBtn.reactsOnMouse = true;
+                //     this.favoriteBtn = VCContent.addImage(this, layerid, id + "__favorite", btnX, btnY, 0.7 * this.titleObject.height, 0.7 * this.titleObject.height, "/images/star.svg");
+                //     this.favoriteBtn.reactsOnMouse = true;
 
-                    this.favoriteBtn.onmouseclick = function () {
-                        var _this = this;
-                        if (CZ.Settings.favoriteTimelines.indexOf(this.parent.guid) !== -1) {
-                            CZ.Service.deleteUserFavorite(this.parent.guid).then(function (success) {
-                                CZ.Authoring.showMessageWindow("Timeline '" + _this.parent.title + "' was removed from your favorite timelines.", "Timeline removed from favorites");
-                            }, function (error) {
-                                console.log("[ERROR] /deleteUserFavorite with guid " + _this.parent.guid + " failed.");
-                            });
-                            CZ.Settings.favoriteTimelines.splice(CZ.Settings.favoriteTimelines.indexOf(this.parent.guid), 1);
-                        } else {
-                            CZ.Service.putUserFavorite(this.parent.guid).then(function (success) {
-                                CZ.Settings.favoriteTimelines.push(_this.parent.guid);
-                                CZ.Authoring.showMessageWindow("Timeline '" + _this.parent.title + "' was added to your favorite timelines.", "Favorite timeline added");
-                            }, function (error) {
-                                console.log("[ERROR] /putUserFavorite with guid + " + _this.parent.guid + " failed.");
-                            });
-                        }
-                        return true;
-                    };
+                //     this.favoriteBtn.onmouseclick = function () {
+                //         var _this = this;
+                //         if (CZ.Settings.favoriteTimelines.indexOf(this.parent.guid) !== -1) {
+                //             CZ.Service.deleteUserFavorite(this.parent.guid).then(function (success) {
+                //                 CZ.Authoring.showMessageWindow("Timeline '" + _this.parent.title + "' was removed from your favorite timelines.", "Timeline removed from favorites");
+                //             }, function (error) {
+                //                 console.log("[ERROR] /deleteUserFavorite with guid " + _this.parent.guid + " failed.");
+                //             });
+                //             CZ.Settings.favoriteTimelines.splice(CZ.Settings.favoriteTimelines.indexOf(this.parent.guid), 1);
+                //         } else {
+                //             CZ.Service.putUserFavorite(this.parent.guid).then(function (success) {
+                //                 CZ.Settings.favoriteTimelines.push(_this.parent.guid);
+                //                 CZ.Authoring.showMessageWindow("Timeline '" + _this.parent.title + "' was added to your favorite timelines.", "Favorite timeline added");
+                //             }, function (error) {
+                //                 console.log("[ERROR] /putUserFavorite with guid + " + _this.parent.guid + " failed.");
+                //             });
+                //         }
+                //         return true;
+                //     };
 
-                    this.favoriteBtn.onmousehover = function () {
-                        this.parent.settings.strokeStyle = "yellow";
-                    };
+                //     this.favoriteBtn.onmousehover = function () {
+                //         this.parent.settings.strokeStyle = "yellow";
+                //     };
 
-                    this.favoriteBtn.onmouseunhover = function () {
-                        this.parent.settings.strokeStyle = timelineinfo.strokeStyle ? timelineinfo.strokeStyle : CZ.Settings.timelineBorderColor;
-                    };
+                //     this.favoriteBtn.onmouseunhover = function () {
+                //         this.parent.settings.strokeStyle = timelineinfo.strokeStyle ? timelineinfo.strokeStyle : CZ.Settings.timelineBorderColor;
+                //     };
 
-                    // remove event handlers to prevent their stacking
-                    this.favoriteBtn.onRemove = function () {
-                        this.onmousehover = undefined;
-                        this.onmouseunhover = undefined;
-                        this.onmouseclick = undefined;
-                    };
-                }
+                //     // remove event handlers to prevent their stacking
+                //     this.favoriteBtn.onRemove = function () {
+                //         this.onmousehover = undefined;
+                //         this.onmouseunhover = undefined;
+                //         this.onmouseclick = undefined;
+                //     };
+                // }
 
                 // initialize edit button if it isn't root collection and titleObject was already initialized
                 if (CZ.Authoring.isEnabled && typeof this.editButton === "undefined" && this.titleObject.width !== 0) {
@@ -1063,7 +1085,7 @@ var CZ;
 
                 // initialize map view button
                 if (this.mapViewEnabled && typeof this.mapViewBtn === "undefined" && this.titleObject.width !== 0) {
-                    btnX = this.x + this.width - 1.0 * this.titleObject.height;
+                    btnX = this.x + this.width - 2.0 * this.titleObject.height;
                     btnY = this.titleObject.y + 0.15 * this.titleObject.height;
 
                     this.mapViewBtn = VCContent.addImage(
@@ -1079,8 +1101,14 @@ var CZ;
                     this.mapViewBtn.reactsOnMouse = true;
 
                     this.mapViewBtn.onmouseclick = function () {
-                        var africaMap = new CZ.MapAfrica(CZ.Common.mapLayerSelector);
-                        africaMap.show();
+                        var exhibits = this.parent.exhibits.filter(function (item) {
+                                return item.mapAreaId !== null;
+                            });
+                        // CZ.Map.prototype.MapAfrica.call(CZ.Common.map, exhibits);
+                        CZ.Map.prototype.MapAfrica.call(CZ.Common.map, this.parent.exhibits, this.parent);
+
+                        // africaMap.loadData(exhibits);
+                        CZ.Common.map.show();
 
                         return true;
                     };

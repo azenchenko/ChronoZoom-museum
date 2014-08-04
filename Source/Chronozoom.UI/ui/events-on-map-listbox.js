@@ -41,7 +41,13 @@ var CZ;
                 _super.prototype.remove.call(this, item);
             };
 
+            CurrentMapEventsListbox.prototype.add = function (item, mapAreaId) {
+                CZ.UI.ListboxBase.prototype.add.call(this, arguments[0]);
 
+                mapAreaId = mapAreaId || item.mapAreaId;
+
+                this.items[this.items.length - 1].container.attr("data-map-area-id", mapAreaId);
+            };
 
             return CurrentMapEventsListbox;
         })(UI.ListboxBase);
@@ -53,8 +59,9 @@ var CZ;
 
             function onRemoveBtnClicked (event) {
                 var item = event.data.item;
+                var id = $(event.srcElement).parent().parent().parent().parent().attr("data-map-area-id");
 
-                item.container.trigger("mapeventremoved", item)
+                item.container.trigger("mapeventremoved", { item: item, id: id});
             }
 
             function CurrentMapEventListItem(parent, container, uiMap, context) {

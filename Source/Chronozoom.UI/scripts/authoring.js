@@ -463,7 +463,7 @@ var CZ;
         * @param  {Widget} form A dialog form for editing timeline.
         */
         function updateTimeline(t, prop) {
-            var deffered = jQuery.Deferred();
+            // var deffered = jQuery.Deferred();
 
             var temp = {
                 x: Number(prop.start),
@@ -473,7 +473,7 @@ var CZ;
                 type: "rectangle"
             };
 
-            if (checkTimelineIntersections(t.parent, temp, true)) {
+            // if (checkTimelineIntersections(t.parent, temp, true)) {
                 t.x = temp.x;
                 t.width = temp.width;
                 t.endDate = prop.end;
@@ -495,27 +495,38 @@ var CZ;
                 t.title = prop.title;
                 updateTimelineTitle(t);
 
-                CZ.Service.putTimeline(t).then(function (success) {
+                // CZ.Service.putTimeline(t).then(function (success) {
                     // update ids if existing elements with returned from server
-                    t.id = "t" + success;
-                    t.guid = success;
-                    t.titleObject.id = "t" + success + "__header__";
+                    // t.id = "t" + success;
+                    // t.guid = success;
+                    // t.titleObject.id = "t" + success + "__header__";
 
-                    if (!t.parent.guid) {
-                        // Root timeline, refresh page
-                        document.location.reload(true);
-                    } else {
-                        CZ.Common.vc.virtualCanvas("requestInvalidate");
-                    }
-                    deffered.resolve(t);
-                }, function (error) {
-                    deffered.reject(error);
-                });
-            } else {
-                deffered.reject('Timeline intersects with parent timeline or other siblings');
-            }
+                    prop.onMapExhibits.forEach(function (item) {
+                        var _exhibit = CZ.VCContent.getChild(t, "e" + item.id);
 
-            return deffered.promise();
+
+                        if (_exhibit) {
+                            _exhibit.mapAreaId = item.mapAreaId;
+                        }
+                    });
+
+                    localStorage.setItem(t.id, JSON.stringify(prop.onMapExhibits));
+
+                    // if (!t.parent.guid) {
+                    //     // Root timeline, refresh page
+                    //     document.location.reload(true);
+                    // } else {
+                    //     CZ.Common.vc.virtualCanvas("requestInvalidate");
+                    // }
+                    // deffered.resolve(t);
+                // }, function (error) {
+                //     deffered.reject(error);
+                // });
+            // } else {
+            //     deffered.reject('Timeline intersects with parent timeline or other siblings');
+            // }
+
+            // return deffered.promise();
         }
         Authoring.updateTimeline = updateTimeline;
         ;

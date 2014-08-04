@@ -66,6 +66,8 @@ var CZ;
 
             Common.map = new CZ.Map(Common.mapLayerSelector);
             Common.map.init();
+
+            AddScript("/scripts/maps/map-africa.js");
         }
         Common.initialize = initialize;
 
