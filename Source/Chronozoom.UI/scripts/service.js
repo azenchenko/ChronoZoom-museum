@@ -36,20 +36,6 @@ var CZ;
             Map.tour = tour;
 
             function timeline(t) {
-                var onMapExhibits = [];
-
-                onMapExhibits = t.onMapExhibits;
-                // if (t.mapType !== "none") {
-                    // onMapExhibits = t.exhibits.filter(function (exhibit) {
-                    //     return exhibit.mapAreaId !== null;
-                    // }).map(function (exhibit) {
-                    //     return {
-                    //         mapAreaId: exhibit.mapAreaId,
-                    //         id: exhibit.guid
-                    //     };
-                    // });
-                // }
-
                 return {
                     id: t.guid,
                     ParentTimelineId: t.parent.guid,
@@ -57,9 +43,8 @@ var CZ;
                     end: typeof t.endDate !== 'undefined' ? t.endDate : CZ.Dates.getDecimalYearFromCoordinate(t.x + t.width),
                     title: t.title,
                     Regime: t.regime,
-                    mapType: "Africa",
-                    // mapType: t.mapType,
-                    onMapExhibits: onMapExhibits
+                    mapType: t.mapType,
+                    onMapExhibits: t.onMapExhibits
                 };
             }
             Map.timeline = timeline;

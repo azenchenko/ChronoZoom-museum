@@ -92,15 +92,15 @@ var CZ;
                 var _this = this;
                 _super.call(this, parent, container, uiMap, context);
 
-                var date = CZ.Dates.convertCoordinateToYear(this.data.infodotDescription.date);
+                var date = CZ.Dates.convertCoordinateToYear(context.infodotDescription.date);
 
                 this.iconImg = this.container.find(uiMap.iconImg);
                 this.titleTextblock = this.container.find(uiMap.titleTextblock);
                 this.dateTextblock = this.container.find(uiMap.dateTextblock);
 
                 this.iconImg.attr("onerror", "this.src='/images/Temp-Thumbnail2.png';");
-                this.iconImg.attr("src", this.data.contentItems[0].uri);
-                this.titleTextblock.text(this.data.title);
+                this.iconImg.attr("src", context.contentItems[0].uri);
+                this.titleTextblock.text(context.infodotDescription.title);
                 this.dateTextblock.text(date.year + " " + date.regime);
             }
 

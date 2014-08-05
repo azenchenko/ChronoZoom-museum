@@ -68,7 +68,7 @@ var CZ;
                 var _this = this;
                 _super.call(this, parent, container, uiMap, context);
 
-                var date = CZ.Dates.convertCoordinateToYear(this.data.infodotDescription.date);
+                var date = CZ.Dates.convertCoordinateToYear(context.infodotDescription.date);
                 // ,iconSrc = CZ.Settings.contentItemThumbnailBaseUri + 'x3/' + this.data.contentItems[0].guid + '.png'
 
                 this.iconImg = this.container.find(uiMap.iconImg);
@@ -81,9 +81,9 @@ var CZ;
                 }, onRemoveBtnClicked);
 
                 this.iconImg.attr("onerror", "this.src='/images/Temp-Thumbnail2.png';");
-                this.iconImg.attr("src", this.data.contentItems[0].uri);
+                this.iconImg.attr("src", context.contentItems[0].uri);
                 // this.iconImg.attr("src", iconSrc);
-                this.titleTextblock.text(this.data.title);
+                this.titleTextblock.text(context.infodotDescription.title);
                 this.dateTextblock.text(date.year + " " + date.regime);
             }
 

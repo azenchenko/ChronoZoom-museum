@@ -68,6 +68,7 @@ var CZ;
             Common.map.init();
 
             AddScript("/scripts/maps/map-africa.js");
+            AddScript("/scripts/maps/map-usa.js");
         }
         Common.initialize = initialize;
 

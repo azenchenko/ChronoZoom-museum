@@ -54,6 +54,7 @@ var CZ;
         Authoring.showEditMapViewForm = null;
         Authoring.showMessageWindow = null;
         Authoring.hideMessageWindow = null;
+        Authoring.showSelectMapTypeForm = null;
 
         // Generic callback function set by the form when waits user's input (e.g. mouse click) to continue.
         Authoring.callback = null;
@@ -459,6 +460,8 @@ var CZ;
             };
             Authoring.hideMessageWindow = formHandlers && formHandlers.hideMessageWindow || function () {
             };
+            Authoring.showSelectMapTypeForm = formHandlers && formHandlers.showSelectMapTypeForm || function () {
+            };
         }
         Authoring.initialize = initialize;
 
@@ -498,6 +501,14 @@ var CZ;
                     ]);
                 }
 
+                t.onMapExhibits = [];
+                Object.keys(prop.mapViewExhibits).forEach(function (key) {
+                    t.onMapExhibits.push({
+                        id: key,
+                        mapAreaId: prop.mapViewExhibits[key].mapAreaId
+                    });
+                });
+
                 // Update title.
                 t.title = prop.title;
                 updateTimelineTitle(t);
@@ -508,13 +519,11 @@ var CZ;
                     t.guid = success;
                     t.titleObject.id = "t" + success + "__header__";
 
-                    prop.onMapExhibits = prop.onMapExhibits || [];
-
-                    prop.onMapExhibits.forEach(function (item) {
-                        var _exhibit = CZ.VCContent.getChild(t, "e" + item.id);
+                    Object.keys(prop.mapViewExhibits).forEach(function (key) {
+                        var _exhibit = CZ.VCContent.getChild(t, "e" + key);
 
                         if (_exhibit) {
-                            _exhibit.mapAreaId = item.mapAreaId;
+                            _exhibit.mapAreaId = prop.mapViewExhibits[key].mapAreaId;
                         }
                     });
 
@@ -535,7 +544,7 @@ var CZ;
                 deffered.reject('Timeline intersects with parent timeline or other siblings');
             }
 
-            // return deffered.promise();
+            return deffered.promise();
         }
         Authoring.updateTimeline = updateTimeline;
         ;

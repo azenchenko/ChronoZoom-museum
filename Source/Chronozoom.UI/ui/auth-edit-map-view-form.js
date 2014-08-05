@@ -18,54 +18,34 @@ var CZ;
                 _this = this;
                 _super.call(this, container, formInfo);
 
-                var exhibits = [];
+                this.exhibits = formInfo.context.exhibits;
+                this.mapType = formInfo.context.mapType;
+                this.timeline = formInfo.context.timeline;
 
-                if (typeof formInfo.context.onMapExhibits !== "undefined" && formInfo.context.onMapExhibits.length > 0) {
-                    exhibits = formInfo.context.onMapExhibits;
-                }
-                else {
-                    exhibits = formInfo.context.timeline.exhibits;
+                switch (formInfo.context.mapType) {
+                    case "africa":
+                        map = CZ.Map.prototype.MapAfrica.call(CZ.Common.map, this.exhibits, formInfo.context.timeline);
+                        break;
+                    case "usa-albers":
+                        map = CZ.Map.prototype.MapUSA.call(CZ.Common.map, this.exhibits, formInfo.context.timeline);
+                        break;
                 }
 
-                map = CZ.Map.prototype.MapAfrica.call(CZ.Common.map, exhibits, formInfo.context.timeline);
                 map.show();
 
                 this.$navBackBtn = this.container.find(formInfo.navBackBtn);
-                this.timeline = formInfo.context.timeline;
 
-                // Show modified exhibit date in case if user returned back to map view during current timeline editing session.
-                if (typeof formInfo.context.onMapExhibits !== "undefined" && formInfo.context.onMapExhibits.length > 0) {
-                    var tempIds = [];
+                this.mapEvents = [];
+                this.notMapEvents = [];
 
-                    tempIds = formInfo.context.onMapExhibits.filter(function (exhibit) {
-                            return exhibit.mapAreaId !== null;
-                        })
-                        .map(function (exhibit) {
-                            return exhibit.id;
-                        });
-                    this.mapEvents = this.timeline.exhibits.filter(function (exhibit) {
-                        return tempIds.indexOf(exhibit.guid) !== -1;
-                    });
-
-                    tempIds = formInfo.context.onMapExhibits.filter(function (exhibit) {
-                            return exhibit.mapAreaId === null;
-                        })
-                        .map(function (exhibit) {
-                            return exhibit.id;
-                        });
-                    this.notMapEvents = this.timeline.exhibits.filter(function (exhibit) {
-                        return tempIds.indexOf(exhibit.guid) !== -1;
-                    });
-                }
-                // Showing exhibit data from timeline because opening map view for the first time in this timeline editing session.
-                else {
-                    this.mapEvents = this.timeline.exhibits.filter(function (exhibit) {
-                        return exhibit.mapAreaId !== null;
-                    });
-                    this.notMapEvents = this.timeline.exhibits.filter(function (exhibit) {
-                        return exhibit.mapAreaId === null;
-                    });
-                }
+                Object.keys(this.exhibits).forEach(function (key) {
+                    if (_this.exhibits[key].mapAreaId === null) {
+                        _this.notMapEvents.push(_this.exhibits[key]);
+                    }
+                    else {
+                        _this.mapEvents.push(_this.exhibits[key]);
+                    }
+                });
 
                 this.newMapEventForm = {
                     $container: this.container.find(formInfo.newMapEventForm.container),
@@ -126,10 +106,11 @@ var CZ;
                     }
                 });
 
-                this.container.on("mapeventremoved", function (event, args) {//item, id) {
+                this.container.on("mapeventremoved", function (event, args) {
                     var item = args.item;
                     var id = args.id;
 
+                    item.data.mapAreaId = null;
                     _this.currentMapEventsForm.eventsListbox.remove(item);
 
                     try {
@@ -153,6 +134,8 @@ var CZ;
 
                 var cl = $(".subunit[data-id='" + mapAreaId + "']").attr("class");
                 $(".subunit[data-id='" + mapAreaId + "']").attr("class", cl +" selected");
+
+                item.data.mapAreaId = mapAreaId;
 
                 this.newMapEventForm.eventsListbox.removeAt(index);
                 this.currentMapEventsForm.eventsListbox.add(item.data, mapAreaId);
@@ -187,24 +170,6 @@ var CZ;
              * Click handler for navigation back button.
              */
             var onNavBackClicked = function (event) {
-                if (_this.prevForm && _this.prevForm instanceof UI.FormEditTimeline) {
-                    var _onMapExhibits = _this.currentMapEventsForm.eventsListbox.items.map(function (item) {
-                        return {
-                            id: item.data.guid,
-                            mapAreaId: item.container.attr("data-map-area-id")
-                        };
-                    });
-
-                    _this.newMapEventForm.eventsListbox.items.map(function (item) {
-                        return _onMapExhibits.push({
-                            id: item.data.guid,
-                            mapAreaId: null
-                        });
-                    });
-
-                    _this.prevForm.onMapExhibits = _onMapExhibits;
-                }
-
                 _this.back();
 
                 map.hide();

@@ -67,7 +67,8 @@ var CZ;
             "#auth-edit-collection-editors": "/ui/auth-edit-collection-editors.html",           // 20
             "#auth-edit-map-view-form": "/ui/auth-edit-map-view-form.html",                     // 21
             "$('<div><!-- New Map Event Listbox --></div>')": "/ui/new-map-event-listbox.html", // 22
-            "$('<div><!-- Events On Map Listbox --></div>')": "/ui/events-on-map-listbox.html"  // 23
+            "$('<div><!-- Events On Map Listbox --></div>')": "/ui/events-on-map-listbox.html", // 23
+            "#auth-edit-select-maptype-form": "/ui/auth-edit-select-maptype-form.html"          // 24
         };
 
         (function (FeatureActivation) {
@@ -573,7 +574,7 @@ var CZ;
                         form.show(noAnimation);
                     },
 
-                    showEditMapViewForm: function (timeline, prevForm, onMapExhibits) {
+                    showEditMapViewForm: function (prevForm, context) {
                         _formEditMapView = new CZ.UI.FormEditMapView(forms[21], {
                             prevForm: prevForm,
                             navBackBtn: ".cz-form-nav",
@@ -592,12 +593,28 @@ var CZ;
                                 eventsListboxTemplate: forms[23]
                             },
                             context: {
-                                timeline: timeline,
-                                onMapExhibits: onMapExhibits
+                                timeline: context.timeline,
+                                exhibits: context.exhibits,
+                                mapType: context.mapType
                             }
                         });
 
                         _formEditMapView.show();
+                    },
+
+                    showSelectMapTypeForm: function (prevForm, context) {
+                        var form = new CZ.UI.FormSelectMapType(forms[24], {
+                            prevForm: prevForm,
+                            navButton: ".cz-form-nav",
+                            mapTypeInput: ".cz-form-item-map-type",
+                            nextButton: ".cz-form-next",
+                            context: {
+                                timeline: context.timeline,
+                                exhibits: context.exhibits
+                            }
+                        });
+
+                        form.show();
                     }
                 });
 

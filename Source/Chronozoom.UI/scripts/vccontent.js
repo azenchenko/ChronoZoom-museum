@@ -1084,7 +1084,16 @@ var CZ;
                                 return item.mapAreaId !== null;
                             });
 
-                        CZ.Map.prototype.MapAfrica.call(CZ.Common.map, this.parent.exhibits, this.parent);
+                        switch (this.parent.mapType) {
+                            case "africa":
+                                CZ.Map.prototype.MapAfrica.call(CZ.Common.map, this.parent.exhibits, this.parent);
+                                break;
+                            case "usa-albers":
+                                CZ.Map.prototype.MapUSA.call(CZ.Common.map, this.parent.exhibits, this.parent);
+                                break;
+                        }
+
+                        // CZ.Map.prototype.MapAfrica.call(CZ.Common.map, this.parent.exhibits, this.parent);
                         CZ.Common.map.show();
 
                         return true;
@@ -1542,7 +1551,7 @@ var CZ;
                     img['isFallback'] = true;
                     img.src = CZ.Settings.fallbackImageUri;
                 } else {
-                    throw "Cannot load an image!";
+                    // throw "Cannot load an image!";
                 }
             };
 

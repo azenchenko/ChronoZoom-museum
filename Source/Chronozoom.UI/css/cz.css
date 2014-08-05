@@ -1656,6 +1656,18 @@ iframe[sutra=picker] + div {
   right: 0;
   left: 0;
 }
+.cz-form-select-map-type {
+  position: absolute;
+  top: 53px;
+  left: 0;
+  width: 300px;
+}
+.cz-form-select-map-type .cz-form-content {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 300px;
+}
 .cz-form-new-map-event,
 .cz-form-current-map-events {
   position: absolute;

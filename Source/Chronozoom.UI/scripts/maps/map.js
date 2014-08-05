@@ -184,7 +184,9 @@
                 _this = this;
 
             // Create list of ids for map areas that are in mapData.
-            this.mapData.forEach(function (item) {
+            Object.keys(this.mapData).forEach(function (key) {
+                var item = _this.mapData[key];
+
                 if (item.mapAreaId && ids.indexOf(item.mapAreaId === -1)) {
                     ids.push(item.mapAreaId);
                 }
@@ -194,22 +196,24 @@
             ids.forEach(function (id) {
                 var _$container = $("<div></div>");
 
-                _this.mapData.filter(function (mapItem) {
-                    return mapItem.mapAreaId && mapItem.mapAreaId === id;
-                }).forEach(function (mapItem) {
+                Object.keys(_this.mapData).filter(function (key) {
+                    return _this.mapData[key].mapAreaId && _this.mapData[key].mapAreaId === id;
+                }).forEach(function (key) {
+                    var exhibit = _this.mapData[key];
+
                     var $tooltipItem = template.clone(true, true),
-                        date = CZ.Dates.convertCoordinateToYear(mapItem.infodotDescription.date);
+                        date = CZ.Dates.convertCoordinateToYear(exhibit.infodotDescription.date);
 
                     $tooltipItem.on("click", {
-                            id: mapItem.mapAreaId,
-                            info: mapItem.contentItems,
-                            title: mapItem.infodotDescription.title + " (" + date.year + " " + date.regime + ")"
+                            id: exhibit.mapAreaId,
+                            info: exhibit.contentItems,
+                            title: exhibit.infodotDescription.title + " (" + date.year + " " + date.regime + ")"
                         },
                         CZ.Common.map.showMapAreaInfo)
-                        .attr("data-description", mapItem.infodotDescription.title)
+                        .attr("data-description", exhibit.infodotDescription.title)
                         .attr("data-date", date.year + " " + date.regime)
                         .find("img")
-                            .attr("src", mapItem.contentItems[0].uri);
+                            .attr("src", exhibit.contentItems[0].uri);
 
                     $tooltipItem.appendTo(_$container);
                 });

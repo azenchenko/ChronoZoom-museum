@@ -27,6 +27,15 @@ var CZ;
                 this.mapViewBtn = container.find(".cz-map-view");
 
                 this.timeline = formInfo.context;
+                this.exhibits = {};
+                this.timeline.exhibits.map(function (exhibit) {
+                    return _this.exhibits[exhibit.guid] = {
+                        infodotDescription: exhibit.infodotDescription,
+                        contentItems: exhibit.contentItems,
+                        mapAreaId: exhibit.mapAreaId
+                    };
+                });
+                this.onMapExhibits = null;
 
                 this.saveButton.off();
                 this.deleteButton.off();
@@ -36,7 +45,11 @@ var CZ;
                     .on("click", function () {
                         _this.hide(true);
 
-                        CZ.Authoring.showEditMapViewForm(_this.timeline, _this, _this.onMapExhibits);
+                        CZ.Authoring.showSelectMapTypeForm(_this, {
+                            timeline: _this.timeline,
+                            exhibits: _this.exhibits
+                        });
+                        // CZ.Authoring.showEditMapViewForm(_this.timeline, _this, _this.onMapExhibits);
                     });
 
                 this.titleInput.focus(function () {
@@ -110,23 +123,23 @@ var CZ;
                             title: _this.titleInput.val(),
                             start: _this.startDate.getDate(),
                             end: _this.endDate.getDate(),
-                            onMapExhibits: _this.onMapExhibits
-                        });//.then(function (success) {
+                            mapViewExhibits: _this.exhibits
+                        }).then(function (success) {
                             self.isCancel = false;
                             self.close();
 
                             //Move to new created timeline
                             self.timeline.onmouseclick();
-                        // }, function (error) {
-                        //     if (error !== undefined && error !== null) {
-                        //         self.errorMessage.text(error).show().delay(7000).fadeOut();
-                        //     } else {
-                        //         self.errorMessage.text("Sorry, internal server error :(").show().delay(7000).fadeOut();
-                        //     }
-                        //     console.log(error);
-                        // }).always(function () {
+                        }, function (error) {
+                            if (error !== undefined && error !== null) {
+                                self.errorMessage.text(error).show().delay(7000).fadeOut();
+                            } else {
+                                self.errorMessage.text("Sorry, internal server error :(").show().delay(7000).fadeOut();
+                            }
+                            console.log(error);
+                        }).always(function () {
                             _this.saveButton.prop('disabled', false);
-                        // });
+                        });
                     }
                 });
 
