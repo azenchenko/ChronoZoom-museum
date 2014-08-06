@@ -72,7 +72,8 @@
             }
             else
             {
-                link.href = path.replace('.css', '.min.css') + '?v=' + constants.cssFileVersion;    // test/prod - use minified .css files
+                // link.href = path.replace('.css', '.min.css') + '?v=' + constants.cssFileVersion;    // test/prod - use minified .css files
+                link.href = path                             + '?v=' + constants.cssFileVersion;    // test/prod - use minified .css files
             }
             document.getElementsByTagName('head')[0].appendChild(link);
         }
