@@ -179,6 +179,9 @@ namespace Chronozoom.UI.Utils
                     }
                     _storage.Timelines.Add(timeline);
                 }
+
+                // Set default values for fields for map view support.
+                MapViewSupportForTimelines(timelines);
             }
             _storage.SaveChanges();
 
@@ -262,6 +265,26 @@ namespace Chronozoom.UI.Utils
             foreach (Timeline timeline in timelines)
             {
                 timeline.Traverse(operation);
+            }
+        }
+
+        /// <summary>
+        /// Recursivly set default value for MapType field in timeline entity if it is not set.
+        /// </summary>
+        /// <param name="timelines">Array of timelines to set fields for map view migration.</param>
+        private static void MapViewSupportForTimelines(IEnumerable<Timeline> timelines)
+        {
+            foreach (Timeline timeline in timelines)
+            {
+                if (timeline.ChildTimelines != null && timeline.ChildTimelines.Count != 0)
+                {
+                    MapViewSupportForTimelines(timeline.ChildTimelines);
+                }
+
+                if (timeline.MapType == null)
+                {
+                    timeline.MapType = "none";
+                }
             }
         }
 
