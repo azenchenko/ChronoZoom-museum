@@ -921,7 +921,6 @@ namespace Chronozoom.UI
                     Timeline newTimeline = new Timeline { Id = newTimelineGuid, Title = timelineRequest.Title, Regime = timelineRequest.Regime };
                     newTimeline.FromYear = timelineRequest.FromYear;
                     newTimeline.ToYear = timelineRequest.ToYear;
-                    newTimeline.MapType = timelineRequest.MapType;
                     newTimeline.Collection = collection;
 
                     // Update parent timeline.

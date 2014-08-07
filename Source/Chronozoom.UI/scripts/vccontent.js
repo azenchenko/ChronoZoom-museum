@@ -1169,7 +1169,7 @@ var CZ;
 
                 // initialize map view button
                 if (this.mapViewEnabled && typeof this.mapViewBtn === "undefined" && this.titleObject.width !== 0) {
-                    btnX = this.x + this.width - 2.0 * this.titleObject.height;
+                    btnX = this.x + this.width - 4.0 * this.titleObject.height;
                     btnY = this.titleObject.y + 0.15 * this.titleObject.height;
 
                     this.mapViewBtn = VCContent.addImage(

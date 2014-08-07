@@ -30,6 +30,7 @@ namespace Chronozoom.Entities
         {
             this.FromIsCirca = false;
             this.ToIsCirca   = false;
+            this.MapType = "none";
         }
 
         /// <summary>
