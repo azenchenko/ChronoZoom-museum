@@ -12,12 +12,12 @@ var CZ;
         /**
         * Base class for a listbox.
         * - container: a jQuery object with listbox's container.
-        * - listBoxInfo: information about listbox's data and settings.
+        * - listboxInfo: information about listbox's data and settings.
         * - listItemInfo: information about types of listitems.
         * - getType: a function to define type of listitems depending on their data.
         */
-        var ListBoxBase = (function () {
-            function ListBoxBase(container, listBoxInfo, listItemsInfo, getType) {
+        var ListboxBase = (function () {
+            function ListboxBase(container, listboxInfo, listItemsInfo, getType) {
                 if (typeof getType === "undefined") { getType = function (context) {
                     return "default";
                 }; }
@@ -35,7 +35,7 @@ var CZ;
                     this.listItemsInfo.default.ctor = this.listItemsInfo.default.ctor || ListItemBase;
                 }
 
-                for (var i = 0, context = listBoxInfo.context, len = context.length; i < len; ++i) {
+                for (var i = 0, context = listboxInfo.context, len = context.length; i < len; ++i) {
                     this.add(context[i]);
                 }
 
@@ -49,10 +49,10 @@ var CZ;
 
                 // Apply jQueryUI sortable widget.
                 var self = this;
-                if (listBoxInfo.sortableSettings) {
-                    var origStart = listBoxInfo.sortableSettings.start;
-                    var origStop = listBoxInfo.sortableSettings.stop;
-                    $.extend(listBoxInfo.sortableSettings, {
+                if (listboxInfo.sortableSettings) {
+                    var origStart = listboxInfo.sortableSettings.start;
+                    var origStop = listboxInfo.sortableSettings.stop;
+                    $.extend(listboxInfo.sortableSettings, {
                         start: function (event, ui) {
                             ui.item.startPos = ui.item.index();
                             if (origStart)
@@ -67,14 +67,15 @@ var CZ;
                                 origStop(event, ui);
                         }
                     });
-                    this.container.sortable(listBoxInfo.sortableSettings);
+                    this.container.sortable(listboxInfo.sortableSettings);
                 }
             }
+
             /**
             * Produces listitem from data and add it to a listbox.
             * - context: a data to display in a listitem.
             */
-            ListBoxBase.prototype.add = function (context) {
+            ListboxBase.prototype.add = function (context) {
                 var type = this.getType(context);
                 var typeInfo = this.listItemsInfo[type];
 
@@ -91,7 +92,7 @@ var CZ;
             /**
             * Removes listitem from a listbox.
             */
-            ListBoxBase.prototype.remove = function (item) {
+            ListboxBase.prototype.remove = function (item) {
                 var i = this.items.indexOf(item);
 
                 if (i !== -1) {
@@ -102,9 +103,24 @@ var CZ;
             };
 
             /**
+            * Removes listitem from a listbox by given index.
+            */
+            ListboxBase.prototype.removeAt = function (index) {
+                if (index < 0 || index > this.items.length - 1) {
+                    return false;
+                }
+
+                var item = this.items[index];
+
+                this.items[index].container.remove();
+                this.items.splice(index, 1);
+                this.itemRemoveHandler(item, index);
+            };
+
+            /**
             * Clears all listitems from a listbox.
             */
-            ListBoxBase.prototype.clear = function () {
+            ListboxBase.prototype.clear = function () {
                 for (var i = 0, len = this.items.length; i < len; ++i) {
                     var item = this.items[i];
                     item.container.remove();
@@ -115,7 +131,18 @@ var CZ;
             /**
             * Selects an element of the listbox
             */
-            ListBoxBase.prototype.selectItem = function (item) {
+            ListboxBase.prototype.selectItem = function (item) {
+                var i = this.items.indexOf(item);
+
+                if (i !== -1 && this.itemClickHandler) {
+                    this.itemClickHandler(item, i);
+                }
+            };
+
+            /**
+            * Opens an element of the listbox
+            */
+            ListboxBase.prototype.openItem = function (item) {
                 var i = this.items.indexOf(item);
 
                 if (i !== -1) {
@@ -126,26 +153,40 @@ var CZ;
             /**
             * Setup listitem clicked handler
             */
-            ListBoxBase.prototype.itemDblClick = function (handler) {
+            ListboxBase.prototype.itemClick = function (handler) {
+                this.itemClickHandler = handler;
+            };
+
+            /**
+            * Setup listitem double clicked handler
+            */
+            ListboxBase.prototype.itemDblClick = function (handler) {
                 this.itemDblClickHandler = handler;
+            };
+
+            /**
+            * Setup item added handler.
+            */
+            ListboxBase.prototype.itemAdd = function (handler) {
+                this.itemAddHandler = handler;
             };
 
             /**
             * Setup listitem removed handler
             */
-            ListBoxBase.prototype.itemRemove = function (handler) {
+            ListboxBase.prototype.itemRemove = function (handler) {
                 this.itemRemoveHandler = handler;
             };
 
             /**
             * Setup listitem move handler
             */
-            ListBoxBase.prototype.itemMove = function (handler) {
+            ListboxBase.prototype.itemMove = function (handler) {
                 this.itemMoveHandler = handler;
             };
-            return ListBoxBase;
+            return ListboxBase;
         })();
-        UI.ListBoxBase = ListBoxBase;
+        UI.ListboxBase = ListboxBase;
 
         /**
         * Base class for a listitem.
@@ -165,9 +206,14 @@ var CZ;
                 this.container = container;
                 this.data = context;
 
-                // Setup click on a listitem
-                this.container.dblclick(function (_) {
+                // Setup click on a list item
+                this.container.click(function () {
                     return _this.parent.selectItem(_this);
+                });
+
+                // Setup double click on a listitem
+                this.container.dblclick(function (_) {
+                    return _this.parent.openItem(_this);
                 });
 
                 // Setup close button of a listitem.

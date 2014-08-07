@@ -10,10 +10,10 @@ var __extends = this.__extends || function (d, b) {
 var CZ;
 (function (CZ) {
     (function (UI) {
-        var TourStopListBox = (function (_super) {
-            __extends(TourStopListBox, _super);
-            function TourStopListBox(container, listItemContainer, contentItems) {
-                var listBoxInfo = {
+        var TourStopListbox = (function (_super) {
+            __extends(TourStopListbox, _super);
+            function TourStopListbox(container, listItemContainer, contentItems) {
+                var listboxInfo = {
                     context: contentItems,
                     sortableSettings: {
                         forcePlaceholderSize: true,
@@ -42,11 +42,11 @@ var CZ;
                 };
 
                 listItemsInfo.default.ctor = TourStopListItem;
-                _super.call(this, container, listBoxInfo, listItemsInfo);
+                _super.call(this, container, listboxInfo, listItemsInfo);
             }
-            return TourStopListBox;
-        })(UI.ListBoxBase);
-        UI.TourStopListBox = TourStopListBox;
+            return TourStopListbox;
+        })(UI.ListboxBase);
+        UI.TourStopListbox = TourStopListbox;
 
         var TourStopListItem = (function (_super) {
             __extends(TourStopListItem, _super);

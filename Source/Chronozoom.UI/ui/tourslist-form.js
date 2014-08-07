@@ -23,7 +23,7 @@ var CZ;
                 var tours = formInfo.tours.sort(function (a, b) {
                     return a.sequenceNum - b.sequenceNum;
                 });
-                this.toursListBox = new CZ.UI.TourListBox(container.find("#tours"), formInfo.tourTemplate, formInfo.tours, function (tour) {
+                this.toursListbox = new CZ.UI.TourListbox(container.find("#tours"), formInfo.tourTemplate, formInfo.tours, function (tour) {
                     _this.onTakeTour(tour);
                 }, this.editTour ? function (tour) {
                     _this.onEditTour(tour);
@@ -80,7 +80,7 @@ var CZ;
                     complete: function () {
                         _this.container.find("cz-form-errormsg").hide();
                         _this.container.find("#tours").empty();
-                        _this.toursListBox.container.empty();
+                        _this.toursListbox.container.empty();
                     }
                 });
 

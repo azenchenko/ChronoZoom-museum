@@ -51,6 +51,9 @@ var CZ;
         // Initial Content contains the identifier (e.g. ID or Title) of the content that should be loaded initially.
         Common.initialContent = null;
 
+        Common.mapLayerSelector = "#map-layer";
+        Common.map;
+
         /* Initialize the JQuery UI Widgets
         */
         function initialize() {
@@ -60,6 +63,12 @@ var CZ;
             CZ.VirtualCanvas.initialize();
             Common.vc = $('#vc');
             Common.vc.virtualCanvas();
+
+            Common.map = new CZ.Map(Common.mapLayerSelector);
+            Common.map.init();
+
+            AddScript("/scripts/maps/map-africa.js");
+            AddScript("/scripts/maps/map-usa.js");
         }
         Common.initialize = initialize;
 

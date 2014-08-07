@@ -42,7 +42,9 @@ var CZ;
                     start: CZ.Dates.getDecimalYearFromCoordinate(t.x),
                     end: typeof t.endDate !== 'undefined' ? t.endDate : CZ.Dates.getDecimalYearFromCoordinate(t.x + t.width),
                     title: t.title,
-                    Regime: t.regime
+                    Regime: t.regime,
+                    mapType: t.mapType,
+                    onMapExhibits: t.onMapExhibits
                 };
             }
             Map.timeline = timeline;
@@ -70,6 +72,7 @@ var CZ;
                     ParentTimelineId: e.parent.guid,
                     time: e.infodotDescription.date,
                     title: e.title,
+                    mapAreaId: e.mapAreaId,
                     description: undefined,
                     contentItems: mappedContentItems
                 };

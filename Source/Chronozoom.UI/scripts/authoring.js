@@ -51,8 +51,10 @@ var CZ;
         Authoring.showEditExhibitForm = null;
         Authoring.showEditContentItemForm = null;
         Authoring.showEditTourForm = null;
+        Authoring.showEditMapViewForm = null;
         Authoring.showMessageWindow = null;
         Authoring.hideMessageWindow = null;
+        Authoring.showSelectMapTypeForm = null;
 
         // Generic callback function set by the form when waits user's input (e.g. mouse click) to continue.
         Authoring.callback = null;
@@ -84,6 +86,13 @@ var CZ;
         function isIncluded(tp, obj) {
             switch (obj.type) {
                 case "infodot":
+                    // hack to fix unable editing of Cosmos timeline
+                    // TODO: remove this
+                    if (tp.x === -13699999999) {
+                        tp.x = -13700000000;
+                        tp.width += 1;
+                    }
+
                     return (tp.x <= obj.infodotDescription.date && tp.x + tp.width >= obj.infodotDescription.date && tp.y + tp.height >= obj.y + obj.height);
                     break;
                 case "timeline":
@@ -429,9 +438,13 @@ var CZ;
             };
             Authoring.showEditTourForm = formHandlers && formHandlers.showEditTourForm || function () {
             };
+            Authoring.showEditMapViewForm = formHandlers && formHandlers.showEditMapViewForm || function () {
+            };
             Authoring.showMessageWindow = formHandlers && formHandlers.showMessageWindow || function (mess, title) {
             };
             Authoring.hideMessageWindow = formHandlers && formHandlers.hideMessageWindow || function () {
+            };
+            Authoring.showSelectMapTypeForm = formHandlers && formHandlers.showSelectMapTypeForm || function () {
             };
         }
         Authoring.initialize = initialize;
@@ -472,6 +485,14 @@ var CZ;
                     ]);
                 }
 
+                t.onMapExhibits = [];
+                Object.keys(prop.mapViewExhibits).forEach(function (key) {
+                    t.onMapExhibits.push({
+                        id: key,
+                        mapAreaId: prop.mapViewExhibits[key].mapAreaId
+                    });
+                });
+
                 // Update title.
                 t.title = prop.title;
                 updateTimelineTitle(t);
@@ -481,6 +502,17 @@ var CZ;
                     t.id = "t" + success;
                     t.guid = success;
                     t.titleObject.id = "t" + success + "__header__";
+
+                    Object.keys(prop.mapViewExhibits).forEach(function (key) {
+                        var _exhibit = CZ.VCContent.getChild(t, "e" + key);
+
+                        if (_exhibit) {
+                            _exhibit.mapAreaId = prop.mapViewExhibits[key].mapAreaId;
+                        }
+                    });
+
+                    CZ.VCContent.removeChild(t, t.id + "__mapView");
+                    t.mapViewEnabled = null;
 
                     if (!t.parent.guid) {
                         // Root timeline, refresh page

@@ -10,6 +10,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Data.SqlTypes;
+using System.Dynamic;
+using System.Collections.Generic;
 
 namespace Chronozoom.Entities
 {
@@ -91,6 +93,13 @@ namespace Chronozoom.Entities
         [Column(TypeName = "bit")]
         public bool ToIsCirca { get; set; }
 
+
+        /// <summary>
+        /// The name of the map to use. Eg.: "Africa", "World", ...
+        /// </summary>
+        [DataMember(Name = "mapType")]
+        public string MapType { get; set; }
+
         /// <summary>
         /// ???
         /// </summary>
@@ -122,8 +131,22 @@ namespace Chronozoom.Entities
 
     [DataContract]
     [NotMapped]
+    public class MapExhibitRaw
+    {
+        [DataMember(Name = "mapAreaId")]
+        public string MapAreaId { get; set; }
+
+        [DataMember(Name = "id")]
+        public Guid Id { get; set; }
+    }
+
+    [DataContract]
+    [NotMapped]
     public class TimelineRaw : Timeline
     {
+        [DataMember(Name = "onMapExhibits")]
+        public List<MapExhibitRaw> OnMapExhibits { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "t")]
         public TimelineRaw() { }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "t")]

@@ -24,10 +24,33 @@ var CZ;
                 this.titleInput = container.find(formInfo.titleInput);
                 this.errorMessage = container.find(formInfo.errorMessage);
 
+                this.mapViewBtn = container.find(".cz-map-view");
+
                 this.timeline = formInfo.context;
+                this.exhibits = {};
+                this.timeline.exhibits.map(function (exhibit) {
+                    return _this.exhibits[exhibit.guid] = {
+                        infodotDescription: exhibit.infodotDescription,
+                        contentItems: exhibit.contentItems,
+                        mapAreaId: exhibit.mapAreaId
+                    };
+                });
+                this.onMapExhibits = null;
 
                 this.saveButton.off();
                 this.deleteButton.off();
+                this.mapViewBtn.off();
+
+                this.mapViewBtn.show()
+                    .on("click", function () {
+                        _this.hide(true);
+
+                        CZ.Authoring.showSelectMapTypeForm(_this, {
+                            timeline: _this.timeline,
+                            exhibits: _this.exhibits
+                        });
+                        // CZ.Authoring.showEditMapViewForm(_this.timeline, _this, _this.onMapExhibits);
+                    });
 
                 this.titleInput.focus(function () {
                     _this.titleInput.hideError();
@@ -68,6 +91,10 @@ var CZ;
                     this.endDate.setDate(this.timeline.x + this.timeline.width, true);
                 }
 
+                if (this.timeline.exhibits.length === 0) {
+                    this.mapViewBtn.hide();
+                }
+
                 this.saveButton.click(function (event) {
                     _this.errorMessage.empty();
                     var isDataValid = false;
@@ -89,10 +116,14 @@ var CZ;
                         var self = _this;
 
                         _this.saveButton.prop('disabled', true);
+
+                        _this.timeline.onMapExhibits = _this.onMapExhibits;
+
                         CZ.Authoring.updateTimeline(_this.timeline, {
                             title: _this.titleInput.val(),
                             start: _this.startDate.getDate(),
-                            end: _this.endDate.getDate()
+                            end: _this.endDate.getDate(),
+                            mapViewExhibits: _this.exhibits
                         }).then(function (success) {
                             self.isCancel = false;
                             self.close();
@@ -157,6 +188,22 @@ var CZ;
 
                 CZ.Common.vc.virtualCanvas("showNonRootVirtualSpace");
             };
+
+            FormEditTimeline.prototype.hide = function () {
+                var _this = this;
+
+                this.errorMessage.empty();
+
+                _super.prototype.close.call(this, {
+                    effect: "slide",
+                    direction: "left",
+                    duration: 500,
+                    complete: function () {
+                        _this.titleInput.hideError();
+                    }
+                });
+            };
+
             return FormEditTimeline;
         })(CZ.UI.FormUpdateEntity);
         UI.FormEditTimeline = FormEditTimeline;

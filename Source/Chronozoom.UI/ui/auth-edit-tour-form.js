@@ -243,11 +243,11 @@ var CZ;
                     this.tourTitleInput.val("");
                     this.tourDescriptionInput.val("");
                 }
-                this.tourStopsListBox = new CZ.UI.TourStopListBox(container.find(formInfo.tourStopsListBox), formInfo.tourStopsTemplate, stops);
-                this.tourStopsListBox.itemMove(function (item, startPos, endPos) {
+                this.tourStopsListbox = new CZ.UI.TourStopListbox(container.find(formInfo.tourStopsListbox), formInfo.tourStopsTemplate, stops);
+                this.tourStopsListbox.itemMove(function (item, startPos, endPos) {
                     return self.onStopsReordered.apply(self, [item, startPos, endPos]);
                 });
-                this.tourStopsListBox.itemRemove(function (item, index) {
+                this.tourStopsListbox.itemRemove(function (item, index) {
                     return self.onStopRemoved.apply(self, [item, index]);
                 });
                 this.initialize();
@@ -370,7 +370,7 @@ var CZ;
                         message += 'Please provide a valid audio URL.\n';
                     }
 
-                    if (_this.tourStopsListBox.items.length == 0)
+                    if (_this.tourStopsListbox.items.length == 0)
                         message += "Please add a tour stop to the tour.\n";
 
                     if (message) {
@@ -440,10 +440,10 @@ var CZ;
 
             // Gets an array of TourStops as they are currently in the listbox.
             FormEditTour.prototype.getStops = function () {
-                var n = this.tourStopsListBox.items.length;
+                var n = this.tourStopsListbox.items.length;
                 var stops = new Array(n);
                 for (; --n >= 0;) {
-                    stops[n] = this.tourStopsListBox.items[n].data;
+                    stops[n] = this.tourStopsListbox.items[n].data;
                 }
                 return stops;
             };
@@ -528,10 +528,10 @@ var CZ;
                 CZ.Authoring.callback = null;
 
                 if (targetElement) {
-                    var n = this.tourStopsListBox.items.length;
+                    var n = this.tourStopsListbox.items.length;
                     var stop = new TourStop(targetElement);
-                    stop.LapseTime = n == 0 ? 0 : this.tourStopsListBox.items[this.tourStopsListBox.items.length - 1].data.LapseTime + CZ.Settings.tourDefaultTransitionTime;
-                    this.tourStopsListBox.add(stop);
+                    stop.LapseTime = n == 0 ? 0 : this.tourStopsListbox.items[this.tourStopsListbox.items.length - 1].data.LapseTime + CZ.Settings.tourDefaultTransitionTime;
+                    this.tourStopsListbox.add(stop);
                 }
                 this.show();
             };

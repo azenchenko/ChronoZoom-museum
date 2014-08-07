@@ -7,18 +7,18 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 
-var RedGreenListBox = (function (_super) {
-    __extends(RedGreenListBox, _super);
-    function RedGreenListBox(container, listBoxInfo, listItemsInfo) {
+var RedGreenListbox = (function (_super) {
+    __extends(RedGreenListbox, _super);
+    function RedGreenListbox(container, listboxInfo, listItemsInfo) {
         listItemsInfo.red.ctor = RedListItem;
         listItemsInfo.green.ctor = GreenListItem;
-        _super.call(this, container, listBoxInfo, listItemsInfo, function (item) {
+        _super.call(this, container, listboxInfo, listItemsInfo, function (item) {
             var type = item.text.match(/red|green/i);
             return type ? type[0].toLowerCase() : "default";
         });
     }
-    return RedGreenListBox;
-})(CZ.UI.ListBoxBase);
+    return RedGreenListbox;
+})(CZ.UI.ListboxBase);
 
 var RedListItem = (function (_super) {
     __extends(RedListItem, _super);

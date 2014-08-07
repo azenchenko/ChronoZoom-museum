@@ -427,7 +427,7 @@ var CZ;
                 if (element.children[i].id == id)
                     return element.children[i];
             }
-            throw "There is no child with id [" + id + "]";
+            return null;
         }
         VCContent.getChild = getChild;
         ;
@@ -819,6 +819,10 @@ var CZ;
             this.settings.outline = true;
             this.type = 'timeline';
 
+            this.mapType = timelineinfo.mapType;
+            this.exhibits = [];
+            this.mapViewEnabled = null;
+
             this.endDate = timelineinfo.endDate;
 
             var width = timelineinfo.timeEnd - timelineinfo.timeStart;
@@ -962,6 +966,19 @@ var CZ;
             @remarks The method is implemented for each particular VirtualCanvas element.
             */
             this.render = function (ctx, visibleBox, viewport2d, size_p, opacity) {
+                // Initializing mapViewEnabled flag, since this is the first time when children elements are added to timeline.
+                // Map view is enabled if mapType isn't "none" and at least one exhibit of this timeline has not null mapAreaId.
+                if (this.mapViewEnabled == null) {
+
+                    this.exhibits = this.children.filter(function (child) {
+                        return child.type === "infodot";
+                    });
+
+                    this.mapViewEnabled = this.mapType !== "none" && this.exhibits.filter(function (exhibit) {
+                                                                         return exhibit.mapAreaId != null;
+                                                                     }).length > 0;
+                }
+
                 this.titleObject.initialized = false; //disable CanvasText initialized (rendered) option by default
 
                 if (this.settings.hoverAnimationDelta) {
@@ -1147,6 +1164,60 @@ var CZ;
                         this.onmousehover = undefined;
                         this.onmouseunhover = undefined;
                         this.onmouseclick = undefined;
+                    };
+                }
+
+                // initialize map view button
+                if (this.mapViewEnabled && typeof this.mapViewBtn === "undefined" && this.titleObject.width !== 0) {
+                    btnX = this.x + this.width - 2.0 * this.titleObject.height;
+                    btnY = this.titleObject.y + 0.15 * this.titleObject.height;
+
+                    this.mapViewBtn = VCContent.addImage(
+                        this,
+                        layerid,
+                        id + "__mapView",
+                        btnX, 
+                        btnY,
+                        0.7 * this.titleObject.height,
+                        0.7 * this.titleObject.height,
+                        "/images/mapview.svg"
+                    );
+                    this.mapViewBtn.reactsOnMouse = true;
+
+                    this.mapViewBtn.onmouseclick = function () {
+                        var exhibits = this.parent.exhibits.filter(function (item) {
+                                return item.mapAreaId !== null;
+                            });
+
+                        switch (this.parent.mapType) {
+                            case "africa":
+                                CZ.Map.prototype.MapAfrica.call(CZ.Common.map, this.parent.exhibits, this.parent);
+                                break;
+                            case "usa-albers":
+                                CZ.Map.prototype.MapUSA.call(CZ.Common.map, this.parent.exhibits, this.parent);
+                                break;
+                        }
+
+                        // CZ.Map.prototype.MapAfrica.call(CZ.Common.map, this.parent.exhibits, this.parent);
+                        CZ.Common.map.show();
+
+                        return true;
+                    };
+
+                    this.mapViewBtn.onmousehover = function () {
+                        this.parent.settings.strokeStyle = "yellow";
+                    };
+
+                    this.mapViewBtn.onmouseunhover = function () {
+                        this.parent.settings.strokeStyle = timelineinfo.strokeStyle ? timelineinfo.strokeStyle : CZ.Settings.timelineBorderColor;
+                    };
+
+                    // remove event handlers to prevent their stacking
+                    this.mapViewBtn.onRemove = function () {
+                        this.onmousehover = undefined;
+                        this.onmouseunhover = undefined;
+                        this.onmouseclick = undefined;
+                        delete this.parent.mapViewBtn;
                     };
                 }
 
@@ -1585,7 +1656,7 @@ var CZ;
                     img['isFallback'] = true;
                     img.src = CZ.Settings.fallbackImageUri;
                 } else {
-                    throw "Cannot load an image!";
+                    // throw "Cannot load an image!";
                 }
             };
 
@@ -2343,6 +2414,8 @@ var CZ;
             this.infodotDescription = infodotDescription;
             this.title = infodotDescription.title;
             this.opacity = typeof infodotDescription.opacity !== 'undefined' ? infodotDescription.opacity : 1;
+
+            this.mapAreaId = infodotDescription.mapAreaId;
 
             contentItems.sort(function (a, b) {
                 if (typeof a.order !== 'undefined' && typeof b.order === 'undefined')

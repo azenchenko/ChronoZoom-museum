@@ -60,8 +60,23 @@
     <Content Include="css\datepicker.min.css">
       <DependentUpon>datepicker.less</DependentUpon>
     </Content>
+    <Content Include="css\forms.css">
+      <DependentUpon>forms.less</DependentUpon>
+    </Content>
+    <Content Include="css\forms.min.css">
+      <DependentUpon>forms.less</DependentUpon>
+    </Content>
+    <Content Include="css\map.css">
+      <DependentUpon>map.less</DependentUpon>
+    </Content>
+    <Content Include="css\map.min.css">
+      <DependentUpon>map.less</DependentUpon>
+    </Content>
     <Content Include="css\media.css">
       <DependentUpon>media.less</DependentUpon>
+    </Content>
+    <Content Include="css\media.min.css">
+      <DependentUpon>media.css</DependentUpon>
     </Content>
     <Content Include="css\start-page.css">
       <DependentUpon>start-page.less</DependentUpon>
@@ -69,14 +84,27 @@
     <Content Include="css\start-page.min.css">
       <DependentUpon>start-page.less</DependentUpon>
     </Content>
+    <Content Include="css\timescale.min.css">
+      <DependentUpon>timescale.css</DependentUpon>
+    </Content>
+    <Content Include="css\tooltipster.css" />
     <Content Include="css\_colors.css">
       <DependentUpon>_colors.less</DependentUpon>
+    </Content>
+    <Content Include="css\_colors.min.css">
+      <DependentUpon>_colors.css</DependentUpon>
     </Content>
     <Content Include="css\_mixins.css">
       <DependentUpon>_mixins.less</DependentUpon>
     </Content>
+    <Content Include="css\_mixins.min.css">
+      <DependentUpon>_mixins.css</DependentUpon>
+    </Content>
     <Content Include="css\_vars.css">
       <DependentUpon>_vars.less</DependentUpon>
+    </Content>
+    <Content Include="css\_vars.min.css">
+      <DependentUpon>_vars.css</DependentUpon>
     </Content>
     <Content Include="dumps\extensions\GaribaldiTourJSON.js" />
     <Content Include="dumps\extensions\narrative.js" />
@@ -94,6 +122,9 @@
     <Content Include="css\cz.css.map">
       <DependentUpon>cz.less</DependentUpon>
     </Content>
+    <Content Include="images\arrow-navigation-back.png" />
+    <Content Include="images\close.png" />
+    <Content Include="images\mapview.svg" />
     <Content Include="images\copy.svg" />
     <Content Include="images\paste.svg" />
     <Content Include="scripts\authoring-ui.min.js">
@@ -154,6 +185,7 @@
     <Content Include="scripts\external\audiojs\audiojs\audiojs.swf" />
     <Content Include="scripts\external\audiojs\audiojs\player-graphics.gif" />
     <Content Include="scripts\external\jquery.autonumeric-1.9.24.min.js" />
+    <Content Include="scripts\external\jquery.tooltipster.min.js" />
     <Content Include="scripts\gestures.min.js">
       <DependentUpon>gestures.js</DependentUpon>
     </Content>
@@ -166,6 +198,9 @@
     <Content Include="scripts\layout.min.js.map">
       <DependentUpon>layout.js</DependentUpon>
     </Content>
+    <Content Include="scripts\maps\map-africa.js" />
+    <Content Include="scripts\maps\map-usa.js" />
+    <Content Include="scripts\maps\map.js" />
     <Content Include="scripts\media.min.js">
       <DependentUpon>media.js</DependentUpon>
     </Content>
@@ -262,6 +297,16 @@
     <Content Include="ui\auth-edit-exhibit-form.min.js">
       <DependentUpon>auth-edit-exhibit-form.js</DependentUpon>
     </Content>
+    <Content Include="ui\auth-edit-map-view-form.html" />
+    <Content Include="ui\auth-edit-map-view-form.js" />
+    <Content Include="ui\auth-edit-map-view-form.min.js">
+      <DependentUpon>auth-edit-map-view-form.js</DependentUpon>
+    </Content>
+    <Content Include="ui\auth-edit-select-maptype-form.html" />
+    <Content Include="ui\auth-edit-select-maptype-form.js" />
+    <Content Include="ui\auth-edit-select-maptype-form.min.js">
+      <DependentUpon>auth-edit-select-maptype-form.js</DependentUpon>
+    </Content>
     <Content Include="ui\auth-edit-timeline-form.min.js">
       <DependentUpon>auth-edit-timeline-form.js</DependentUpon>
     </Content>
@@ -307,6 +352,11 @@
     <Content Include="scripts\extensions\rinplayer.min.js.map">
       <DependentUpon>rinplayer.js</DependentUpon>
     </Content>
+    <Content Include="ui\events-on-map-listbox.html" />
+    <Content Include="ui\events-on-map-listbox.js" />
+    <Content Include="ui\events-on-map-listbox.min.js">
+      <DependentUpon>events-on-map-listbox.js</DependentUpon>
+    </Content>
     <Content Include="ui\header-edit-form.min.js">
       <DependentUpon>header-edit-form.js</DependentUpon>
     </Content>
@@ -325,6 +375,7 @@
     <Content Include="ui\header-session-expired-form.min.js">
       <DependentUpon>header-session-expired-form.js</DependentUpon>
     </Content>
+    <Content Include="ui\new-map-event-listbox.js" />
     <Content Include="ui\mediapicker-form.min.js">
       <DependentUpon>mediapicker-form.js</DependentUpon>
     </Content>
@@ -388,6 +439,10 @@
     <Content Include="ui\message-window.min.js.map">
       <DependentUpon>message-window.js</DependentUpon>
     </Content>
+    <Content Include="ui\new-map-event-listbox.html" />
+    <Content Include="ui\new-map-event-listbox.min.js">
+      <DependentUpon>new-map-event-listbox.js</DependentUpon>
+    </Content>
     <Content Include="ui\start-page.min.js">
       <DependentUpon>start-page.js</DependentUpon>
     </Content>
@@ -429,6 +484,50 @@
     </Content>
     <Content Include="ui\tourstop-listbox.min.js.map">
       <DependentUpon>tourstop-listbox.js</DependentUpon>
+    </Content>
+    <Content Include="maps-topojson\africa.json" />
+    <Content Include="css\map.less" />
+    <Content Include="css\forms.less" />
+    <Content Include="css\map.css.map">
+      <DependentUpon>map.css</DependentUpon>
+    </Content>
+    <Content Include="maps-topojson\usa.json" />
+    <Content Include="css\forms.css.map">
+      <DependentUpon>forms.css</DependentUpon>
+    </Content>
+    <Content Include="css\datepicker.css.map">
+      <DependentUpon>datepicker.css</DependentUpon>
+    </Content>
+    <Content Include="css\start-page.css.map">
+      <DependentUpon>start-page.css</DependentUpon>
+    </Content>
+    <Content Include="css\media.css.map">
+      <DependentUpon>media.css</DependentUpon>
+    </Content>
+    <Content Include="css\timescale.css.map">
+      <DependentUpon>timescale.css</DependentUpon>
+    </Content>
+    <Content Include="css\_mixins.css.map">
+      <DependentUpon>_mixins.css</DependentUpon>
+    </Content>
+    <Content Include="css\_vars.css.map">
+      <DependentUpon>_vars.css</DependentUpon>
+    </Content>
+    <None Include="Properties\PublishProfiles\cz-oct2014-alex-museum.pubxml" />
+    <Content Include="ui\auth-edit-map-view-form.min.js.map">
+      <DependentUpon>auth-edit-map-view-form.js</DependentUpon>
+    </Content>
+    <Content Include="ui\auth-edit-select-maptype-form.min.js.map">
+      <DependentUpon>auth-edit-select-maptype-form.js</DependentUpon>
+    </Content>
+    <Content Include="ui\events-on-map-listbox.min.js.map">
+      <DependentUpon>events-on-map-listbox.js</DependentUpon>
+    </Content>
+    <Content Include="ui\new-map-event-listbox.min.js.map">
+      <DependentUpon>new-map-event-listbox.js</DependentUpon>
+    </Content>
+    <Content Include="scripts\authoring-ui.min.js.map">
+      <DependentUpon>authoring-ui.js</DependentUpon>
     </Content>
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />

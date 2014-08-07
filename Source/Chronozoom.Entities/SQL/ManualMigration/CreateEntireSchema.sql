@@ -113,6 +113,7 @@ CREATE TABLE [dbo].[Timelines]
 	[SubtreeSize]       [int]                   NOT NULL        DEFAULT (0),
 	[FromIsCirca]       [bit]                   NOT NULL        DEFAULT (0),
 	[ToIsCirca]         [bit]                   NOT NULL        DEFAULT (0),
+	[MapType]			[nvarchar](1000)		NOT NULL		DEFAULT 'none',
     CONSTRAINT [PK_dbo.Timelines] PRIMARY KEY CLUSTERED 
     (
 	    [Id] ASC
@@ -139,6 +140,7 @@ CREATE TABLE [dbo].[Exhibits]
 	[Timeline_Id]       [uniqueidentifier]      NULL,
     [UpdatedBy_Id]      [uniqueidentifier]      NULL,
     [UpdatedTime]       [datetime]              NULL            DEFAULT (GETUTCDATE()),
+	[MapAreaId]			[nvarchar](200)			NULL,
     CONSTRAINT [PK_dbo.Exhibits] PRIMARY KEY CLUSTERED 
     (
 	    [Id] ASC
@@ -353,4 +355,7 @@ INSERT INTO [MigrationHistory] (MigrationId, ProductVersion) VALUES ('2013062105
 GO
 
 INSERT INTO [MigrationHistory] (MigrationId, ProductVersion) VALUES ('201406020351501_MultipleEditors',         'Manual Migration');
+GO
+
+INSERT INTO [MigrationHistory] (MigrationId, ProductVersion) VALUES ('201407221617220_TimelineMapView',         'Manual Migration');
 GO
