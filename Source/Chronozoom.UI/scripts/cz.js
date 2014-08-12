@@ -255,7 +255,7 @@ var CZ;
                 $("body").bind("toursInitialized", onToursInitialized);
         }
 
-        var defaultRootTimeline = { title: "My Timeline", x: 1950, endDate: 9999, children: [], parent: { guid: null } };
+        var defaultRootTimeline = { title: "My Timeline", x: 1950, endDate: 9999, children: [], parent: { guid: null }, exhibits: [] };
 
         $(document).ready(function () {
             // ensures there will be no 'console is undefined' errors

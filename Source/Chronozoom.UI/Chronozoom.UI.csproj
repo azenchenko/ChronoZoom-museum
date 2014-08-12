@@ -513,6 +513,7 @@
     <Content Include="css\_vars.css.map">
       <DependentUpon>_vars.css</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\cz-file-system.pubxml" />
     <None Include="Properties\PublishProfiles\cz-oct2014-alex-museum.pubxml" />
     <Content Include="ui\auth-edit-map-view-form.min.js.map">
       <DependentUpon>auth-edit-map-view-form.js</DependentUpon>

@@ -25,6 +25,12 @@
             this.$title = null;
             this.$start = null;
             this.$end = null;
+            this.path;
+            this.projection;
+            this.behaviorZoom;
+            this.behaviorDrag;
+            this.isDragging;
+            this.preventClick;
         }
 
         /**
@@ -35,6 +41,8 @@
 
             this.map = d3.select(this.mapDiv);
             this.$map = $(this.map[0]);
+
+            this.preventClick = false;
 
             this.$closeBtn = $("<div></div>", {
                 class: _opts.closeBtnClass,
@@ -67,6 +75,72 @@
             this.$infoPanel = this.$map.find("#mapAreaInfo");
 
             this.initInfoPanel();
+        };
+
+        /**
+         * Initializes d3 drag behavior.
+         */
+        Map.prototype.initDrag = function () {
+            var _this = this;
+
+            this.isDragging = false;
+
+            this.behaviorDrag = d3.behavior.drag()
+                .on("drag", function () {
+                    _this.isDragging = true;
+                })
+                .on("dragend", function () {
+                    _this.isDragging = false;
+                });
+        };
+
+        /**
+         * Initializes d3 zoom behavior.
+         */
+        Map.prototype.initZoom = function (args) {
+            var args = args || {},
+                minZoom = typeof args.minZoom !== "undefined" ? args.minZoom : 1,
+                maxZoom = typeof args.maxZoom !== "undefined" ? args.maxZoom : 40;
+
+            this.behaviorZoom = d3.behavior
+                .zoom()
+                .translate([0, 0])
+                .scale(1)
+                .scaleExtent([minZoom, maxZoom])
+                .on("zoom", args.onZoom);
+        };
+
+        /**
+         * Handler for click over map area.
+         *
+         * @param   area    {string}    Id of map area that was clicked.
+         * @param   caller  {Object}    Event caller.
+         */
+        Map.prototype.onAreaClicked = function (areaId, caller) {
+            // if (_this.active.node() === _this) return resetViewport();
+            
+            if (CZ.Authoring.isActive) {
+                this.$map.trigger("mapareaclicked", {
+                    mapAreaId: areaId
+                });
+            }
+            else {
+                this.active.classed("active", false);
+                this.active = d3.select(caller).classed("active", true);
+
+                var bounds = this.path.bounds(area),
+                    dx = bounds[1][0] - bounds[0][0],
+                    dy = bounds[1][1] - bounds[0][1],
+                    x = (bounds[0][0] + bounds[1][0]) / 2,
+                    y = (bounds[0][1] + bounds[1][1]) / 2,
+                    scale = .95 / Math.max(dx / this.width, dy / this.height),
+                    translate = [this.width / 2 - scale * x, this.height / 2 - scale * y];
+
+                this.geoMapLayer.transition()
+                    .duration(750)
+                    .call(this.behaviorZoom.translate(translate).scale(scale).event)
+                    .selectAll(".subunit-label").style("font-size", 15 / d3.event.scale + "px");
+            }
         };
 
         /**
@@ -126,6 +200,7 @@
 
                 switch (item.mediaType) {
                     case "Picture":
+                    case "image":
                         media = $("<img></img>");
                         break;
                     default:
@@ -203,6 +278,7 @@
 
                     var $tooltipItem = template.clone(true, true),
                         date = CZ.Dates.convertCoordinateToYear(exhibit.infodotDescription.date);
+                        // width = $(_this.geoMapLayer.select(".subunit[data-id='" + id + "']")).width();
 
                     $tooltipItem.on("click", {
                             id: exhibit.mapAreaId,
@@ -226,7 +302,9 @@
                 $(_this.geoMapLayer.select(".subunit[data-id='" + id + "']"))
                     .tooltipster({
                         content: _$container,
-                        interactive: true
+                        interactive: true,
+                        onlyOne: true//,
+                        // positionTracker: true
                     });
             });
         };

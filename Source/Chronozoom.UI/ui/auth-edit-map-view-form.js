@@ -132,6 +132,10 @@ var CZ;
                 index = typeof index === "undefined" ? this.newMapEventForm.eventsListbox.listboxSelectedItemIndex : index;
                 var item = this.newMapEventForm.eventsListbox.items[index];
 
+                if (index === -1) {
+                    return false;
+                }
+
                 var cl = $(".subunit[data-id='" + mapAreaId + "']").attr("class");
                 $(".subunit[data-id='" + mapAreaId + "']").attr("class", cl +" selected");
 

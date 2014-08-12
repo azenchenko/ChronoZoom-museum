@@ -47,99 +47,95 @@
         };
 
         function loadMap (mapData) {
+            _this.initDrag();
+            _this.initZoom({
+                minZoom:1,
+                maxZoom: 40,
+                onZoom: onZoom
+            });
+
             d3.json("maps-topojson/africa.json", function (error, map) {
                 if (error) {
                     return console.error(error);
                 }
 
                 // Initial projection.
-                projection = d3.geo.mercator()
+                _this.projection = d3.geo.mercator()
                     .scale(1)
                     .translate([0, 0]);
 
-                path = d3.geo
+                _this.path = d3.geo
                     .path()
-                    .projection(projection);
+                    .projection(_this.projection);
 
                 // Centerin map view.
-                var b = path.bounds(topojson.feature(map, map.objects.africa_countries))
+                var b = _this.path.bounds(topojson.feature(map, map.objects.africa_countries))
                 s = .95 / Math.max((b[1][0] - b[0][0]) / _this.width, (b[1][1] - b[0][1]) / _this.height),
                 t = [(_this.width - s * (b[1][0] + b[0][0])) / 2, (_this.height - s * (b[1][1] + b[0][1])) / 2];
 
-                projection
-                    .scale(s)
+                _this.projection.scale(s)
                     .translate(t);
 
-                var zoom = d3.behavior
-                    .zoom()
-                    .translate([0, 0])
-                    .scale(1)
-                    .scaleExtent([1, 40])
-                    .on("zoom", onZoomed);
-
-                _this.svg.call(zoom) // delete this line to disable free zooming
-                    .call(zoom.event);
+                _this.svg.call(_this.behaviorZoom) // delete this line to disable free zooming
+                    .call(_this.behaviorZoom.event)
+                    .call(_this.behaviorDrag);
 
                 _this.geoMapLayer.selectAll(".subunit")
                     .data(topojson.feature(map, map.objects.africa_countries).features)
                     .enter().append("path")
                     .attr("class", function (d) {
                         return "subunit " + d.properties.name;
-                    }).attr("d", path)
+                    }).attr("d", _this.path)
                     .attr("data-id", function (d) {
                         return d.id
                     })
-                    .on("click", onClicked);
+                    .on("mousemove", function () {
+                        if (_this.isDragging) _this.preventClick = true;
+                    })
+                    .on("click", onAreaClicked);
 
                 _this.geoMapLayer.selectAll(".place-label")
                     .data(topojson.feature(map, map.objects.africa_countries).features)
                     .enter().append("text")
                     .attr("class", function (d) { return "subunit-label " + d.id; })
-                    .attr("transform", function (d) { return "translate(" + path.centroid(d) + ")"; })
-                    .attr("dy", ".35em")
+                    .attr("transform", function (d) { return "translate(" + _this.path.centroid(d) + ")"; })
+                    .attr("data-text-size", function (d) {
+                        var _bounds = _this.path.bounds(d),
+                            _width = _bounds[1][0] - _bounds[0][0],
+                            _height = _bounds[1][1] - _bounds[0][1];
+
+                        return _width * _height / 1000 / 16;
+                    })
+                    .style("font-size", function(d) {
+                        Math.min(parseFloat($(this).attr("data-text-size")), 1) + "em";
+                    })
                     .text(function (d) { return d.properties.name; });
 
                 _this.geoMapLayer.append("path")
                     .datum(topojson.mesh(map, map.objects.africa_countries, function (a, b) { return a !== b; }))
                     .attr("class", "subunit-boundary")
-                    .attr("d", path);
+                    .attr("d", _this.path);
 
                 _this.clearData();
                 _this.loadData(mapData);
             });
         }
 
-        function onClicked(d) {
-            if (_this.active.node() === _this) return resetViewport();
-            
-            if (CZ.Authoring.isActive) {
-            _this.$map.trigger("mapareaclicked", {
-                    mapAreaId: d.id
-                });
+        function onAreaClicked (area) {
+            if (_this.preventClick) {
+                _this.preventClick = false;
+                return;
             }
-            else {
-                _this.active.classed("active", false);
-                _this.active = d3.select(this).classed("active", true);
 
-                var bounds = path.bounds(d),
-                    dx = bounds[1][0] - bounds[0][0],
-                    dy = bounds[1][1] - bounds[0][1],
-                    x = (bounds[0][0] + bounds[1][0]) / 2,
-                    y = (bounds[0][1] + bounds[1][1]) / 2,
-                    scale = .95 / Math.max(dx / _this.width, dy / _this.height),
-                    translate = [_this.width / 2 - scale * x, _this.height / 2 - scale * y];
+            _this.onAreaClicked.apply(_this, [area.id, this]);
+        };
 
-                _this.geoMapLayer.transition()
-                    .duration(750)
-                    .style("stroke-width", 1.5 / scale + "px")
-                    .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-            }
-        }
-
-        function onZoomed() {
+        function onZoom() {
             _this.geoMapLayer.style("stroke-width", 1.5 / d3.event.scale + "px");
             _this.geoMapLayer.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-            _this.geoMapLayer.selectAll(".subunit-label").style("font-size", 15 / d3.event.scale + "px");
+            _this.geoMapLayer.selectAll(".subunit-label").style("font-size", function (d) {
+                return Math.min(parseFloat($(this).attr("data-text-size")) * d3.event.scale, 1)   / d3.event.scale + "em";
+            });
         }
 
         // If the drag behavior prevents the default click,
