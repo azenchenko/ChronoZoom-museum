@@ -1932,7 +1932,8 @@ var CZ;
             this.base = CanvasDomItem;
             this.base(vc, layerid, id, vx, vy, vw, vh, z);
 
-            var elem = document.createElement('iframe');
+            // var elem = document.createElement('iframe');
+            var elem = document.createElement("video");
             elem.setAttribute("id", id);
             if (videoSrc.indexOf('?') == -1)
                 videoSrc += '?wmode=opaque';

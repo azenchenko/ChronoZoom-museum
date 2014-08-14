@@ -1261,17 +1261,17 @@ namespace Chronozoom.UI
             }
 
             // Check if valid url
-            if (!(Uri.TryCreate(contentitemURI, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
+            /*if (!(Uri.TryCreate(contentitemURI, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
             {
                 SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidContentItemUrl);
                 error = ErrorDescription.InvalidContentItemUrl;
 
                 return false;
-            }
+            }*/
 
             // Get MIME type of Url.
-            var mimeType = "";
-            try
+            //var mimeType = "";
+            /*try
             {
                 mimeType = MimeTypeOfUrl(contentitem.Uri);
             }
@@ -1285,9 +1285,10 @@ namespace Chronozoom.UI
                     return false;
                 }
             }
+             * */
 
             // Check if MIME type match mediaType (regex test for 'video')
-            switch (contentitem.MediaType)
+            /*switch (contentitem.MediaType)
             {
                 case "image":
                     if (mimeType != "image/jpg"
@@ -1327,7 +1328,7 @@ namespace Chronozoom.UI
                         return false;
                     }
                     break;
-            }
+            }*/
 
             return true;
         }

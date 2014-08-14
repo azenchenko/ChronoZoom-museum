@@ -757,20 +757,20 @@ var CZ;
                 isValid = isValid && CZ.Authoring.isNotEmpty(ci.title) && CZ.Authoring.isNotEmpty(ci.uri) && CZ.Authoring.isNotEmpty(ci.mediaType);
 
                 var mime;
-                if (ci.mediaType.toLowerCase() !== "video") {
-                    mime = CZ.Service.getMimeTypeByUrl(ci.uri);
-                }
+                // if (ci.mediaType.toLowerCase() !== "video") {
+                //     mime = CZ.Service.getMimeTypeByUrl(ci.uri);
+                // }
 
                 if (ci.mediaType.toLowerCase() === "image") {
                     var imageReg = /\.(jpg|jpeg|png|gif)$/i;
                     if (!imageReg.test(ci.uri)) {
-                        if (mime != "image/jpg" && mime != "image/jpeg" && mime != "image/gif" && mime != "image/png") {
-                            if (mediaInput) {
-                                mediaInput.showError("Sorry, only JPG/PNG/GIF images are supported.");
-                            }
+                        // if (mime != "image/jpg" && mime != "image/jpeg" && mime != "image/gif" && mime != "image/png") {
+                        //     if (mediaInput) {
+                        //         mediaInput.showError("Sorry, only JPG/PNG/GIF images are supported.");
+                        //     }
 
-                            isValid = false;
-                        }
+                        //     isValid = false;
+                        // }
                     }
                 } else if (ci.mediaType.toLowerCase() === "video") {
                     // Youtube
@@ -780,43 +780,43 @@ var CZ;
                     var vimeo = /vimeo\.com\/([0-9]+)/i;
                     var vimeoEmbed = /player.vimeo.com\/video\/([0-9]+)/i;
 
-                    if (youtube.test(ci.uri)) {
-                        var youtubeVideoId = ci.uri.match(youtube)[1];
-                        ci.uri = "http://www.youtube.com/embed/" + youtubeVideoId;
-                    } else if (vimeo.test(ci.uri)) {
-                        var vimeoVideoId = ci.uri.match(vimeo)[1];
-                        ci.uri = "http://player.vimeo.com/video/" + vimeoVideoId;
-                    } else if (vimeoEmbed.test(ci.uri)) {
-                        //Embedded link provided
-                    } else {
-                        if (mediaInput) {
-                            mediaInput.showError("Sorry, only YouTube or Vimeo videos are supported.");
-                        }
+                    // if (youtube.test(ci.uri)) {
+                    //     var youtubeVideoId = ci.uri.match(youtube)[1];
+                    //     ci.uri = "http://www.youtube.com/embed/" + youtubeVideoId;
+                    // } else if (vimeo.test(ci.uri)) {
+                    //     var vimeoVideoId = ci.uri.match(vimeo)[1];
+                    //     ci.uri = "http://player.vimeo.com/video/" + vimeoVideoId;
+                    // } else if (vimeoEmbed.test(ci.uri)) {
+                    //     //Embedded link provided
+                    // } else {
+                    //     if (mediaInput) {
+                    //         mediaInput.showError("Sorry, only YouTube or Vimeo videos are supported.");
+                    //     }
 
-                        isValid = false;
-                    }
+                    //     isValid = false;
+                    // }
                 } else if (ci.mediaType.toLowerCase() === "pdf") {
                     //Google PDF viewer
                     //Example: http://docs.google.com/viewer?url=http%3A%2F%2Fwww.selab.isti.cnr.it%2Fws-mate%2Fexample.pdf&embedded=true
                     var pdf = /\.(pdf)$|\.(pdf)\?/i;
 
-                    if (!pdf.test(ci.uri)) {
-                        if (mime != "application/pdf") {
-                            if (mediaInput) {
-                                mediaInput.showError("Sorry, only PDF extension is supported.");
-                            }
+                    // if (!pdf.test(ci.uri)) {
+                    //     if (mime != "application/pdf") {
+                    //         if (mediaInput) {
+                    //             mediaInput.showError("Sorry, only PDF extension is supported.");
+                    //         }
 
-                            isValid = false;
-                        }
-                    }
+                    //         isValid = false;
+                    //     }
+                    // }
                 } else if (ci.mediaType.toLowerCase() === "skydrive-document") {
                     // Skydrive embed link
-                    var skydrive = /(onedrive|skydrive)\.live\.com\/embed/;
+                    // var skydrive = /(onedrive|skydrive)\.live\.com\/embed/;
 
-                    if (!skydrive.test(ci.uri)) {
-                        alert("This is not a OneDrive embed link.");
-                        isValid = false;
-                    }
+                    // if (!skydrive.test(ci.uri)) {
+                    //     alert("This is not a OneDrive embed link.");
+                    //     isValid = false;
+                    // }
                 } else if (ci.mediaType.toLowerCase() === "skydrive-image") {
                     // uri pattern is - {url} {width} {height}
                     var splited = ci.uri.split(' ');
@@ -830,13 +830,13 @@ var CZ;
                     // validate height
                     var height = /[0-9]/;
 
-                    if (!skydrive.test(splited[0]) || !width.test(splited[1]) || !height.test(splited[2])) {
-                        if (mediaInput) {
-                            mediaInput.showError("This is not a OneDrive embed link.");
-                        }
+                    // if (!skydrive.test(splited[0]) || !width.test(splited[1]) || !height.test(splited[2])) {
+                    //     if (mediaInput) {
+                    //         mediaInput.showError("This is not a OneDrive embed link.");
+                    //     }
 
-                        isValid = false;
-                    }
+                    //     isValid = false;
+                    // }
                 }
                 if (!isValid)
                     return false;
