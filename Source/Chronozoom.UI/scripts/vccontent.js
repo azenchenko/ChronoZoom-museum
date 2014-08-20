@@ -2382,7 +2382,9 @@ var CZ;
                         zl = CZ.Settings.contentItemThumbnailMinLevel;
                     }
                     var sz = 1 << zl;
-                    var thumbnailUri = CZ.Settings.contentItemThumbnailBaseUri + 'x' + sz + '/' + contentItem.guid + '.png';
+
+                    // Add query part to thumbnail uri to bypass caching of the image.
+                    var thumbnailUri = CZ.Settings.contentItemThumbnailBaseUri + contentItem.guid + '.png?' + new Date().getTime();
 
                     return {
                         zoomLevel: newZl,

@@ -54,6 +54,10 @@ var CZ;
         Common.mapLayerSelector = "#map-layer";
         Common.map;
 
+        Common.thumbnailCanvas = $("#thumbnail-generation-canvas")[0];
+        Common.thumbnailCanvasContext = Common.thumbnailCanvas.getContext("2d");
+        Common.thumbnailVideo = $("#thumbnail-generation-video")[0];
+
         /* Initialize the JQuery UI Widgets
         */
         function initialize() {
@@ -405,6 +409,68 @@ var CZ;
             };
         }
         Common.viewportToViewBox = viewportToViewBox;
+
+        /**
+         * Generates local thumbnail for given item by pair (filetype, filename)
+         */
+        function generateLocalThumbnail (filetype, filename, guid, callback) {
+            Common.thumbnailCanvasContext.clearRect(0, 0, 256, 256);
+
+            if (filetype.match(/video/)) {
+                var base64Thumbnail,
+                    video = document.createElement("video");
+
+                video.oncanplaythrough = function (event) {
+                    video.currentTime = video.duration / 2;
+                    Common.thumbnailCanvasContext.drawImage(video, 0, 0, 256, 256);
+                    base64Thumbnail = Common.thumbnailCanvas.toDataURL("image/png");
+
+                    delete this;
+
+                    CZ.Service.postLocalThumbnail(base64Thumbnail, guid)
+                        .then(function (response) {
+                            if (typeof callback !== "undefined") {
+                                callback(response);
+                            }
+                        },
+                        function (error) {
+                            console.log("[Error] Failed to generate local thumbnail to item with guid " + guid);
+                        });
+                };
+
+                video.onerror = function (event) {
+                    console.log(arguments);
+                };
+
+                video.src = filename;
+            }
+            else if (filetype.match(/image/)) {
+                var base64Thumbnail,
+                    img = document.createElement("img");
+
+                img.onload = function (event) {
+                    Common.thumbnailCanvasContext.drawImage(img, 0, 0, 256, 256);
+                    base64Thumbnail = Common.thumbnailCanvas.toDataURL("image/png");
+
+                    img.src = "";
+
+                    CZ.Service.postLocalThumbnail(base64Thumbnail, guid)
+                        .then(function (response) {
+                            callback(response);
+                        },
+                        function (error) {
+                            console.log("[Error] Failed to generate local thumbnail to item with guid " + guid);
+                        });
+                };
+
+                img.src = filename;
+            }
+            else {
+                return false;
+            }
+        }
+        Common.generateLocalThumbnail = generateLocalThumbnail;
+
     })(CZ.Common || (CZ.Common = {}));
     var Common = CZ.Common;
 })(CZ || (CZ = {}));

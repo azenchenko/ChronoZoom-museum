@@ -562,6 +562,7 @@ var CZ;
                             titleInput: ".cz-form-item-title",
                             mediaSourceInput: ".cz-form-item-mediasource",
                             mediaInput: ".cz-form-item-mediaurl",
+                            mediaInputName:".cz-form-item-mediaurl-name",
                             descriptionInput: ".cz-form-item-descr",
                             attributionInput: ".cz-form-item-attribution",
                             mediaTypeInput: ".cz-form-item-media-type",
@@ -759,7 +760,7 @@ var CZ;
             });
 
             CZ.Service.getServiceInformation().then(function (response) {
-                CZ.Settings.contentItemThumbnailBaseUri = response.thumbnailsPath;
+                CZ.Settings.contentItemThumbnailBaseUri = "/" + response.thumbnailsPath + "/";
                 CZ.Settings.signinUrlMicrosoft = response.signinUrlMicrosoft;
                 CZ.Settings.signinUrlGoogle = response.signinUrlGoogle;
                 CZ.Settings.signinUrlYahoo = response.signinUrlYahoo;

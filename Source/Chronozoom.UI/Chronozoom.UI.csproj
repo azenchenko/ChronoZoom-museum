@@ -714,6 +714,9 @@
     <Compile Include="api\Featured.svc.cs">
       <DependentUpon>chronozoom.svc</DependentUpon>
     </Compile>
+    <Compile Include="api\IStreamAPI.cs">
+      <DependentUpon>chronozoom.svc</DependentUpon>
+    </Compile>
     <Compile Include="api\MyTimelines.cvs.cs">
       <DependentUpon>chronozoom.svc</DependentUpon>
     </Compile>

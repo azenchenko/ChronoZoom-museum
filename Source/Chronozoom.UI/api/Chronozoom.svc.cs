@@ -55,7 +55,7 @@ namespace Chronozoom.UI
         /// The path to download thumbanils from.
         /// </summary>
         [DataMember(Name = "thumbnailsPath")]
-        public Uri ThumbnailsPath { get; set; }
+        public String ThumbnailsPath { get; set; }
 
         /// <summary>
         /// The URL to sign in with Microsoft account.
@@ -166,12 +166,12 @@ namespace Chronozoom.UI
         });
 
         // Points to the absolute path where thumbnails are stored
-        private static Lazy<Uri> _thumbnailsPath = new Lazy<Uri>(() =>
+        private static Lazy<String> _thumbnailsPath = new Lazy<String>(() =>
         {
             if (string.IsNullOrEmpty(ConfigurationManager.AppSettings["ThumbnailsPath"]))
                 return null;
 
-            return new Uri(ConfigurationManager.AppSettings["ThumbnailsPath"]);
+            return ConfigurationManager.AppSettings["ThumbnailsPath"];
         });
 
         // The login URL to sign in with Microsoft account
@@ -1090,7 +1090,9 @@ namespace Chronozoom.UI
                     newExhibit.Year         = exhibitRequest.Year;
                     newExhibit.Collection   = collection;
                     newExhibit.Depth        = parentTimeline.Depth + 1;
+#if RELEASE
                     newExhibit.UpdatedBy    = storage.Users.Where(u => user.Id == user.Id).FirstOrDefault();
+#endif
                     newExhibit.UpdatedTime  = DateTime.UtcNow;  // force timestamp update even if no changes have been made since save is still requested and someone else could've edited in meantime
 
                     // Update parent timeline.

@@ -72,7 +72,7 @@ var CZ;
                 this.descrTextblock = this.container.find(uiMap.descrTextblock);
 
                 this.iconImg.attr("onerror", "this.src='/images/Temp-Thumbnail2.png';");
-                this.iconImg.attr("src", this.data.uri);
+                this.iconImg.attr("src", CZ.Settings.contentItemThumbnailBaseUri + this.data.guid + '.png?' + new Date().getTime());
                 this.titleTextblock.text(this.data.title);
                 this.descrTextblock.text(this.data.description);
 

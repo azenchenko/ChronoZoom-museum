@@ -896,6 +896,54 @@ var CZ;
         }
         Service.getMimeTypeByUrl = getMimeTypeByUrl;
 
+        /**
+         * Client to server stream request to save file locally.
+         *
+         * [POST] /api/stream/localfile?filename={filename}
+         */
+        function postLocalFile (file) {
+            if (!file) {
+                return new $.Deferred();
+            }
+
+            var request = new Service.Request(_serviceUrl);
+            request.addToPath("stream");
+            request.addToPath("localfile");
+            request.addParameter("filename", file.name)
+
+            return $.ajax({
+                type: "POST",
+                url: request.url,
+                cache: false,
+                contentType: "application/json;charset=utf-8",
+                data: file,
+                processData: false
+            });
+        }
+        Service.postLocalFile = postLocalFile;
+
+        /**
+         * Client to server stream request to save generated thumbnail locally.
+         *
+         * [POST] /api/stream/localthumbnail?id={id}
+         */
+        function postLocalThumbnail (image, guid) {
+            var request = new Service.Request(_serviceUrl);
+            request.addToPath("stream");
+            request.addToPath("localthumbnail");
+            request.addParameter("id", guid);
+
+            return $.ajax({
+                type: "POST",
+                url: request.url,
+                cache: false,
+                contentType: "application/json;charset=utf-8",
+                data: image,
+                processData: false
+            });
+        }
+        Service.postLocalThumbnail = postLocalThumbnail;
+
         function getUserTimelines(sc, c) {
             if (typeof sc === "undefined") { sc = Service.superCollectionName; }
             if (typeof c === "undefined") { c = Service.collectionName; }

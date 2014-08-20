@@ -23,6 +23,7 @@ var CZ;
                 this.mediaInput = container.find(formInfo.mediaInput);
                 this.mediaSourceInput = container.find(formInfo.mediaSourceInput);
                 this.mediaTypeInput = container.find(formInfo.mediaTypeInput);
+                this.mediaInputName = container.find(formInfo.mediaInputName);
                 this.attributionInput = container.find(formInfo.attributionInput);
                 this.descriptionInput = container.find(formInfo.descriptionInput);
                 this.previewButton = container.find('a.preview');
@@ -30,6 +31,15 @@ var CZ;
                 this.errorMessage = container.find(formInfo.errorMessage);
                 this.saveButton = container.find(formInfo.saveButton);
                 this.mediaListContainer = container.find(formInfo.mediaListContainer);
+
+                // Hack to clear file input value.
+                if (this.mediaInput.length > 0) {
+                    this.mediaInput.remove();
+                }
+
+                this.mediaInput = $("<input type='file' class='cz-form-item-mediaurl cz-input'" +
+                        "style='width: 100%; display: block;'></input>")
+                    .insertBefore(this.mediaInputName);
 
                 this.titleInput.focus(function () {
                     _this.titleInput.hideError();
@@ -51,6 +61,7 @@ var CZ;
                 this.mode = CZ.Authoring.mode; // deep copy mode. it never changes throughout the lifecycle of the form.
                 this.isCancel = true;
                 this.isModified = false;
+                this.mediaFileChanged = false;
                 this.initUI();
             }
             FormEditCI.prototype.initUI = function () {
@@ -78,10 +89,26 @@ var CZ;
                     _this.isModified = true;
                 });
 
+                this.mediaInput.change(function () {
+                    var $this = $(this),
+                        file = $this.get(0).files[0];
+
+                    _this.mediaFileChanged = true;
+
+                    if (file) {
+                        _this.mediaInputName.val(file.name);
+                    }
+                    else {
+                        _this.mediaInputName.val("No file selected");
+                    }
+
+                    _this.file = file || null;
+                });
+
                 this.descriptionInput.on('keyup', function (e) {
                     if (e.which == 13) {
                         that.saveButton.click(function () {
-                            return that.onSave();
+                            return that.onSaveClick();
                         });
                     }
                 });
@@ -102,8 +129,9 @@ var CZ;
                     }).appendTo(this.mediaTypeInput);
                 }
 
+                this.file = null;
                 this.titleInput.val(this.contentItem.title || "");
-                this.mediaInput.val(this.contentItem.uri || "");
+                this.mediaInputName.val(this.contentItem.uri || "No file selected");
                 this.mediaSourceInput.val(this.contentItem.mediaSource || "");
                 this.mediaTypeInput.val(this.contentItem.mediaType || "");
                 this.attributionInput.val(this.contentItem.attribution || "");
@@ -135,7 +163,7 @@ var CZ;
 
                 this.saveButton.off();
                 this.saveButton.click(function () {
-                    return _this.onSave();
+                    return _this.onSaveClick();
                 });
 
                 if (CZ.Authoring.contentItemMode === "createContentItem") {
@@ -159,11 +187,15 @@ var CZ;
                 this.saveButton.show();
             };
 
-            FormEditCI.prototype.onSave = function () {
+            FormEditCI.prototype.saveContentItem = function (filename) {
                 var _this = this;
+
+                this.mediaInputName = filename;
+                this.mediaInput.attr("data-filename", filename);
+
                 var newContentItem = {
                     title: this.titleInput.val() || "",
-                    uri: this.mediaInput.val() || "",
+                    uri: filename,
                     mediaSource: this.mediaSourceInput.val() || "",
                     mediaType: this.mediaTypeInput.val() || "",
                     attribution: this.attributionInput.val() || "",
@@ -179,11 +211,7 @@ var CZ;
                     this.mediaInput.showError("URL can't be empty");
                 }
 
-                // if (!CZ.Authoring.isValidURL(newContentItem.uri)) {
-                //     this.mediaInput.showError("URL is wrong");
-                // }
-
-                if ((CZ.Authoring.validateContentItems([newContentItem], this.mediaInput))/* && (CZ.Authoring.isValidURL(newContentItem.uri))*/) {
+                if (CZ.Authoring.validateContentItems([newContentItem], this.mediaInput)) {
                     if (CZ.Authoring.contentItemMode === "createContentItem") {
                         if (this.prevForm && this.prevForm instanceof UI.FormEditExhibit) {
                             this.isCancel = false;
@@ -196,36 +224,67 @@ var CZ;
                         }
                     } else if (CZ.Authoring.contentItemMode === "editContentItem") {
                         if (this.prevForm && this.prevForm instanceof UI.FormEditExhibit) {
-                            this.isCancel = false;
-                            var clickedListItem = this.prevForm.clickedListItem;
-                            clickedListItem.iconImg.attr("src", newContentItem.uri);
-                            clickedListItem.titleTextblock.text(newContentItem.title);
-                            clickedListItem.descrTextblock.text(newContentItem.description);
-                            $.extend(this.exhibit.contentItems[this.contentItem.order], newContentItem);
-                            this.prevForm.exhibit = this.exhibit = CZ.Authoring.renewExhibit(this.exhibit);
-                            this.prevForm.isModified = true;
-                            CZ.Common.vc.virtualCanvas("requestInvalidate");
-                            this.isModified = false;
-                            this.back();
+                            // Updating exhibit.
+
+                            if (this.contentItem.guid) {
+                                var filetype = this.file ? this.file.type : this.contentItem.mediaType;
+
+                                // Update local thumbnail for existing exhibit (guid is defined).
+                                CZ.Common.generateLocalThumbnail(filetype, filename, this.contentItem.guid, function () {
+                                    _this.isCancel = false;
+                                    var clickedListItem = _this.prevForm.clickedListItem;
+                                    clickedListItem.iconImg.attr("src", newContentItem.uri);
+                                    clickedListItem.titleTextblock.text(newContentItem.title);
+                                    clickedListItem.descrTextblock.text(newContentItem.description);
+                                    $.extend(_this.exhibit.contentItems[_this.contentItem.order], newContentItem);
+                                    _this.prevForm.exhibit = _this.exhibit = CZ.Authoring.renewExhibit(_this.exhibit);
+                                    _this.prevForm.isModified = true;
+                                    CZ.Common.vc.virtualCanvas("requestInvalidate");
+                                    _this.isModified = false;
+                                    _this.back();
+                                });
+                            }
+                            else {
+                                this.isCancel = false;
+                                var clickedListItem = this.prevForm.clickedListItem;
+                                clickedListItem.iconImg.attr("src", newContentItem.uri);
+                                clickedListItem.titleTextblock.text(newContentItem.title);
+                                clickedListItem.descrTextblock.text(newContentItem.description);
+                                $.extend(this.exhibit.contentItems[this.contentItem.order], newContentItem);
+                                this.prevForm.exhibit = this.exhibit = CZ.Authoring.renewExhibit(this.exhibit);
+                                this.prevForm.isModified = true;
+                                CZ.Common.vc.virtualCanvas("requestInvalidate");
+                                this.isModified = false;
+                                this.back();
+                            }
                         } else {
-                            this.saveButton.prop('disabled', true);
-                            CZ.Authoring.updateContentItem(this.exhibit, this.contentItem, newContentItem).then(function (response) {
-                                _this.isCancel = false;
-                                _this.isModified = false;
-                                _this.close();
-                            }, function (error) {
-                                var errorMessage = error.statusText;
+                            // Editing single content item.
 
-                                if (errorMessage.match(/Media Source/)) {
-                                    _this.errorMessage.text("One or more fields filled wrong");
-                                    _this.mediaSourceInput.showError("Media Source URL is not a valid URL");
-                                } else {
-                                    _this.errorMessage.text("Sorry, internal server error :(");
-                                }
+                            var filetype = this.file ? this.file.type : this.contentItem.mediaType;
 
-                                _this.errorMessage.show().delay(7000).fadeOut();
-                            }).always(function () {
-                                _this.saveButton.prop('disabled', false);
+                            // Update local thumbnail for existing exhibit (guid is defined).
+                            CZ.Common.generateLocalThumbnail(filetype, filename, this.contentItem.guid, function () {
+                                console.log("generated local thumbnail for item with guid" + _this.contentItem.guid);
+
+                                _this.saveButton.prop('disabled', true);
+                                CZ.Authoring.updateContentItem(_this.exhibit, _this.contentItem, newContentItem).then(function (response) {
+                                    _this.isCancel = false;
+                                    _this.isModified = false;
+                                    _this.close();
+                                }, function (error) {
+                                    var errorMessage = error.statusText;
+
+                                    if (errorMessage.match(/Media Source/)) {
+                                        _this.errorMessage.text("One or more fields filled wrong");
+                                        _this.mediaSourceInput.showError("Media Source URL is not a valid URL");
+                                    } else {
+                                        _this.errorMessage.text("Sorry, internal server error :(");
+                                    }
+
+                                    _this.errorMessage.show().delay(7000).fadeOut();
+                                }).always(function () {
+                                    _this.saveButton.prop('disabled', false);
+                                });
                             });
                         }
                     }
@@ -234,8 +293,75 @@ var CZ;
                 }
             };
 
+            FormEditCI.prototype.onSaveClick = function () {
+                var _this = this;
+
+                // File was not selected.
+                if (this.mediaInputName.val() === "No file selected") {
+                    _this.errorMessage.text("Media file was not selected.").show().delay(7000).fadeOut();
+                    return false;
+                }
+
+                if (this.mediaFileChanged) {
+                    CZ.Service.postLocalFile(this.file).then(function (filename) {
+                        _this.saveContentItem(filename);
+                    },
+                    function (error) {
+                        console.log("[Error] Failed to post a file stream. Given error: " + error);
+                    });
+                }
+                else {
+                    this.saveContentItem(this.mediaInputName.val());
+                }
+            };
+
+            FormEditCI.prototype.uploadFile = function () {
+                var _this = this;
+
+                return CZ.Service.postLocalFile(this.file).done(function (response) {
+                    console.log(response);
+
+                    _this.mediaInput.attr("data-filename", response);
+
+                    if (_this.file.type.match(/video/)) {
+                        var video = document.createElement("video");
+                        $("footer").append(video);
+                        var a = false;
+                        video.oncanplaythrough = function () {
+                            if (!a) {
+                                video.currentTime = video.duration / 2;
+                                var canvas = document.createElement("canvas");
+                                var context = canvas.getContext("2d");
+                                canvas.setAttribute("width", "100px");
+                                canvas.setAttribute("height", "100px");
+                                context.drawImage(video, 0, 0, 100, 100);
+                                var _data = canvas.toDataURL("image/png");
+
+                                CZ.Service.postLocalThumbnail(_data, _this.contentItem.guid);
+
+                                a = true;
+                            }
+                        };
+
+                        video.src = response;
+                        // video.src = escape(response);
+                        video.setAttribute("controls", "true");
+                    }
+                    else {
+                        reader = new FileReader();
+
+                        reader.onload = function (event) {
+                            CZ.Service.postLocalThumbnail(event.target.result, _this.contentItem.guid)
+                        };
+
+                        reader.readAsDataURL(_this.file);
+                    }
+                    // console.log(response)
+                });
+            };
+
             FormEditCI.prototype.updateMediaInfo = function () {
-                this.mediaInput.val(this.contentItem.uri || "");
+                this.mediaInputName.val(this.mediaInput.uri || "No file selected");
                 this.mediaSourceInput.val(this.contentItem.mediaSource || "");
                 this.mediaTypeInput.val(this.contentItem.mediaType || "");
                 this.attributionInput.val(this.contentItem.attribution || "");
@@ -282,6 +408,7 @@ var CZ;
                 this.activationSource.removeClass("active");
                 CZ.Authoring.isActive = false;
             };
+
             return FormEditCI;
         })(CZ.UI.FormUpdateEntity);
         UI.FormEditCI = FormEditCI;

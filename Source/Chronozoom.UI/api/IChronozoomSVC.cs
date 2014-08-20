@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
@@ -807,5 +808,17 @@ namespace Chronozoom.UI
         [OperationContract]
         [WebInvoke(Method = "DELETE", UriTemplate = "/{featuredGUID}", ResponseFormat = WebMessageFormat.Json)]
         bool DeleteUserFeatured(string featuredGUID);
-    }   
+    }
+
+    [ServiceContract(Namespace = "")]
+    public interface IStreamAPI
+    {
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "/localfile?filename={filename}")]
+        string PostLocalFile(Stream stream, string filename);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "/localthumbnail?id={id}")]
+        string PostLocalThumbnail(Stream stream, Guid id);
+    }
 }

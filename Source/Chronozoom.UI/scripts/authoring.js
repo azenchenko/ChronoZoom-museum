@@ -581,6 +581,11 @@ var CZ;
                     $(response.ContentItemId).each(function (contentItemIdIndex, contentItemId) {
                         newExhibit.contentItems[contentItemIdIndex].id = contentItemId;
                         newExhibit.contentItems[contentItemIdIndex].guid = contentItemId;
+
+                        CZ.Common.generateLocalThumbnail(newExhibit.contentItems[contentItemIdIndex].mediaType,
+                            newExhibit.contentItems[contentItemIdIndex].uri,
+                            newExhibit.contentItems[contentItemIdIndex].guid
+                        );
                     });
 
                     newExhibit = renewExhibit(newExhibit);
@@ -754,7 +759,7 @@ var CZ;
             var i = 0;
             while (contentItems[i] != null) {
                 var ci = contentItems[i];
-                isValid = isValid && CZ.Authoring.isNotEmpty(ci.title) && CZ.Authoring.isNotEmpty(ci.uri) && CZ.Authoring.isNotEmpty(ci.mediaType);
+                // isValid = isValid && CZ.Authoring.isNotEmpty(ci.title) && CZ.Authoring.isNotEmpty(ci.uri) && CZ.Authoring.isNotEmpty(ci.mediaType);
 
                 var mime;
                 // if (ci.mediaType.toLowerCase() !== "video") {

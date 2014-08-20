@@ -72,7 +72,7 @@ var CZ;
         Settings.contentItemShowContentZoomLevel = 9;
         Settings.contentItemThumbnailMinLevel = 3;
         Settings.contentItemThumbnailMaxLevel = 7;
-        Settings.contentItemThumbnailBaseUri = 'http://czbeta.blob.core.windows.net/images/';
+        Settings.contentItemThumbnailBaseUri = '/thumbs/';
         Settings.contentItemTopTitleHeight = 47.0 / 540;
         Settings.contentItemContentWidth = 480.0 / 520;
         Settings.contentItemVerticalMargin = 13.0 / 540;
