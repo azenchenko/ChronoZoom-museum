@@ -54,6 +54,9 @@
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="css\audio.css">
+      <DependentUpon>audio.less</DependentUpon>
+    </Content>
     <Content Include="css\cz.min.css">
       <DependentUpon>cz.less</DependentUpon>
     </Content>
@@ -512,6 +515,10 @@
     </Content>
     <Content Include="css\_vars.css.map">
       <DependentUpon>_vars.css</DependentUpon>
+    </Content>
+    <Content Include="css\audio.less" />
+    <Content Include="css\audio.css.map">
+      <DependentUpon>audio.css</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\cz-file-system.pubxml" />
     <None Include="Properties\PublishProfiles\cz-oct2014-alex-museum.pubxml" />
