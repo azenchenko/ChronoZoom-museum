@@ -23,7 +23,9 @@ var CZ;
 
         function initialize() {
             // TODO: Register media pickers. The order is essential for MediaList.
-            registerMediaPicker("bing", "/images/media/bing-import-50x150.png", CZ.Media.BingMediaPicker, "/ui/media/bing-mediapicker.html");
+            if (CZ.Media.BingMediaPicker.isEnabled) {
+                registerMediaPicker("bing", "/images/media/bing-import-50x150.png", CZ.Media.BingMediaPicker, "/ui/media/bing-mediapicker.html");
+            }
 
             if (CZ.Media.SkyDriveMediaPicker.isEnabled) {
                 registerMediaPicker("skydrive", "/images/media/skydrive-import-50x150.png", CZ.Media.SkyDriveMediaPicker).done(function () {

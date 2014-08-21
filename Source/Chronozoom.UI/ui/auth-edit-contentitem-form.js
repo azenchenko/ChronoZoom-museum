@@ -66,7 +66,19 @@ var CZ;
             }
             FormEditCI.prototype.initUI = function () {
                 var _this = this;
-                this.mediaList = new CZ.UI.MediaList(this.mediaListContainer, CZ.Media.mediaPickers, this.contentItem, this);
+
+                // Hide container for mediapicker list if no mediapicker is enabled
+                if ($.isEmptyObject(CZ.Media.mediaPickers)) {
+                    this.mediaListContainer.hide()
+                        .prev()
+                            .hide()
+                        .next().next()
+                            .hide();
+                }
+                else {
+                    this.mediaList = new CZ.UI.MediaList(this.mediaListContainer, CZ.Media.mediaPickers, this.contentItem, this);
+                }
+
                 var that = this;
                 this.saveButton.prop('disabled', false);
 
@@ -313,51 +325,6 @@ var CZ;
                 else {
                     this.saveContentItem(this.mediaInputName.val());
                 }
-            };
-
-            FormEditCI.prototype.uploadFile = function () {
-                var _this = this;
-
-                return CZ.Service.postLocalFile(this.file).done(function (response) {
-                    console.log(response);
-
-                    _this.mediaInput.attr("data-filename", response);
-
-                    if (_this.file.type.match(/video/)) {
-                        var video = document.createElement("video");
-                        $("footer").append(video);
-                        var a = false;
-                        video.oncanplaythrough = function () {
-                            if (!a) {
-                                video.currentTime = video.duration / 2;
-                                var canvas = document.createElement("canvas");
-                                var context = canvas.getContext("2d");
-                                canvas.setAttribute("width", "100px");
-                                canvas.setAttribute("height", "100px");
-                                context.drawImage(video, 0, 0, 100, 100);
-                                var _data = canvas.toDataURL("image/png");
-
-                                CZ.Service.postLocalThumbnail(_data, _this.contentItem.guid);
-
-                                a = true;
-                            }
-                        };
-
-                        video.src = response;
-                        // video.src = escape(response);
-                        video.setAttribute("controls", "true");
-                    }
-                    else {
-                        reader = new FileReader();
-
-                        reader.onload = function (event) {
-                            CZ.Service.postLocalThumbnail(event.target.result, _this.contentItem.guid)
-                        };
-
-                        reader.readAsDataURL(_this.file);
-                    }
-                    // console.log(response)
-                });
             };
 
             FormEditCI.prototype.updateMediaInfo = function () {

@@ -1,11 +1,9 @@
-/// <reference path='../../scripts/cz.ts'/>
-/// <reference path='../../scripts/media.ts'/>
-/// <reference path='../../ui/controls/formbase.ts'/>
-/// <reference path='../../scripts/typings/jquery/jquery.d.ts'/>
 var CZ;
 (function (CZ) {
     (function (Media) {
         var BingMediaPicker = (function () {
+            BingMediaPicker.isEnabled;
+
             function BingMediaPicker(container, context, formHost) {
                 this.container = container;
                 this.contentItem = context;
@@ -134,7 +132,8 @@ var CZ;
                     'Search',
                     'Bing Search',
                     mediaType
-                ]);
+                ]);
+
                 this.searchResultsBox.empty();
                 this.showProgressBar();
 

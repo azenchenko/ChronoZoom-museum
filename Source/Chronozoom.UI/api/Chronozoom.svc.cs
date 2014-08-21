@@ -1090,9 +1090,7 @@ namespace Chronozoom.UI
                     newExhibit.Year         = exhibitRequest.Year;
                     newExhibit.Collection   = collection;
                     newExhibit.Depth        = parentTimeline.Depth + 1;
-#if RELEASE
-                    newExhibit.UpdatedBy    = storage.Users.Where(u => user.Id == user.Id).FirstOrDefault();
-#endif
+                    //newExhibit.UpdatedBy    = storage.Users.Where(u => user.Id == user.Id).FirstOrDefault();
                     newExhibit.UpdatedTime  = DateTime.UtcNow;  // force timestamp update even if no changes have been made since save is still requested and someone else could've edited in meantime
 
                     // Update parent timeline.
@@ -1137,9 +1135,7 @@ namespace Chronozoom.UI
                     // Update the exhibit fields
                     updateExhibit.Title         = exhibitRequest.Title;
                     updateExhibit.Year          = exhibitRequest.Year;
-#if RELEASE
-                    updateExhibit.UpdatedBy     = storage.Users.Where(u => user.Id == user.Id).FirstOrDefault();
-#endif
+                    //updateExhibit.UpdatedBy     = storage.Users.Where(u => user.Id == user.Id).FirstOrDefault();
                     updateExhibit.UpdatedTime   = DateTime.UtcNow;  // force timestamp update even if no changes have been made since save is still requested and someone else could've edited in meantime
                     returnValue.ExhibitId       = exhibitRequest.Id;
 
@@ -1220,117 +1216,117 @@ namespace Chronozoom.UI
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1304:SpecifyCultureInfo", MessageId = "System.String.ToLower")]
         private static Boolean ValidateContentItemUrl(ContentItem contentitem, out string error)
         {
-            string contentitemURI = contentitem.Uri;
             error = "";
+            //string contentitemURI = contentitem.Uri;
 
-            // Custom validation for Skydrive images
-            if (contentitem.MediaType == "skydrive-image")
-            {
-                // Parse url parameters. url pattern is - {url} {width} {height}
-                var splited = contentitem.Uri.Split(' ');
+            //// Custom validation for Skydrive images
+            //if (contentitem.MediaType == "skydrive-image")
+            //{
+            //    // Parse url parameters. url pattern is - {url} {width} {height}
+            //    var splited = contentitem.Uri.Split(' ');
 
-                // Not enough parameters in url
-                if (splited.Length != 3)
-                {
-                    SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidContentItemUrl);
-                    error = ErrorDescription.InvalidContentItemUrl;
+            //    // Not enough parameters in url
+            //    if (splited.Length != 3)
+            //    {
+            //        SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidContentItemUrl);
+            //        error = ErrorDescription.InvalidContentItemUrl;
 
-                    return false;
-                }
+            //        return false;
+            //    }
 
-                contentitemURI = splited[0];
+            //    contentitemURI = splited[0];
 
-                // Validate width and height are numbers
-                int value;
-                if (!Int32.TryParse(splited[1], out value) || !Int32.TryParse(splited[2], out value))
-                {
-                    SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidContentItemUrl);
-                    error = ErrorDescription.InvalidContentItemUrl;
+            //    // Validate width and height are numbers
+            //    int value;
+            //    if (!Int32.TryParse(splited[1], out value) || !Int32.TryParse(splited[2], out value))
+            //    {
+            //        SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidContentItemUrl);
+            //        error = ErrorDescription.InvalidContentItemUrl;
 
-                    return false;
-                }
-            }
+            //        return false;
+            //    }
+            //}
 
-            Uri uriResult;
+            //Uri uriResult;
 
-            // If Media Source is present, validate it
-            if (contentitem.MediaSource.Length > 0 && !(Uri.TryCreate(contentitem.MediaSource, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
-            {
-                SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidMediaSourceUrl);
-                error = ErrorDescription.InvalidMediaSourceUrl;
+            //// If Media Source is present, validate it
+            //if (contentitem.MediaSource.Length > 0 && !(Uri.TryCreate(contentitem.MediaSource, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
+            //{
+            //    SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidMediaSourceUrl);
+            //    error = ErrorDescription.InvalidMediaSourceUrl;
 
-                return false;
-            }
+            //    return false;
+            //}
 
-            // Check if valid url
-            /*if (!(Uri.TryCreate(contentitemURI, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
-            {
-                SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidContentItemUrl);
-                error = ErrorDescription.InvalidContentItemUrl;
+            //// Check if valid url
+            //if (!(Uri.TryCreate(contentitemURI, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
+            //{
+            //    SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidContentItemUrl);
+            //    error = ErrorDescription.InvalidContentItemUrl;
 
-                return false;
-            }*/
+            //    return false;
+            //}
 
-            // Get MIME type of Url.
-            //var mimeType = "";
-            /*try
-            {
-                mimeType = MimeTypeOfUrl(contentitem.Uri);
-            }
-            catch (Exception)
-            {
-                if (contentitem.MediaType == "image" || contentitem.MediaType == "pdf")
-                {
-                    SetStatusCode(HttpStatusCode.InternalServerError, ErrorDescription.ResourceAccessFailed);
-                    error = ErrorDescription.InvalidContentItemUrl;
+            //// Get MIME type of Url.
+            ////var mimeType = "";
+            //try
+            //{
+            //    mimeType = MimeTypeOfUrl(contentitem.Uri);
+            //}
+            //catch (Exception)
+            //{
+            //    if (contentitem.MediaType == "image" || contentitem.MediaType == "pdf")
+            //    {
+            //        SetStatusCode(HttpStatusCode.InternalServerError, ErrorDescription.ResourceAccessFailed);
+            //        error = ErrorDescription.InvalidContentItemUrl;
 
-                    return false;
-                }
-            }
-             * */
+            //        return false;
+            //    }
+            //}
+            
 
-            // Check if MIME type match mediaType (regex test for 'video')
-            /*switch (contentitem.MediaType)
-            {
-                case "image":
-                    if (mimeType != "image/jpg"
-                        && mimeType != "image/jpeg"
-                        && mimeType != "image/gif"
-                        && mimeType != "image/png")
-                    {
-                        SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidContentItemImageUrl);
-                        error = ErrorDescription.InvalidContentItemImageUrl;
+            //// Check if MIME type match mediaType (regex test for 'video')
+            //switch (contentitem.MediaType)
+            //{
+            //    case "image":
+            //        if (mimeType != "image/jpg"
+            //            && mimeType != "image/jpeg"
+            //            && mimeType != "image/gif"
+            //            && mimeType != "image/png")
+            //        {
+            //            SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidContentItemImageUrl);
+            //            error = ErrorDescription.InvalidContentItemImageUrl;
 
-                        return false;
-                    }
-                    break;
+            //            return false;
+            //        }
+            //        break;
 
-                case "video":
-                    // Youtube
-                    var youtube = new Regex("(?:youtu\\.be\\/|youtube\\.com(?:\\/embed\\/|\\/v\\/|\\/watch\\?v=|[\\S\\?\\&]+&v=|\\/user\\/\\S+))([^\\/&#]{10,12})");
-                    // Vimeo
-                    var vimeo = new Regex("vimeo\\.com\\/([0-9]+)", RegexOptions.IgnoreCase);
-                    var vimeoEmbed = new Regex("player.vimeo.com\\/video\\/([0-9]+)", RegexOptions.IgnoreCase);
+            //    case "video":
+            //        // Youtube
+            //        var youtube = new Regex("(?:youtu\\.be\\/|youtube\\.com(?:\\/embed\\/|\\/v\\/|\\/watch\\?v=|[\\S\\?\\&]+&v=|\\/user\\/\\S+))([^\\/&#]{10,12})");
+            //        // Vimeo
+            //        var vimeo = new Regex("vimeo\\.com\\/([0-9]+)", RegexOptions.IgnoreCase);
+            //        var vimeoEmbed = new Regex("player.vimeo.com\\/video\\/([0-9]+)", RegexOptions.IgnoreCase);
 
-                    if (!youtube.IsMatch(contentitem.Uri) && !vimeo.IsMatch(contentitem.Uri) && !vimeoEmbed.IsMatch(contentitem.Uri))
-                    {
-                        SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidContentItemVideoUrl);
-                        error = ErrorDescription.InvalidContentItemVideoUrl;
+            //        if (!youtube.IsMatch(contentitem.Uri) && !vimeo.IsMatch(contentitem.Uri) && !vimeoEmbed.IsMatch(contentitem.Uri))
+            //        {
+            //            SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidContentItemVideoUrl);
+            //            error = ErrorDescription.InvalidContentItemVideoUrl;
 
-                        return false;
-                    }
-                    break;
+            //            return false;
+            //        }
+            //        break;
 
-                case "pdf":
-                    if (mimeType != "application/pdf")
-                    {
-                        SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidContentItemPdfUrl);
-                        error = ErrorDescription.InvalidContentItemPdfUrl;
+            //    case "pdf":
+            //        if (mimeType != "application/pdf")
+            //        {
+            //            SetStatusCode(HttpStatusCode.BadRequest, ErrorDescription.InvalidContentItemPdfUrl);
+            //            error = ErrorDescription.InvalidContentItemPdfUrl;
 
-                        return false;
-                    }
-                    break;
-            }*/
+            //            return false;
+            //        }
+            //        break;
+            //}
 
             return true;
         }
@@ -2037,23 +2033,21 @@ namespace Chronozoom.UI
         /// </summary>
         public string GetExhibitLastUpdate(string exhibitId)
         {
-#if RELEASE
-            return ApiOperation(delegate(User user, Storage storage)
-            {
-                string rv = "";
+            //return ApiOperation(delegate(User user, Storage storage)
+            //{
+            //    string rv = "";
 
-                Guid exhibitGUID = new Guid(exhibitId);
-                Exhibit exhibit  = storage.Exhibits.Where(e => e.Id == exhibitGUID).Include("UpdatedBy").FirstOrDefault();
-                if (exhibit != null)
-                {
-                    rv = exhibit.UpdatedTime.ToString("yyyy/MM/dd HH:mm:ss") + "|" + exhibit.UpdatedBy.DisplayName;
-                }
+            //    Guid exhibitGUID = new Guid(exhibitId);
+            //    Exhibit exhibit  = storage.Exhibits.Where(e => e.Id == exhibitGUID).Include("UpdatedBy").FirstOrDefault();
+            //    if (exhibit != null)
+            //    {
+            //        rv = exhibit.UpdatedTime.ToString("yyyy/MM/dd HH:mm:ss") + "|" + exhibit.UpdatedBy.DisplayName;
+            //    }
 
-                return rv;
-            });
-#else
+            //    return rv;
+            //});
+
             return new DateTime(1970, 1, 1).ToString("yyyy/MM/dd HH:mm:ss");
-#endif
         }
 
         /// <summary>

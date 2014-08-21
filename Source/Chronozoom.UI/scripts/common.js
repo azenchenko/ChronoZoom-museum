@@ -456,7 +456,9 @@ var CZ;
 
                     CZ.Service.postLocalThumbnail(base64Thumbnail, guid)
                         .then(function (response) {
-                            callback(response);
+                            if (typeof callback !== "undefined") {
+                                callback(response);
+                            }
                         },
                         function (error) {
                             console.log("[Error] Failed to generate local thumbnail to item with guid " + guid);

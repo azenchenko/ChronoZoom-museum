@@ -140,7 +140,11 @@ var CZ;
             },
             {
                 Name: "Skydrive",
-                Activation: 0 /* Enabled */
+                Activation: 1 /* Disabled */
+            },
+            {
+                Name: "Bing",
+                Activation: 1 /* Disabled */
             },
             {
                 Name: "StartPage",
@@ -293,6 +297,7 @@ var CZ;
 
             // register ChronoZoom media pickers
             CZ.Media.SkyDriveMediaPicker.isEnabled = IsFeatureEnabled(_featureMap, "Skydrive");
+            CZ.Media.BingMediaPicker.isEnabled = IsFeatureEnabled(_featureMap, "Bing");
             CZ.Media.initialize();
             CZ.Common.initialize();
 
