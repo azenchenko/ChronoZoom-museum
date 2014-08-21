@@ -361,7 +361,10 @@ var CZ;
                     direction: "left",
                     duration: 500,
                     complete: function () {
-                        _this.mediaList.remove();
+                        if (_this.mediaList) {
+                            _this.mediaList.remove();
+                        }
+
                         _this.mediaInput.hideError();
                         _this.titleInput.hideError();
                         _this.mediaSourceInput.hideError();

@@ -1260,7 +1260,7 @@ img.fallbackBackground
 .cz-input
 {
     color: @defaultBackgroundColor;
-    background-color: #E9E9E9;
+    background-color: #FFF;
     border: 1px solid #D5D5D5;
     padding: 5px;
     font-size: 12px;
@@ -1269,6 +1269,11 @@ img.fallbackBackground
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+
+    &[disabled~="disabled"] {
+        background-color: #E9E9E9;
+        color: #D5D5D5;
+    }
 }
 
 .cz-button
