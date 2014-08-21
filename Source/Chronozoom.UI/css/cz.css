@@ -1903,7 +1903,6 @@ body {
 }
 body {
   overflow: hidden;
-  min-width: 250px;
   min-height: 250px;
   background-color: #232323;
   font-family: 'Segoe UI', Helvetica, Arial, 'Trebuchet MS', San Serif;

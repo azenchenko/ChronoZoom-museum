@@ -41,7 +41,16 @@ var CZ;
     CZ.leftDataSet;
     CZ.rightDataSet;
 
+    // In demo mode authoring, login, timeseries, all clickable links, canvas icons are disabled.
+    // Demo mode is turned on by using pair (demo_mode, true) in sarch part of URL.
+    // For instanse: localhost:4949/myDemoCollection?demo_mode=true
+    CZ._demoMode = false;
+
     (function (HomePageViewModel) {
+        if (location.search.match(/demo_mode=true/)) {
+            CZ._demoMode = true;
+        }
+
         // Contains mapping: CSS selector -> html file.
         var _uiMap = {
             "#header-edit-form": "/ui/header-edit-form.html",                                   // 0
@@ -91,7 +100,7 @@ var CZ;
         var _featureMap = [
             {
                 Name: "Login",
-                Activation: 0 /* Enabled */,
+                Activation: 1 /* Disabled */,
                 JQueryReference: "#login-panel"
             },
             {
@@ -126,7 +135,7 @@ var CZ;
             },
             {
                 Name: "TimeSeries",
-                Activation: 0 /* Enabled */
+                Activation: 1 /* Disabled */
             },
             {
                 Name: "ManageCollections",
@@ -167,23 +176,10 @@ var CZ;
         HomePageViewModel.rootCollection;
 
         function UserCanEditCollection(profile) {
-            /* old code prior to multi-user:
-            
-            // Allow developers to edit any collection locally (sign-in scenarios are not currently supported in dev box)
-            if (!constants || !constants.environment || constants.environment === "localhost") {
-            return true;
+            // In demo mode authoring is disabled.
+            if (CZ._demoMode) {
+                return false;
             }
-            
-            if (CZ.Service.superCollectionName && CZ.Service.superCollectionName.toLowerCase() === "sandbox") {
-            return true;
-            }
-            
-            if (!profile || !profile.DisplayName || !CZ.Service.superCollectionName || profile.DisplayName.toLowerCase() !== CZ.Service.superCollectionName.toLowerCase()) {
-            return false
-            }
-            
-            return true;
-            */
 
             // override - anyone can edit the sandbox
             if (CZ.Service.superCollectionName && CZ.Service.superCollectionName.toLowerCase() === "sandbox") {
@@ -890,28 +886,6 @@ var CZ;
                     hashChangeFromOutside = true;
             });
 
-            // Axis: enable showing thresholds
-            CZ.Common.controller.onAnimationComplete.push(function () {
-                //CZ.Common.ax.axis("enableThresholds", true);
-                //if (window.console && console.log("thresholds enabled"));
-            });
-
-            //Axis: disable showing thresholds
-            CZ.Common.controller.onAnimationStarted.push(function () {
-                //CZ.Common.ax.axis("enableThresholds", true);
-                //if (window.console && console.log("thresholds disabled"));
-            });
-
-            // Axis: enable showing thresholds
-            CZ.Common.controller.onAnimationUpdated.push(function (oldId, newId) {
-                if (oldId != undefined && newId == undefined) {
-                    setTimeout(function () {
-                        //CZ.Common.ax.axis("enableThresholds", true);
-                        //if (window.console && console.log("thresholds enabled"));
-                    }, 500);
-                }
-            });
-
             //Tour: notifyng tour that the bookmark is reached
             CZ.Common.controller.onAnimationComplete.push(function (id) {
                 if (CZ.Tours.tourBookmarkTransitionCompleted != undefined)
@@ -946,13 +920,6 @@ var CZ;
                 CZ.Common.updateMarker();
             });
 
-            CZ.Common.ax.bind('thresholdBookmarkChanged', function (thresholdBookmark) {
-                var bookmark = CZ.UrlNav.navStringToVisible(thresholdBookmark.Bookmark, CZ.Common.vc);
-                if (bookmark != undefined) {
-                    CZ.Common.controller.moveToVisible(bookmark, false);
-                }
-            });
-
             // Reacting on the event when one of the infodot exploration causes inner zoom constraint
             CZ.Common.vc.bind("innerZoomConstraintChanged", function (constraint) {
                 CZ.Common.controller.effectiveExplorationZoomConstraint = constraint.zoomValue; // applying the constraint
@@ -972,7 +939,12 @@ var CZ;
 
                 //updating timeSeries chart
                 var vp = CZ.Common.vc.virtualCanvas("getViewport");
-                updateTimeSeriesChart(vp);
+
+
+                // In demo mode timeseries are disabled.
+                if (!CZ._demoMode) {
+                    updateTimeSeriesChart(vp);
+                }
             });
 
             var vp = CZ.Common.vc.virtualCanvas("getViewport");

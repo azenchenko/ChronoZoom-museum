@@ -992,233 +992,248 @@ var CZ;
                 var btnX = this.x + this.width - 1.0 * this.titleObject.height;
                 var btnY = this.titleObject.y + 0.15 * this.titleObject.height;
 
-                // initialize add favorite button if user is logged in
-                if (CZ.Settings.isAuthorized === true && typeof this.favoriteBtn === "undefined" && this.titleObject.width !== 0)
-                {
-                    this.favoriteBtn = VCContent.addImage(this, layerid, id + "__favorite", btnX, btnY, 0.7 * this.titleObject.height, 0.7 * this.titleObject.height, "/images/star.svg");
-                    this.favoriteBtn.reactsOnMouse = true;
-
-                    this.favoriteBtn.onmouseclick = function (event)
+                // In demo mode putting of favorite timelines is disabled.
+                if (!CZ._demoMode) {
+                    // initialize add favorite button if user is logged in
+                    if (CZ.Settings.isAuthorized === true && typeof this.favoriteBtn === "undefined" && this.titleObject.width !== 0)
                     {
-                        var _this = this;
-                        if (CZ.Settings.favoriteTimelines.indexOf(this.parent.guid) !== -1)
+                        this.favoriteBtn = VCContent.addImage(this, layerid, id + "__favorite", btnX, btnY, 0.7 * this.titleObject.height, 0.7 * this.titleObject.height, "/images/star.svg");
+                        this.favoriteBtn.reactsOnMouse = true;
+
+                        this.favoriteBtn.onmouseclick = function (event)
                         {
-                            CZ.Service.deleteUserFavorite(this.parent.guid).then
-                            (
-                                function (success)
-                                {
-                                    CZ.Authoring.showMessageWindow("\"" + _this.parent.title + "\" was removed from your favorite timelines.", "Timeline removed from favorites");
-                                },
-                                function (error)
-                                {
-                                    console.log("[ERROR] /deleteUserFavorite with guid " + _this.parent.guid + " failed.");
-                                }
-                            );
-                            CZ.Settings.favoriteTimelines.splice(CZ.Settings.favoriteTimelines.indexOf(this.parent.guid), 1);
-                        }
-                        else
-                        {
-                            CZ.Service.putUserFavorite(this.parent.guid).then
-                            (
-                                function (success)
-                                {
-                                    CZ.Settings.favoriteTimelines.push(_this.parent.guid);
-                                    CZ.Authoring.showMessageWindow("\"" + _this.parent.title + "\" was added to your favorite timelines.", "Favorite timeline added");
-                                },
-                                function (error)
-                                {
-                                    console.log("[ERROR] /putUserFavorite with guid + " + _this.parent.guid + " failed.");
-                                }
-                            );
-                        }
-                        return true;
-                    }
-
-                    this.favoriteBtn.onmousehover = function (event)
-                    {
-                        this.parent.settings.strokeStyle = "yellow";
-                    }
-
-                    this.favoriteBtn.onmouseunhover = function (event)
-                    {
-                        this.parent.settings.strokeStyle = timelineinfo.strokeStyle ? timelineinfo.strokeStyle : CZ.Settings.timelineBorderColor;
-                    }
-
-                    this.favoriteBtn.onRemove = function (event)
-                    {
-                        this.onmousehover   = undefined;
-                        this.onmouseunhover = undefined;
-                        this.onmouseclick   = undefined;
-                    }
-                }
-
-                // initialize paste timeline button only if user is authorized
-                if (CZ.Authoring.isEnabled === true && typeof this.pasteButton === "undefined" && this.titleObject.width !== 0)
-                {
-                    btnX -= this.titleObject.height;
-
-                    this.pasteButton = VCContent.addImage(this, layerid, id + "__paste", btnX, btnY, 0.7 * this.titleObject.height, 0.7 * this.titleObject.height, "/images/paste.svg");
-                    this.pasteButton.reactsOnMouse = true;
-
-                    this.pasteButton.onmousehover = function (event)
-                    {
-                        this.parent.settings.strokeStyle = "yellow";
-                    }
-
-                    this.pasteButton.onmouseunhover = function (event)
-                    {
-                        this.parent.settings.strokeStyle = timelineinfo.strokeStyle ? timelineinfo.strokeStyle : CZ.Settings.timelineBorderColor;
-                    }
-
-                    this.pasteButton.onmouseclick = function (event)
-                    {
-                        var newTimeline = localStorage.getItem('ExportedTimeline');
-
-                        if ((localStorage.getItem('ExportedSchemaVersion') == constants.schemaVersion) && newTimeline != null)
-                        {
-                            // timeline from same db schema version is on "clipboard" so attempt "paste"
-                            CZ.Service.importTimelines(this.parent.guid, newTimeline).then(function (importMessage)
+                            var _this = this;
+                            if (CZ.Settings.favoriteTimelines.indexOf(this.parent.guid) !== -1)
                             {
-                                CZ.Authoring.showMessageWindow(importMessage);
+                                CZ.Service.deleteUserFavorite(this.parent.guid).then
+                                (
+                                    function (success)
+                                    {
+                                        CZ.Authoring.showMessageWindow("\"" + _this.parent.title + "\" was removed from your favorite timelines.", "Timeline removed from favorites");
+                                    },
+                                    function (error)
+                                    {
+                                        console.log("[ERROR] /deleteUserFavorite with guid " + _this.parent.guid + " failed.");
+                                    }
+                                );
+                                CZ.Settings.favoriteTimelines.splice(CZ.Settings.favoriteTimelines.indexOf(this.parent.guid), 1);
+                            }
+                            else
+                            {
+                                CZ.Service.putUserFavorite(this.parent.guid).then
+                                (
+                                    function (success)
+                                    {
+                                        CZ.Settings.favoriteTimelines.push(_this.parent.guid);
+                                        CZ.Authoring.showMessageWindow("\"" + _this.parent.title + "\" was added to your favorite timelines.", "Favorite timeline added");
+                                    },
+                                    function (error)
+                                    {
+                                        console.log("[ERROR] /putUserFavorite with guid + " + _this.parent.guid + " failed.");
+                                    }
+                                );
+                            }
+                            return true;
+                        }
+
+                        this.favoriteBtn.onmousehover = function (event)
+                        {
+                            this.parent.settings.strokeStyle = "yellow";
+                        }
+
+                        this.favoriteBtn.onmouseunhover = function (event)
+                        {
+                            this.parent.settings.strokeStyle = timelineinfo.strokeStyle ? timelineinfo.strokeStyle : CZ.Settings.timelineBorderColor;
+                        }
+
+                        this.favoriteBtn.onRemove = function (event)
+                        {
+                            this.onmousehover   = undefined;
+                            this.onmouseunhover = undefined;
+                            this.onmouseclick   = undefined;
+                        }
+                    }
+                }
+
+                // In demo mode paste if the data is disabled.
+                if (!CZ._demoMode) {
+                    // initialize paste timeline button only if user is authorized
+                    if (CZ.Authoring.isEnabled === true && typeof this.pasteButton === "undefined" && this.titleObject.width !== 0)
+                    {
+                        btnX -= this.titleObject.height;
+
+                        this.pasteButton = VCContent.addImage(this, layerid, id + "__paste", btnX, btnY, 0.7 * this.titleObject.height, 0.7 * this.titleObject.height, "/images/paste.svg");
+                        this.pasteButton.reactsOnMouse = true;
+
+                        this.pasteButton.onmousehover = function (event)
+                        {
+                            this.parent.settings.strokeStyle = "yellow";
+                        }
+
+                        this.pasteButton.onmouseunhover = function (event)
+                        {
+                            this.parent.settings.strokeStyle = timelineinfo.strokeStyle ? timelineinfo.strokeStyle : CZ.Settings.timelineBorderColor;
+                        }
+
+                        this.pasteButton.onmouseclick = function (event)
+                        {
+                            var newTimeline = localStorage.getItem('ExportedTimeline');
+
+                            if ((localStorage.getItem('ExportedSchemaVersion') == constants.schemaVersion) && newTimeline != null)
+                            {
+                                // timeline from same db schema version is on "clipboard" so attempt "paste"
+                                CZ.Service.importTimelines(this.parent.guid, newTimeline).then(function (importMessage)
+                                {
+                                    CZ.Authoring.showMessageWindow(importMessage);
+                                });
+                            }
+                            else
+                            {
+                                // unable to paste as nothing suitable is on "clipboard" so inform user
+                                CZ.Authoring.showMessageWindow
+                                (
+                                    'Please copy a timeline to your ChronoZoom clip-board first.',
+                                    'Unable to Paste Timeline'
+                                );
+                            }
+                        }
+
+                        this.pasteButton.onRemove = function (event)
+                        {
+                            this.onmousehover   = undefined;
+                            this.onmouseunhover = undefined;
+                            this.onmouseclick   = undefined;
+                        }
+                    }
+                }
+
+                // In demo mode copy buttons os disabled.
+                if (!CZ._demoMode) {
+                    // initialize copy timeline button - including for anon user
+                    if (typeof this.copyButton === "undefined" && this.titleObject.width !== 0)
+                    {
+                        if (typeof this.favoriteBtn !== "undefined") btnX -= this.titleObject.height;
+
+                        this.copyButton = VCContent.addImage(this, layerid, id + "__copy", btnX, btnY, 0.7 * this.titleObject.height, 0.7 * this.titleObject.height, "/images/copy.svg");
+                        this.copyButton.reactsOnMouse = true;
+
+                        this.copyButton.onmousehover = function (event)
+                        {
+                            this.parent.settings.strokeStyle = "yellow";
+                        }
+
+                        this.copyButton.onmouseunhover = function (event)
+                        {
+                            this.parent.settings.strokeStyle = timelineinfo.strokeStyle ? timelineinfo.strokeStyle : CZ.Settings.timelineBorderColor;
+                        }
+
+                        this.copyButton.onmouseclick = function (event)
+                        {
+                            CZ.Service.exportTimelines(this.parent.guid).then(function (exportData)
+                            {
+                                localStorage.setItem('ExportedSchemaVersion', constants.schemaVersion);
+                                localStorage.setItem('ExportedTimeline',      JSON.stringify(exportData));
+                                CZ.Authoring.showMessageWindow('"' + exportData[0].timeline.title + '" has been copied to your clip-board. You can paste this into a different timeline.');
                             });
                         }
-                        else
+
+                        this.copyButton.onRemove = function (event)
                         {
-                            // unable to paste as nothing suitable is on "clipboard" so inform user
-                            CZ.Authoring.showMessageWindow
-                            (
-                                'Please copy a timeline to your ChronoZoom clip-board first.',
-                                'Unable to Paste Timeline'
-                            );
+                            this.onmousehover   = undefined;
+                            this.onmouseunhover = undefined;
+                            this.onmouseclick   = undefined;
                         }
-                    }
-
-                    this.pasteButton.onRemove = function (event)
-                    {
-                        this.onmousehover   = undefined;
-                        this.onmouseunhover = undefined;
-                        this.onmouseclick   = undefined;
                     }
                 }
 
-                // initialize copy timeline button - including for anon user
-                if (typeof this.copyButton === "undefined" && this.titleObject.width !== 0)
-                {
-                    if (typeof this.favoriteBtn !== "undefined") btnX -= this.titleObject.height;
+                // In demo mode editing of timelines is disabled.
+                if (!CZ._demoMode) {
+                    // initialize edit button if it isn't root collection and titleObject was already initialized
+                    if (CZ.Authoring.isEnabled && typeof this.editButton === "undefined" && this.titleObject.width !== 0) {
+                        this.editButton = VCContent.addImage(this, layerid, id + "__edit", this.x + this.titleObject.height * 0.15, this.titleObject.y, this.titleObject.height, this.titleObject.height, "/images/edit.svg");
+                        this.editButton.reactsOnMouse = true;
 
-                    this.copyButton = VCContent.addImage(this, layerid, id + "__copy", btnX, btnY, 0.7 * this.titleObject.height, 0.7 * this.titleObject.height, "/images/copy.svg");
-                    this.copyButton.reactsOnMouse = true;
+                        this.editButton.onmouseclick = function () {
+                            if (CZ.Common.vc.virtualCanvas("getHoveredInfodot").x == undefined) {
+                                CZ.Authoring.isActive = true;
+                                CZ.Authoring.mode = "editTimeline";
+                                CZ.Authoring.selectedTimeline = this.parent;
+                            }
+                            return true;
+                        };
 
-                    this.copyButton.onmousehover = function (event)
-                    {
-                        this.parent.settings.strokeStyle = "yellow";
-                    }
+                        this.editButton.onmousehover = function () {
+                            this.parent.settings.strokeStyle = "yellow";
+                        };
 
-                    this.copyButton.onmouseunhover = function (event)
-                    {
-                        this.parent.settings.strokeStyle = timelineinfo.strokeStyle ? timelineinfo.strokeStyle : CZ.Settings.timelineBorderColor;
-                    }
+                        this.editButton.onmouseunhover = function () {
+                            this.parent.settings.strokeStyle = timelineinfo.strokeStyle ? timelineinfo.strokeStyle : CZ.Settings.timelineBorderColor;
+                        };
 
-                    this.copyButton.onmouseclick = function (event)
-                    {
-                        CZ.Service.exportTimelines(this.parent.guid).then(function (exportData)
-                        {
-                            localStorage.setItem('ExportedSchemaVersion', constants.schemaVersion);
-                            localStorage.setItem('ExportedTimeline',      JSON.stringify(exportData));
-                            CZ.Authoring.showMessageWindow('"' + exportData[0].timeline.title + '" has been copied to your clip-board. You can paste this into a different timeline.');
-                        });
-                    }
-
-                    this.copyButton.onRemove = function (event)
-                    {
-                        this.onmousehover   = undefined;
-                        this.onmouseunhover = undefined;
-                        this.onmouseclick   = undefined;
+                        // remove event handlers to prevent their stacking
+                        this.editButton.onRemove = function () {
+                            this.onmousehover = undefined;
+                            this.onmouseunhover = undefined;
+                            this.onmouseclick = undefined;
+                        };
                     }
                 }
 
-                // initialize edit button if it isn't root collection and titleObject was already initialized
-                if (CZ.Authoring.isEnabled && typeof this.editButton === "undefined" && this.titleObject.width !== 0) {
-                    this.editButton = VCContent.addImage(this, layerid, id + "__edit", this.x + this.titleObject.height * 0.15, this.titleObject.y, this.titleObject.height, this.titleObject.height, "/images/edit.svg");
-                    this.editButton.reactsOnMouse = true;
+                // In demo mode map view is disabled.
+                if (!CZ._demoMode) {
+                    // initialize map view button
+                    if (this.mapViewEnabled && typeof this.mapViewBtn === "undefined" && this.titleObject.width !== 0) {
+                        btnX = this.x + this.width - 4.0 * this.titleObject.height;
+                        btnY = this.titleObject.y + 0.15 * this.titleObject.height;
 
-                    this.editButton.onmouseclick = function () {
-                        if (CZ.Common.vc.virtualCanvas("getHoveredInfodot").x == undefined) {
-                            CZ.Authoring.isActive = true;
-                            CZ.Authoring.mode = "editTimeline";
-                            CZ.Authoring.selectedTimeline = this.parent;
-                        }
-                        return true;
-                    };
+                        this.mapViewBtn = VCContent.addImage(
+                            this,
+                            layerid,
+                            id + "__mapView",
+                            btnX, 
+                            btnY,
+                            0.7 * this.titleObject.height,
+                            0.7 * this.titleObject.height,
+                            "/images/mapview.svg"
+                        );
+                        this.mapViewBtn.reactsOnMouse = true;
 
-                    this.editButton.onmousehover = function () {
-                        this.parent.settings.strokeStyle = "yellow";
-                    };
+                        this.mapViewBtn.onmouseclick = function () {
+                            var exhibits = this.parent.exhibits.filter(function (item) {
+                                    return item.mapAreaId !== null;
+                                });
 
-                    this.editButton.onmouseunhover = function () {
-                        this.parent.settings.strokeStyle = timelineinfo.strokeStyle ? timelineinfo.strokeStyle : CZ.Settings.timelineBorderColor;
-                    };
+                            switch (this.parent.mapType) {
+                                case "africa":
+                                    CZ.Map.prototype.MapAfrica.call(CZ.Common.map, this.parent.exhibits, this.parent);
+                                    break;
+                                case "usa-albers":
+                                    CZ.Map.prototype.MapUSA.call(CZ.Common.map, this.parent.exhibits, this.parent);
+                                    break;
+                            }
 
-                    // remove event handlers to prevent their stacking
-                    this.editButton.onRemove = function () {
-                        this.onmousehover = undefined;
-                        this.onmouseunhover = undefined;
-                        this.onmouseclick = undefined;
-                    };
-                }
+                            // CZ.Map.prototype.MapAfrica.call(CZ.Common.map, this.parent.exhibits, this.parent);
+                            CZ.Common.map.show();
 
-                // initialize map view button
-                if (this.mapViewEnabled && typeof this.mapViewBtn === "undefined" && this.titleObject.width !== 0) {
-                    btnX = this.x + this.width - 4.0 * this.titleObject.height;
-                    btnY = this.titleObject.y + 0.15 * this.titleObject.height;
+                            return true;
+                        };
 
-                    this.mapViewBtn = VCContent.addImage(
-                        this,
-                        layerid,
-                        id + "__mapView",
-                        btnX, 
-                        btnY,
-                        0.7 * this.titleObject.height,
-                        0.7 * this.titleObject.height,
-                        "/images/mapview.svg"
-                    );
-                    this.mapViewBtn.reactsOnMouse = true;
+                        this.mapViewBtn.onmousehover = function () {
+                            this.parent.settings.strokeStyle = "yellow";
+                        };
 
-                    this.mapViewBtn.onmouseclick = function () {
-                        var exhibits = this.parent.exhibits.filter(function (item) {
-                                return item.mapAreaId !== null;
-                            });
+                        this.mapViewBtn.onmouseunhover = function () {
+                            this.parent.settings.strokeStyle = timelineinfo.strokeStyle ? timelineinfo.strokeStyle : CZ.Settings.timelineBorderColor;
+                        };
 
-                        switch (this.parent.mapType) {
-                            case "africa":
-                                CZ.Map.prototype.MapAfrica.call(CZ.Common.map, this.parent.exhibits, this.parent);
-                                break;
-                            case "usa-albers":
-                                CZ.Map.prototype.MapUSA.call(CZ.Common.map, this.parent.exhibits, this.parent);
-                                break;
-                        }
-
-                        // CZ.Map.prototype.MapAfrica.call(CZ.Common.map, this.parent.exhibits, this.parent);
-                        CZ.Common.map.show();
-
-                        return true;
-                    };
-
-                    this.mapViewBtn.onmousehover = function () {
-                        this.parent.settings.strokeStyle = "yellow";
-                    };
-
-                    this.mapViewBtn.onmouseunhover = function () {
-                        this.parent.settings.strokeStyle = timelineinfo.strokeStyle ? timelineinfo.strokeStyle : CZ.Settings.timelineBorderColor;
-                    };
-
-                    // remove event handlers to prevent their stacking
-                    this.mapViewBtn.onRemove = function () {
-                        this.onmousehover = undefined;
-                        this.onmouseunhover = undefined;
-                        this.onmouseclick = undefined;
-                        delete this.parent.mapViewBtn;
-                    };
+                        // remove event handlers to prevent their stacking
+                        this.mapViewBtn.onRemove = function () {
+                            this.onmousehover = undefined;
+                            this.onmouseunhover = undefined;
+                            this.onmouseclick = undefined;
+                            delete this.parent.mapViewBtn;
+                        };
+                    }
                 }
 
                 if (this.settings.hoverAnimationDelta) {
@@ -2316,7 +2331,11 @@ var CZ;
                             }, sw);
 
                             if (mediaSource) {
-                                sourceItem.reactsOnMouse = true;
+                                // In demo mode acting with media source is disabled.
+                                if (!CZ._demoMode) {
+                                    sourceItem.reactsOnMouse = true;
+                                }
+
                                 sourceItem.onmouseclick = function (e) {
                                     vc.element.css('cursor', 'default');
                                     window.open(mediaSource);
@@ -2342,28 +2361,31 @@ var CZ;
                     var descrTop = titleTop + titleHeight + verticalMargin;
                     var descr = addScrollText(container, layerid, id + "__description__", vx + leftOffset, descrTop, contentWidth, descrHeight, this.contentItem.description, 30, {});
 
-                    //adding edit button
-                    if (CZ.Authoring.isEnabled) {
-                        var imageSize = (container.y + container.height - descr.y - descr.height) * 0.75;
-                        var editButton = VCContent.addImage(container, layerid, id + "__edit", container.x + container.width - 1.25 * imageSize, descrTop + descrHeight, imageSize, imageSize, "/images/edit.svg");
+                    // In demo mode authoring of content item is disabled.
+                    if (!CZ._demoMode) {
+                        //adding edit button
+                        if (CZ.Authoring.isEnabled) {
+                            var imageSize = (container.y + container.height - descr.y - descr.height) * 0.75;
+                            var editButton = VCContent.addImage(container, layerid, id + "__edit", container.x + container.width - 1.25 * imageSize, descrTop + descrHeight, imageSize, imageSize, "/images/edit.svg");
 
-                        editButton.reactsOnMouse = true;
-                        editButton.onmouseclick = function () {
-                            CZ.Authoring.isActive = true;
-                            CZ.Authoring.mode = "editContentItem";
-                            CZ.Authoring.contentItemMode = "editContentItem";
-                            CZ.Authoring.selectedExhibit = self.parent.parent.parent;
-                            CZ.Authoring.selectedContentItem = self.contentItem;
-                            return true;
-                        };
+                            editButton.reactsOnMouse = true;
+                            editButton.onmouseclick = function () {
+                                CZ.Authoring.isActive = true;
+                                CZ.Authoring.mode = "editContentItem";
+                                CZ.Authoring.contentItemMode = "editContentItem";
+                                CZ.Authoring.selectedExhibit = self.parent.parent.parent;
+                                CZ.Authoring.selectedContentItem = self.contentItem;
+                                return true;
+                            };
 
-                        editButton.onmouseenter = function () {
-                            rect.settings.strokeStyle = "yellow";
-                        };
+                            editButton.onmouseenter = function () {
+                                rect.settings.strokeStyle = "yellow";
+                            };
 
-                        editButton.onmouseleave = function () {
-                            rect.settings.strokeStyle = CZ.Settings.contentItemBoundingHoveredBoxBorderColor;
-                        };
+                            editButton.onmouseleave = function () {
+                                rect.settings.strokeStyle = CZ.Settings.contentItemBoundingHoveredBoxBorderColor;
+                            };
+                        }
                     }
 
                     return {
@@ -2613,26 +2635,29 @@ var CZ;
                         numberOfLines: 2
                     }, titleWidth);
 
-                    //adding edit button
-                    if (CZ.Authoring.isEnabled) {
-                        var imageSize = (titleTop - infodot.y) * 0.75;
-                        var editButton = VCContent.addImage(infodot, layerid, id + "__edit", time - imageSize / 2, infodot.y + imageSize * 0.2, imageSize, imageSize, "/images/edit.svg");
+                    // In demo mode authoring of exhibit is disabled.
+                    if (!CZ._demoMode) {
+                        //adding edit button
+                        if (CZ.Authoring.isEnabled) {
+                            var imageSize = (titleTop - infodot.y) * 0.75;
+                            var editButton = VCContent.addImage(infodot, layerid, id + "__edit", time - imageSize / 2, infodot.y + imageSize * 0.2, imageSize, imageSize, "/images/edit.svg");
 
-                        editButton.reactsOnMouse = true;
-                        editButton.onmouseclick = function () {
-                            CZ.Authoring.isActive = true;
-                            CZ.Authoring.mode = "editExhibit";
-                            CZ.Authoring.selectedExhibit = infodot;
-                            return true;
-                        };
+                            editButton.reactsOnMouse = true;
+                            editButton.onmouseclick = function () {
+                                CZ.Authoring.isActive = true;
+                                CZ.Authoring.mode = "editExhibit";
+                                CZ.Authoring.selectedExhibit = infodot;
+                                return true;
+                            };
 
-                        editButton.onmouseenter = function () {
-                            infodot.settings.strokeStyle = "yellow";
-                        };
+                            editButton.onmouseenter = function () {
+                                infodot.settings.strokeStyle = "yellow";
+                            };
 
-                        editButton.onmouseleave = function () {
-                            infodot.settings.strokeStyle = CZ.Settings.infoDotBorderColor;
-                        };
+                            editButton.onmouseleave = function () {
+                                infodot.settings.strokeStyle = CZ.Settings.infoDotBorderColor;
+                            };
+                        }
                     }
 
                     var biblBottom = vyc + centralSquareSize + 63.0 / 450 * 2 * radv;
