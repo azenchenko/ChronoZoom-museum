@@ -191,15 +191,22 @@ namespace Chronozoom.UI
         /// <returns>Boolean value</returns>
         public static bool IsSuperCollectionPresent(string superCollection)
         {
-            string _superCollection = FriendlyUrl.FriendlyUrlDecode( superCollection);
-            if (_storage.SuperCollections.Any(candidate => candidate.Title.ToLower() == _superCollection ))
+            try
+            {
+                string _superCollection = FriendlyUrl.FriendlyUrlDecode(superCollection);
+                if (_storage.SuperCollections.Any(candidate => candidate.Title.ToLower() == _superCollection))
+                {
+                    return true;
+                }
+                else
+                {
+                    HttpContext.Current.Response.Redirect("/");
+                    return false;
+                }
+            }
+            catch (Exception)
             {
                 return true;
-            }
-            else
-            {
-                HttpContext.Current.Response.Redirect("/");
-                return false;
             }
         }
 
