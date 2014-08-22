@@ -714,6 +714,8 @@ var CZ;
                     }
                 });
 
+                InitializeToursUI(null, forms);
+
                 if (IsFeatureEnabled(_featureMap, "Login")) {
                     CZ.Service.getProfile().done(function (data) {
                         //Not authorized

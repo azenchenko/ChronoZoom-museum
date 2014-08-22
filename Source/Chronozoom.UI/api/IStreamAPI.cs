@@ -38,13 +38,14 @@ namespace Chronozoom.UI
             System.IO.Directory.CreateDirectory(Path.Combine(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath, localContentPath));
 
             string filePath = Path.Combine(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath, localContentPath, filename);
-            string newFilename = Uri.EscapeDataString(filename);
+            string newFilename = filename;
+
             int i = 0;
 
             // Add prefix to filename if it already exists.
             while (File.Exists(filePath))
             {
-                newFilename = i++.ToString() + "__" + Uri.EscapeDataString(filename);
+                newFilename = i++.ToString() + "__" + filename;
                 filePath = Path.Combine(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath, localContentPath, newFilename);
             }
 

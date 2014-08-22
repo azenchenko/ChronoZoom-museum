@@ -101,13 +101,13 @@ var CZ;
                     if (!element)
                         return defaultThumb;
                     if (element.type === "contentItem") {
-                        var thumbnailUri = CZ.Settings.contentItemThumbnailBaseUri + 'x64/' + element.id + '.png';
+                        var thumbnailUri = CZ.Settings.contentItemThumbnailBaseUri + element.guid + '.png?' + new Date().getTime();
                         return thumbnailUri;
                     }
                     if (element.type === "infodot") {
                         if (element.contentItems && element.contentItems.length > 0) {
                             var child = element.contentItems[0];
-                            var thumbnailUri = CZ.Settings.contentItemThumbnailBaseUri + 'x64/' + child.id + '.png';
+                            var thumbnailUri = CZ.Settings.contentItemThumbnailBaseUri + element.guid + '.png?' + new Date().getTime();
                             return thumbnailUri;
                         }
                     } else if (element.type === "timeline") {
@@ -217,12 +217,21 @@ var CZ;
                 this.deleteButton = container.find(formInfo.deleteButton);
                 this.addStopButton = container.find(formInfo.addStopButton);
                 this.titleInput = container.find(formInfo.titleInput);
-
                 this.tourTitleInput = this.container.find(".cz-form-tour-title");
                 this.tourDescriptionInput = this.container.find(".cz-form-tour-description");
-                this.tourAudioInput = this.container.find('#cz-form-tour-audio');
-                this.tourAudioControls = this.container.find('.audiojs');
+                this.tourAudioInput = this.container.find("#cz-form-tour-audio");
+                this.tourAudioName = this.container.find(".cz-form-tour-audio-name");
+                this.tourAudioControls = this.container.find(".audiojs");
                 this.clean();
+
+                // Hack to clear file input value.
+                if (this.tourAudioInput.length > 0) {
+                    this.tourAudioInput.remove();
+                }
+
+                this.tourAudioInput = $("<input type='file' id='cz-form-tour-audio' class='cz-form-tour-audio cz-input'" +
+                        "style='width: 100%; display: block;'></input>")
+                    .insertBefore(this.tourAudioName);
 
                 this.saveButton.off();
                 this.deleteButton.off();
@@ -233,7 +242,7 @@ var CZ;
                 if (this.tour) {
                     this.tourTitleInput.val(this.tour.title);
                     this.tourDescriptionInput.val(this.tour.description);
-                    this.tourAudioInput.val(this.tour.audio);
+                    this.tourAudioName.val(this.tour.audio);
                     for (var i = 0, len = this.tour.bookmarks.length; i < len; i++) {
                         var bookmark = this.tour.bookmarks[i];
                         var stop = FormEditTour.bookmarkToTourstop(bookmark);
@@ -242,6 +251,7 @@ var CZ;
                 } else {
                     this.tourTitleInput.val("");
                     this.tourDescriptionInput.val("");
+                    this.tourAudioName.val("No audio file selected");
                 }
                 this.tourStopsListbox = new CZ.UI.TourStopListbox(container.find(formInfo.tourStopsListbox), formInfo.tourStopsTemplate, stops);
                 this.tourStopsListbox.itemMove(function (item, startPos, endPos) {
@@ -287,7 +297,7 @@ var CZ;
                 // Add the tour to the local tours collection
                 var name = this.tourTitleInput.val();
                 var descr = this.tourDescriptionInput.val();
-                var audio = this.tourAudioInput.val();
+                var audio = this.tourAudioName.val();
                 var category = "tours";
                 var n = stops.length;
                 var tourId = undefined;
@@ -333,12 +343,32 @@ var CZ;
                     this.initializeAsEdit();
                 }
 
+                this.tourAudioInput.change(function () {
+                    var $this = $(this),
+                        file = $this.get(0).files[0];
+
+                    _this.mediaFileChanged = true;
+
+                    if (file) {
+                        CZ.Service.postLocalFile(file).then(
+                            function (filename) {
+                                _this.tourAudioName.val(filename);
+                                _this.renderAudioControls();
+                            },
+                            function (error) {
+                                console.log("[Error] Failed to upload audio file " + file.name);
+                            });
+                    }
+                    else {
+                        _this.tourAudioName.val("No audio file selected");
+                    }
+
+                    _this.file = file || null;
+                });
+
                 var self = this;
 
                 this.renderAudioControls();
-                this.tourAudioInput.on('change input', function (event) {
-                    _this.renderAudioControls();
-                });
 
                 this.addStopButton.click(function (event) {
                     CZ.Authoring.isActive = true; // for now we do not watch for mouse moves
@@ -363,12 +393,20 @@ var CZ;
                     if (!_this.tourTitleInput.val())
                         message += "Please enter a title.\n";
 
-                    // audio URL validation
-                    _this.tourAudioInput.val($.trim(_this.tourAudioInput.val())); // first trim excess space
-                    if (_this.tourAudioInput.val() != '' && !CZ.Data.validURL(_this.tourAudioInput.val())) {
-                        // content has been entered and is not a validly formed URL
-                        message += 'Please provide a valid audio URL.\n';
+                    if (_this.mediaFileChanged && _this.file && !_this.file.type.match(/audio/)) {
+                        message += "Please provide a valid audio file."
                     }
+
+                    if (_this.tourAudioName === "No audio file selected") {
+                        message += "Please select a audio file.\n";
+                    }
+
+                    // audio URL validation
+                    // _this.tourAudioInput.val($.trim(_this.tourAudioInput.val())); // first trim excess space
+                    // if (_this.tourAudioInput.val() != '' && !CZ.Data.validURL(_this.tourAudioInput.val())) {
+                    //     // content has been entered and is not a validly formed URL
+                    //     message += 'Please provide a valid audio URL.\n';
+                    // }
 
                     if (_this.tourStopsListbox.items.length == 0)
                         message += "Please add a tour stop to the tour.\n";
@@ -491,13 +529,17 @@ var CZ;
             };
 
             FormEditTour.prototype.renderAudioControls = function () {
-                this.tourAudioControls.find('audio').stop();
-                this.tourAudioControls.find('audio').html('<source src="' + this.tourAudioInput.val() + '" />');
+                var source = this.tourAudioName.val();
 
-                if (CZ.Data.validURL(this.tourAudioInput.val())) {
+                if (source === "No audio file selected") {
+                    this.tourAudioControls.find('audio').stop()
+                        .html("")
+                        .hide();
+                }
+                else {
+                    this.tourAudioControls.find('audio').stop();
+                    this.tourAudioControls.find('audio').html('<source src="' + this.tourAudioName.val() + '" />');
                     this.tourAudioControls.show();
-                } else {
-                    this.tourAudioControls.hide();
                 }
             };
 
