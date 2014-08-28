@@ -578,7 +578,11 @@ var CZ;
                         self.isInAnimation = false;
                         self.invalidate();
 
-                        CZ.Common.setupIdleTimeout();
+                        // Setting up idling definition if it's demo mode.
+                        if (CZ._demoMode) {
+                            CZ.Common.setupIdleTimeout();
+                        }
+
                         if (self.requestNewFrame)
                             self.requestInvalidate();
                     }, 1000.0 / CZ.Settings.targetFps); // 1/targetFps sec (targetFps is defined in a settings.js)

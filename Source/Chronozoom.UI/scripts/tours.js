@@ -631,7 +631,10 @@ var CZ;
         switch the tour in the paused state
         */
         function tourPause() {
-            CZ.Common.setupIdleTimeout();
+            // Setting up idling definition if it's demo mode.
+            if (CZ._demoMode) {
+                CZ.Common.setupIdleTimeout();
+            }
 
             Tours.tourCaptionForm.setPlayPauseButtonState("play");
             if (Tours.tour != undefined) {
