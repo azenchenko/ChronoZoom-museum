@@ -40,6 +40,19 @@
     <label for="cz-form-multiuser-enable"     class="cz-form-label" title="Manage a list of chosen editors to help maintain this collection.">
         <input type="checkbox" id="cz-form-multiuser-enable" /> Allow Others to Edit
     </label>
+    <label for="cz-form-collection-auto-tours" class="cz-form-label" title="Auto tour playback starts or continues a tour if user was idle for defined amount of time.">
+        <input type="checkbox" id="cz-form-collection-auto-tours" class="cz-form-collection-auto-tours" /> Enable Auto Playback of Tours
+    </label>
+    <div class="cz-form-collection-idle-timeout-container">
+        <label title="Set Idling Timeout Before Autoplay: ">
+            <label class="cz-lightgray cz-form-label">
+                Idling timeout before autoplay (seconds):
+            </label>
+            <div class="cz-input-wrapper">
+                <input type="input" class="cz-input cz-form-collection-idle-timeout" maxlength="4" placeholder="Timeout of idle" />
+            </div>
+        </label>
+    </div>
 
     <span class="cz-form-errormsg hidden"></span>
     <button class="cz-button cz-form-save" style="margin-right: 15px;">Save Collection</button>

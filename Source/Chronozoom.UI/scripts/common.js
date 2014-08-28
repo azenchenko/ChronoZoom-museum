@@ -54,9 +54,12 @@ var CZ;
         Common.mapLayerSelector = "#map-layer";
         Common.map;
 
+        // Thumbnail generation.
         Common.thumbnailCanvas = $("#thumbnail-generation-canvas")[0];
         Common.thumbnailCanvasContext = Common.thumbnailCanvas.getContext("2d");
         Common.thumbnailVideo = $("#thumbnail-generation-video")[0];
+
+        Common.idleTimeout = null;
 
         /* Initialize the JQuery UI Widgets
         */
@@ -472,6 +475,70 @@ var CZ;
             }
         }
         Common.generateLocalThumbnail = generateLocalThumbnail;
+
+        /**
+         * Start idling timeout (if enabled), after reaching this timeout autoplay of tours will start.
+         */
+        function setupIdleTimeout () {
+            Common.clearIdleTimeout();
+
+            // Idling is enabled if only autoplay for this collection is turned on.
+            if (!CZ.Settings.theme.autoplay) {
+                return false;
+            }
+
+            Common.idleTimeout = window.setTimeout(function () {
+                // Can't start autoplay since there are not tours.
+                if (CZ.Tours.tours.length === 0) {
+                    console.log("No tours to play");
+                    return;
+                }
+
+                // Continue current or start next tour if there is an active tour.
+                if (CZ.Tours.hasActiveTour()) {
+                    if (CZ.Tours.tourFinished) {
+                        var index = CZ.Tours.tours.indexOf(CZ.Tours.tour),
+                            newTour = CZ.Tours.tours[index === CZ.Tours.tours.length - 1 ? 0 : ++index];
+
+                        CZ.Tours.activateTour(newTour, true);
+                    }
+                    else {
+                        CZ.Tours.tourResume();
+                    }
+                }
+                // Start tour playback from the first tour if there is not active tour.
+                else {
+                    var newTour = CZ.Tours.tours[0];
+
+                    CZ.Tours.tourCaptionForm = new CZ.UI.FormTourCaption(CZ.Tours.tourCaptionFormContainer, {
+                        activationSource: $(".tour-icon"),
+                        navButton: ".cz-form-nav",
+                        closeButton: ".cz-tour-form-close-btn > .cz-form-btn",
+                        titleTextblock: ".cz-tour-form-title",
+                        contentContainer: ".cz-form-content",
+                        minButton: ".cz-tour-form-min-btn > .cz-form-btn",
+                        captionTextarea: ".cz-form-tour-caption",
+                        tourPlayerContainer: ".cz-form-tour-player",
+                        bookmarksCount: ".cz-form-tour-bookmarks-count",
+                        narrationToggle: ".cz-toggle-narration",
+                        context: newTour
+                    });
+
+                    CZ.Tours.tourCaptionForm.show();
+                    CZ.Tours.removeActiveTour();
+                    CZ.Tours.activateTour(newTour, true);
+                }
+            }, CZ.Settings.theme.idleTimeout * 1000); // Value for idle timeout in seconds, not in milliseconds.
+        };
+        Common.setupIdleTimeout = setupIdleTimeout;
+
+        /**
+         * Clear idling timeout.
+         */
+        function clearIdleTimeout () {
+            window.clearTimeout(Common.idleTimeout);
+        }
+        Common.clearIdleTimeout = clearIdleTimeout;
 
     })(CZ.Common || (CZ.Common = {}));
     var Common = CZ.Common;

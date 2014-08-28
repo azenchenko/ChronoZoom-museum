@@ -171,6 +171,19 @@ var CZ;
         // General constants
         Settings.guidEmpty = "00000000-0000-0000-0000-000000000000";
 
+        // Default idle timeout before starting autoplay (seconds).
+        Settings.defaultIdleTimeout = 30;
+        Settings.idleBreakingEvents = [
+            "mousemove",
+            "mousedown",
+            "mouseup",
+            "touchstart",
+            "touchmove",
+            "touchend",
+            "touchcancel",
+            "keypressed"
+        ];
+
         // NOTE: IE version detection.
         //       https://gist.github.com/padolsey/527683
         Settings.ie = (function () {
@@ -190,7 +203,9 @@ var CZ;
                 "timelineStrokeStyle": "rgb(232,232,232)",
                 "infoDotFillColor": 'rgb(92,92,92)',
                 "infoDotBorderColor": 'rgb(232,232,232)',
-                "kioskMode": false
+                "kioskMode": false,
+                "autoplay": false,
+                "idleTimeout": Settings.defaultIdleTimeout
             };
 
             if (theme && theme.backgroundUrl != null)
@@ -205,6 +220,13 @@ var CZ;
                 this.theme.infoDotFillColor = theme.infoDotFillColor;
             if (theme && theme.infoDotBorderColor != null)
                 this.theme.infoDotBorderColor = theme.infoDotBorderColor;
+            if (theme && theme.autoplay !== null)
+                this.theme.autoplay = theme.autoplay;
+            if (theme && typeof theme.idleTimeout !== undefined) {
+                if (!isNaN(Number(theme.idleTimeout)) && isFinite(Number(theme.idleTimeout)) && !isNaN(parseInt(theme.idleTimeout))) {
+                    this.theme.idleTimeout = parseInt(theme.idleTimeout);
+                }
+            }
 
             var themeSettings = this.theme;
             $('#vc').css('background-image', "url('" + themeSettings.backgroundUrl + "')");

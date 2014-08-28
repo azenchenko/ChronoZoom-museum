@@ -320,6 +320,16 @@ var CZ;
         function finishLoad() {
             // only invoked after user's edit permissions are checked (AJAX callback)
             CZ.UILoader.loadAll(_uiMap).done(function () {
+                // Setting up idling definition if it's demo mode.
+                if (CZ._demoMode) {
+                    $(document).on(CZ.Settings.idleBreakingEvents, function () {
+                        CZ.Common.setupIdleTimeout();
+                    });
+
+                    // Start initial idling timeout.
+                    CZ.Common.setupIdleTimeout();
+                }
+
                 var forms = arguments;
 
                 CZ.timeSeriesChart = new CZ.UI.LineChart(forms[11]);
@@ -415,7 +425,10 @@ var CZ;
                         exhibitBackgroundOpacityInput: $(".cz-form-exhibit-background-opacity"),
                         exhibitBorderColorInput: $(".cz-form-exhibit-border"),
                         chkEditors: "#cz-form-multiuser-enable",
-                        btnEditors: '#cz-form-multiuser-manage'
+                        btnEditors: "#cz-form-multiuser-manage",
+                        idleTimeoutContainer: ".cz-form-collection-idle-timeout-container",
+                        inputIdleTimeout: ".cz-form-collection-idle-timeout",
+                        chkAutoPlayback: ".cz-form-collection-auto-tours"
                     });
                     form.show();
                 });

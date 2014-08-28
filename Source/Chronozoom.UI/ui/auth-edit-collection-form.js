@@ -29,6 +29,9 @@ var CZ;
                 this.kioskmodeInput = formInfo.kioskmodeInput;
                 this.chkEditors = container.find(formInfo.chkEditors);
                 this.btnEditors = container.find(formInfo.btnEditors);
+                this.idleTimeoutContainer = container.find(formInfo.idleTimeoutContainer);
+                this.inputIdleTimeout = container.find(formInfo.inputIdleTimeout);
+                this.chkAutoPlayback = container.find(formInfo.chkAutoPlayback);
 
                 this.timelineBackgroundColorInput = formInfo.timelineBackgroundColorInput;
                 this.timelineBackgroundOpacityInput = formInfo.timelineBackgroundOpacityInput;
@@ -69,6 +72,48 @@ var CZ;
                     _this.updateCollectionTheme(true);
                 });
 
+                this.chkAutoPlayback.off("change");
+                this.inputIdleTimeout.off("blur");
+
+                this.inputIdleTimeout.on("blur", function (event) {
+                    var $this = $(this),
+                        duration = $this.val();
+
+                    if (this.chkAutoPlayback.is(":checked")) {
+                        if (!this.checkIdleDuration()) {
+                            return false;
+                        }
+                        else {
+                            this.collectionTheme.idleTimeout = parseInt(duration);
+                        }
+                    }
+                    else {
+                        if (!this.checkIdleDuration()) {
+                            this.collectionTheme.idleTimeout = CZ.Settings.theme.idleTimeout;
+                        }
+                        else {
+                            this.collectionTheme.idleTimeout = parseInt(duration);
+                        }
+                    }
+                });
+
+                this.inputIdleTimeout.off("focus")
+                    .on("focus", function () {
+                        $(this).hideError();
+                    });
+
+                this.chkAutoPlayback.change(function (event) {
+                    var $this = $(this);
+
+                    if ($this.is(":checked")) {
+                        _this.idleTimeoutContainer.slideDown('fast');
+                        _this.updateCollectionTheme(true);
+                    } else {
+                        _this.idleTimeoutContainer.slideUp('fast');
+                        _this.updateCollectionTheme(true);
+                    }
+                });
+
                 this.backgroundInput.focus(function () {
                     _this.backgroundInput.hideError();
                 });
@@ -80,7 +125,27 @@ var CZ;
                 }
 
                 this.saveButton.off().click(function (event) {
-                    _this.updateCollectionTheme(true);
+                    !_this.updateCollectionTheme(true);
+
+                    // Checking if autoplay is enabled.
+                    if (_this.chkAutoPlayback.is(":checked")) {
+                        if (!_this.checkIdleDuration()) {
+                            return false;
+                        }
+                        else {
+                            _this.collectionTheme.idleTimeout = parseInt(_this.inputIdleTimeout.val());
+                        }
+                    }
+                    else {
+                        // Set idle timeout to current one, if the value is not correct.
+                        if (!_this.checkIdleDuration()) {
+                            _this.collectionTheme.idleTimeout = CZ.Settings.theme.idleTimeout;
+                        }
+                        else {
+                            _this.collectionTheme.idleTimeout = parseInt(_this.inputIdleTimeout.val());
+                        }
+                    }
+
                     _this.activeCollectionTheme = _this.collectionTheme;
 
                     var collectionData = {
@@ -104,6 +169,13 @@ var CZ;
 
                 if (!this.collectionTheme.timelineColor)
                     this.collectionTheme.timelineColor = CZ.Settings.timelineColorOverride;
+
+                if (this.collectionTheme.autoplay) {
+                    this.chkAutoPlayback.prop("checked", this.collectionTheme.autoplay);
+                    this.idleTimeoutContainer.slideDown('fast');
+                }
+
+                this.inputIdleTimeout.val(this.collectionTheme.idleTimeout);
                 this.timelineBackgroundColorInput.val(this.getHexColorFromColor(this.collectionTheme.timelineColor));
                 this.timelineBackgroundOpacityInput.val(this.getOpacityFromRGBA(this.collectionTheme.timelineColor).toString());
                 this.timelineBorderColorInput.val(this.getHexColorFromColor(this.collectionTheme.timelineStrokeStyle));
@@ -208,7 +280,8 @@ var CZ;
                     timelineStrokeStyle: this.timelineBorderColorInput.val(),
                     infoDotFillColor: this.rgbaFromColor(this.exhibitBackgroundColorInput.val(), this.exhibitBackgroundOpacityInput.val()),
                     infoDotBorderColor: this.exhibitBorderColorInput.val(),
-                    kioskMode: this.kioskmodeInput.prop("checked")
+                    kioskMode: this.kioskmodeInput.prop("checked"),
+                    autoplay: this.chkAutoPlayback.prop("checked")
                 };
 
                 // If the input holds an rgba color, update the textbox with new alpha value
@@ -217,8 +290,10 @@ var CZ;
                     this.exhibitBackgroundColorInput.val(this.collectionTheme.infoDotFillColor);
                 }
 
-                if (clearError)
+                if (clearError) {
                     this.backgroundInput.hideError();
+                    this.inputIdleTimeout.hideError();
+                }
 
                 this.updateCollectionThemeFromTheme(this.collectionTheme);
             };
@@ -273,6 +348,7 @@ var CZ;
                     duration: 500,
                     complete: function () {
                         _this.backgroundInput.hideError();
+                        _this.inputIdleTimeout.hideError();
                         _this.mediaList.remove();
                     }
                 });
@@ -280,6 +356,29 @@ var CZ;
                 this.backgroundInput.hideError();
                 this.updateCollectionThemeFromTheme(this.activeCollectionTheme);
             };
+
+            /**
+             * Check that value that is in idle input is valid.
+             * If it's not valid returns false and shows error under input element.
+             */
+            FormEditCollection.prototype.checkIdleDuration = function () {
+                var duration = this.inputIdleTimeout.val();
+
+                // Duration is not a number.
+                if (isNaN(Number(duration)) || !isFinite(Number(duration)) || isNaN(parseInt(duration))) {
+                    this.inputIdleTimeout.showError("Idling timeout should be a valid number.");
+                    return false;
+                }
+
+                // Timeout can't be lower than 30 seconds.
+                if (duration < CZ.Settings.defaultIdleTimeout) {
+                    this.inputIdleTimeout.showError("Idling timeout should be at least " + CZ.Settings.defaultIdleTimeout + " seconds.")
+                    return false;
+                }
+
+                return true;
+            };
+
             return FormEditCollection;
         })(CZ.UI.FormUpdateEntity);
         UI.FormEditCollection = FormEditCollection;

@@ -28,6 +28,17 @@ var CZ;
         Tours.tourCaptionFormContainer;
         Tours.tourCaptionForm;
 
+        var _tourFinished = true;
+
+        Object.defineProperty(Tours, "tourFinished", {
+            get: function () {
+                return _tourFinished;
+            },
+            set: function (value) {
+                _tourFinished = value;
+            }
+        });
+
         /* TourBookmark represents a place in the virtual space with associated audio.
         @param url  (string) Url that contains a state of the virtual canvas
         @param caption (string) text describing the bookmark
@@ -544,6 +555,7 @@ var CZ;
                     showTourEndMessage();
                     tourPause();
                     hideBookmarks();
+                    Tours.tourFinished = true;
                 });
 
                 Tours.tour.toggleAudio(isAudioEnabled);
@@ -562,6 +574,8 @@ var CZ;
 
                 // start a tour
                 tourResume();
+
+                Tours.tourFinished = false;
             }
         }
         Tours.activateTour = activateTour;
@@ -588,6 +602,8 @@ var CZ;
 
             // reset active tour
             Tours.tour = undefined;
+
+            Tours.tourFinished = true;
         }
         Tours.removeActiveTour = removeActiveTour;
 
@@ -615,6 +631,8 @@ var CZ;
         switch the tour in the paused state
         */
         function tourPause() {
+            CZ.Common.setupIdleTimeout();
+
             Tours.tourCaptionForm.setPlayPauseButtonState("play");
             if (Tours.tour != undefined) {
                 $("#tour_playpause").attr("src", "/images/tour_play_off.jpg");
@@ -636,6 +654,8 @@ var CZ;
         switch the tour in the running state
         */
         function tourResume() {
+            CZ.Common.clearIdleTimeout();
+
             Tours.tourCaptionForm.setPlayPauseButtonState("pause");
             $("#tour_playpause").attr("src", "/images/tour_pause_off.jpg");
             Tours.tour.play();
