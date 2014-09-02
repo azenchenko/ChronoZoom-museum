@@ -576,6 +576,11 @@ var CZ;
             var ListTemplate = "#template-tweet-list .tweet-list-item";
             var ListElem = "#TwitterBlock-list";
 
+            // Tweets are not required in demo mode (demo mode supposed to be offline).
+            if (CZ._demoMode) {
+                return false;
+            }
+
             CZ.Service.getRecentTweets().done(function (response) {
                 for (var i = 0, len = response.d.length; i < len; ++i) {
                     var tweet = response.d[i];

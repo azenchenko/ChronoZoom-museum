@@ -5,42 +5,12 @@
     <meta name="Description" content="ChronoZoom is an open-source community project dedicated to visualizing the history of everything." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <script type="text/javascript" id="constants"></script>
-    <script data-airbrake-onload="initAirbrake">
-        function initAirbrake(client)
-        {
-            client.setProject(constants.airbrakeProjectId, constants.airbrakeProjectKey);
-            client.setEnvironmentName(constants.airbrakeEnvironmentName);
-        }
-    </script>
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(
-            ['_setAccount', constants.analyticsId],
-            ['_setDomainName', 'auto'],
-            ['_setAllowLinker', true],
-            ['_trackPageview'],
-            ['_trackPageLoadTime']
-        );
-        (function () {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 
-            var lastHashData = null;
-            window.onhashchange = function () {
-                var hashData = window.location.hash.split("@")[0];
-                if (hashData !== lastHashData) {
-                    _gaq.push(['_trackEvent', 'url', 'hash', hashData, 1, lastHashData === null /* Non-Interactive*/]);
-                    lastHashData = hashData;
-                }
-            }
-        })();
-    </script>
-    <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"></script>
-    <script type="text/javascript" src="/scripts/external/airbrake-shim.js"></script>
-    <script type="text/javascript" src="//code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-    <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/modernizr/modernizr-2.0.6-development-only.js"></script>
-    <script type="text/javascript" src="//js.live.net/v5.0/wl.js"></script>
+    <script type="text/javascript" src="/scripts/external/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="/scripts/external/jquery-ui-1.10.2.js"></script>
+    <script type="text/javascript" src="/scripts/external/modernizr-2.0.6-development-only.js"></script>
+    <script type="text/javascript" src="/scripts/external/wl-v5.0.js"></script>
+
     <script type="text/javascript" src="/scripts/external/jquery.cookie.js"></script>
     <script type="text/javascript" src="/scripts/external/rx.js"></script>
     <script type="text/javascript" src="/scripts/external/rx.jQuery.js"></script>
@@ -54,12 +24,12 @@
     <script type="text/javascript" src="/scripts/external/jquery.tooltipster.min.js"></script>
 
     <!-- D3 and topojson for map view. -->
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script type="text/javascript" src="/scripts/external/d3.v3.min.js"></script>
+    <script type="text/javascript" src="/scripts/external/topojson.v1.min.js"></script>
+    <script type="text/javascript" src="/scripts/external/marked-0.3.2.min.js"></script>
 
     <link type="text/css" rel="stylesheet" href="/css/tooltipster.css" />
 
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
     <script type="text/javascript">
 
         function AddCSS(path)

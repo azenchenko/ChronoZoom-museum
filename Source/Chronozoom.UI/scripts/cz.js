@@ -777,9 +777,9 @@ var CZ;
 
             CZ.Service.getServiceInformation().then(function (response) {
                 CZ.Settings.contentItemThumbnailBaseUri = "/" + response.thumbnailsPath + "/";
-                CZ.Settings.signinUrlMicrosoft = response.signinUrlMicrosoft;
-                CZ.Settings.signinUrlGoogle = response.signinUrlGoogle;
-                CZ.Settings.signinUrlYahoo = response.signinUrlYahoo;
+                // CZ.Settings.signinUrlMicrosoft = response.signinUrlMicrosoft;
+                // CZ.Settings.signinUrlGoogle = response.signinUrlGoogle;
+                // CZ.Settings.signinUrlYahoo = response.signinUrlYahoo;
             });
 
             CZ.Settings.applyTheme(null, CZ.Service.superCollectionName != null);

@@ -187,8 +187,14 @@
     <Content Include="scripts\external\audiojs\audiojs\audio.min.js" />
     <Content Include="scripts\external\audiojs\audiojs\audiojs.swf" />
     <Content Include="scripts\external\audiojs\audiojs\player-graphics.gif" />
+    <Content Include="scripts\external\d3.v3.min.js" />
+    <Content Include="scripts\external\jquery-ui-1.10.2.js" />
     <Content Include="scripts\external\jquery.autonumeric-1.9.24.min.js" />
     <Content Include="scripts\external\jquery.tooltipster.min.js" />
+    <Content Include="scripts\external\marked-0.3.2.min.js" />
+    <Content Include="scripts\external\modernizr-2.0.6-development-only.js" />
+    <Content Include="scripts\external\topojson.v1.min.js" />
+    <Content Include="scripts\external\wl-v5.0.js" />
     <Content Include="scripts\gestures.min.js">
       <DependentUpon>gestures.js</DependentUpon>
     </Content>
