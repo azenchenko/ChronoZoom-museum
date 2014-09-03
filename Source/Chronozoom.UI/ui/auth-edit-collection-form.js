@@ -23,6 +23,7 @@ var CZ;
 
                 this.saveButton = container.find(formInfo.saveButton);
                 this.backgroundInput = container.find(formInfo.backgroundInput);
+                this.backgroundInputName = container.find(formInfo.backgroundInputName);
                 this.collectionTheme = formInfo.collectionTheme;
                 this.activeCollectionTheme = jQuery.extend(true, {}, formInfo.collectionTheme);
                 this.mediaListContainer = container.find(formInfo.mediaListContainer);
@@ -40,8 +41,41 @@ var CZ;
                 this.exhibitBackgroundOpacityInput = formInfo.exhibitBackgroundOpacityInput;
                 this.exhibitBorderColorInput = formInfo.exhibitBorderColorInput;
 
-                this.backgroundInput.on('input', function () {
-                    _this.updateCollectionTheme(true);
+                // Hack to clear file input value.
+                if (this.backgroundInput.length > 0) {
+                    this.backgroundInput.remove();
+                }
+
+                this.backgroundInput = $("<input type='file' class='cz-form-item-collection-background cz-input'" +
+                        "style='width: 100%; display: block;'></input>")
+                    .insertBefore(this.backgroundInputName);
+
+                this.backgroundInput.change(function () {
+                    var $this = $(this);
+
+                    file = $this.get(0).files[0];
+                    _this.file = file || null;
+
+                    if (file && !file.type.match(/image/)) {
+                        _this.backgroundInput.showError("Please, select an image file.");
+                        return false;
+                    }
+
+                    if (_this.file) {
+                        _this.backgroundInputName.val(file.name);
+                    }
+                    else {
+                        _this.backgroundInputName.val("No file selected");
+                    }
+
+                    _this.mediaFileChanged = true;
+
+                    if (_this.file) {
+                        CZ.Service.postLocalFile(_this.file).then(function (filename) {
+                            _this.backgroundInputName.val(filename);
+                            _this.updateCollectionTheme(true);
+                        });
+                    }
                 });
 
                 this.kioskmodeInput.change(function () {
@@ -79,20 +113,20 @@ var CZ;
                     var $this = $(this),
                         duration = $this.val();
 
-                    if (this.chkAutoPlayback.is(":checked")) {
-                        if (!this.checkIdleDuration()) {
+                    if (_this.chkAutoPlayback.is(":checked")) {
+                        if (!_this.checkIdleDuration()) {
                             return false;
                         }
                         else {
-                            this.collectionTheme.idleTimeout = parseInt(duration);
+                            _this.collectionTheme.idleTimeout = parseInt(duration);
                         }
                     }
                     else {
-                        if (!this.checkIdleDuration()) {
-                            this.collectionTheme.idleTimeout = CZ.Settings.theme.idleTimeout;
+                        if (!_this.checkIdleDuration()) {
+                            _this.collectionTheme.idleTimeout = CZ.Settings.theme.idleTimeout;
                         }
                         else {
-                            this.collectionTheme.idleTimeout = parseInt(duration);
+                            _this.collectionTheme.idleTimeout = parseInt(duration);
                         }
                     }
                 });
@@ -118,6 +152,8 @@ var CZ;
                     _this.backgroundInput.hideError();
                 });
 
+                this.mediaFileChanged = false;
+
                 try  {
                     this.initialize();
                 } catch (e) {
@@ -125,7 +161,9 @@ var CZ;
                 }
 
                 this.saveButton.off().click(function (event) {
-                    !_this.updateCollectionTheme(true);
+                    if (!_this.updateCollectionTheme(true)) {
+                        return false;
+                    }
 
                     // Checking if autoplay is enabled.
                     if (_this.chkAutoPlayback.is(":checked")) {
@@ -163,8 +201,19 @@ var CZ;
                 var _this = this;
                 this.saveButton.prop('disabled', false);
 
-                this.backgroundInput.val(this.collectionTheme.backgroundUrl);
-                this.mediaList = new CZ.UI.MediaList(this.mediaListContainer, CZ.Media.mediaPickers, this.contentItem, this);
+                // Hide container for mediapicker list if no mediapicker is enabled
+                if ($.isEmptyObject(CZ.Media.mediaPickers)) {
+                    this.mediaListContainer.hide()
+                        .prev()
+                            .hide()
+                        .next().next()
+                            .hide();
+                }
+                else {
+                    this.mediaList = new CZ.UI.MediaList(this.mediaListContainer, CZ.Media.mediaPickers, this.contentItem, this);
+                }
+
+                this.backgroundInputName.val(this.collectionTheme.backgroundUrl);
                 this.kioskmodeInput.prop('checked', false); // temp default to false for now until fix in place that loads theme from db (full fix implemented in MultiUser branch)
 
                 if (!this.collectionTheme.timelineColor)
@@ -274,7 +323,7 @@ var CZ;
 
             FormEditCollection.prototype.updateCollectionTheme = function (clearError) {
                 this.collectionTheme = {
-                    backgroundUrl: this.backgroundInput.val(),
+                    backgroundUrl: this.backgroundInputName.val(),
                     backgroundColor: "#232323",
                     timelineColor: this.rgbaFromColor(this.timelineBackgroundColorInput.val(), this.timelineBackgroundOpacityInput.val()),
                     timelineStrokeStyle: this.timelineBorderColorInput.val(),
@@ -290,15 +339,26 @@ var CZ;
                     this.exhibitBackgroundColorInput.val(this.collectionTheme.infoDotFillColor);
                 }
 
+                if (this.file && !this.file.type.match(/image/)) {
+                    this.backgroundInput.showError("Please, select an image file.");
+                    return false;
+                }
+
                 if (clearError) {
-                    this.backgroundInput.hideError();
                     this.inputIdleTimeout.hideError();
                 }
 
                 this.updateCollectionThemeFromTheme(this.collectionTheme);
+
+                return true;
             };
 
             FormEditCollection.prototype.updateCollectionThemeFromTheme = function (theme) {
+                if (this.file && !this.file.type.match(/image/)) {
+                    this.backgroundInput.showError("Please, select an image file.");
+                    return false;
+                }
+
                 CZ.Settings.applyTheme(theme, false);
 
                 CZ.Common.vc.virtualCanvas("forEachElement", function (element) {
@@ -319,13 +379,6 @@ var CZ;
                 var clearError = true;
 
                 // Using tempSource is less than ideal; however, SkyDrive does not support any permanent link to the file and therefore we will warn users. Future: Create an image cache in the server.
-                if (this.contentItem.mediaType == "skydrive-image") {
-                    this.backgroundInput.val(this.contentItem.tempSource || "");
-                    clearError = false;
-                    this.backgroundInput.showError("SkyDrive static links are not permanent. Consider hosting it as a public image instead.");
-                } else {
-                    this.backgroundInput.val(this.contentItem.uri || "");
-                }
 
                 this.updateCollectionTheme(clearError);
             };
@@ -349,11 +402,13 @@ var CZ;
                     complete: function () {
                         _this.backgroundInput.hideError();
                         _this.inputIdleTimeout.hideError();
-                        _this.mediaList.remove();
+
+                        if (_this.mediaList) {
+                            _this.mediaList.remove();
+                        }
                     }
                 });
 
-                this.backgroundInput.hideError();
                 this.updateCollectionThemeFromTheme(this.activeCollectionTheme);
             };
 
