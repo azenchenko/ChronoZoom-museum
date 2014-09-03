@@ -417,6 +417,8 @@ var CZ;
                         collectionTheme: CZ.Settings.theme,
                         backgroundInput: $(".cz-form-item-collection-background"),
                         backgroundInputName: $(".cz-form-item-collection-background-name"),
+                        backgroundInputContainer: ".cz-form-collection-background-image-container",
+                        chkBackgroundImage: ".cz-form-collection-background-checkbox",
                         kioskmodeInput: $(".cz-form-collection-kioskmode"),
                         mediaListContainer: ".cz-form-medialist",
                         timelineBackgroundColorInput: $(".cz-form-timeline-background"),

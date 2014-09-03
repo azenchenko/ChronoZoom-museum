@@ -208,6 +208,8 @@ var CZ;
                 "idleTimeout": Settings.defaultIdleTimeout
             };
 
+            if (theme && theme.backgroundUrlEnabled !== null)
+                this.theme.backgroundUrlEnabled = theme.backgroundUrlEnabled;
             if (theme && theme.backgroundUrl != null)
                 this.theme.backgroundUrl = theme.backgroundUrl;
             if (theme && theme.kioskMode != null)
@@ -229,7 +231,15 @@ var CZ;
             }
 
             var themeSettings = this.theme;
-            $('#vc').css('background-image', "url('" + themeSettings.backgroundUrl + "')");
+
+            // Show background image for collection if enabled.
+            if (themeSettings.backgroundUrlEnabled) {
+                $('#vc').css('background-image', "url('" + themeSettings.backgroundUrl + "')");
+            }
+            else {
+                $("#vc").css("background-image", "none");
+            }
+
             $('#vc').css('background-color', themeSettings.backgroundColor);
 
             CZ.Settings.timelineColor = themeSettings.timelineColor;

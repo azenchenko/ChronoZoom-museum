@@ -24,6 +24,8 @@ var CZ;
                 this.saveButton = container.find(formInfo.saveButton);
                 this.backgroundInput = container.find(formInfo.backgroundInput);
                 this.backgroundInputName = container.find(formInfo.backgroundInputName);
+                this.backgroundInputContainer = container.find(formInfo.backgroundInputContainer);
+                this.chkBackgroundImage = container.find(formInfo.chkBackgroundImage);
                 this.collectionTheme = formInfo.collectionTheme;
                 this.activeCollectionTheme = jQuery.extend(true, {}, formInfo.collectionTheme);
                 this.mediaListContainer = container.find(formInfo.mediaListContainer);
@@ -107,6 +109,7 @@ var CZ;
                 });
 
                 this.chkAutoPlayback.off("change");
+                this.chkBackgroundImage.off("change");
                 this.inputIdleTimeout.off("blur");
 
                 this.inputIdleTimeout.on("blur", function (event) {
@@ -140,10 +143,24 @@ var CZ;
                     var $this = $(this);
 
                     if ($this.is(":checked")) {
-                        _this.idleTimeoutContainer.slideDown('fast');
+                        _this.idleTimeoutContainer.slideDown("fast");
                         _this.updateCollectionTheme(true);
                     } else {
-                        _this.idleTimeoutContainer.slideUp('fast');
+                        _this.idleTimeoutContainer.slideUp("fast");
+                        _this.updateCollectionTheme(true);
+                    }
+                });
+
+                // Handler for enable/disable background image for collection.
+                this.chkBackgroundImage.change(function (event) {
+                    var $this = $(this);
+
+                    if ($this.is(":checked")) {
+                        _this.backgroundInputContainer.slideDown("fast");
+                        _this.updateCollectionTheme(true);
+                    }
+                    else {
+                        _this.backgroundInputContainer.slideUp("fast");
                         _this.updateCollectionTheme(true);
                     }
                 });
@@ -214,14 +231,19 @@ var CZ;
                 }
 
                 this.backgroundInputName.val(this.collectionTheme.backgroundUrl);
-                this.kioskmodeInput.prop('checked', false); // temp default to false for now until fix in place that loads theme from db (full fix implemented in MultiUser branch)
+                this.kioskmodeInput.prop("checked", false); // temp default to false for now until fix in place that loads theme from db (full fix implemented in MultiUser branch)
 
                 if (!this.collectionTheme.timelineColor)
                     this.collectionTheme.timelineColor = CZ.Settings.timelineColorOverride;
 
+                if (this.collectionTheme.backgroundUrlEnabled) {
+                    this.chkBackgroundImage.prop("checked", this.collectionTheme.backgroundUrlEnabled);
+                    this.backgroundInputContainer.slideDown("fast");
+                }
+
                 if (this.collectionTheme.autoplay) {
                     this.chkAutoPlayback.prop("checked", this.collectionTheme.autoplay);
-                    this.idleTimeoutContainer.slideDown('fast');
+                    this.idleTimeoutContainer.slideDown("fast");
                 }
 
                 this.inputIdleTimeout.val(this.collectionTheme.idleTimeout);
@@ -323,6 +345,7 @@ var CZ;
 
             FormEditCollection.prototype.updateCollectionTheme = function (clearError) {
                 this.collectionTheme = {
+                    backgroundUrlEnabled: this.chkBackgroundImage.prop("checked"),
                     backgroundUrl: this.backgroundInputName.val(),
                     backgroundColor: "#232323",
                     timelineColor: this.rgbaFromColor(this.timelineBackgroundColorInput.val(), this.timelineBackgroundOpacityInput.val()),
