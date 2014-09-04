@@ -27,8 +27,10 @@
 
     <br />
     <label class="cz-lightgray cz-form-label">URL of video or image *</label>
-    <input class="cz-form-item-mediaurl-name cz-input" type="text" disabled="disabled" style="display: block; width: 100%;"
+    <div class="cz-input-wrapper">
+        <input class="cz-form-item-mediaurl-name cz-input" type="text" disabled="disabled" style="display: block; width: 100%;"
            title="Local filename" />
+    </div>
 
     <br />
     <label class="cz-lightgray cz-form-label">Media Source (<a target="_blank" href="http://join.chronozoom.com/create/#create-an-exhibit">?</a>)</label>
@@ -38,11 +40,13 @@
 
     <br />
     <label class="cz-lightgray cz-form-label">Media Type *</label>
-    <select class="cz-form-item-media-type cz-input" style="display: block; width: 100%;">
-        <option value="image"> Image </option>
-        <!-- <option value="pdf"> PDF </option> -->
-        <option value="video"> Video </option>
-    </select>
+    <div class="cz-input-wrapper">
+        <select class="cz-form-item-media-type cz-input" style="display: block; width: 100%;">
+            <option value="image"> Image </option>
+            <!-- <option value="pdf"> PDF </option> -->
+            <option value="video"> Video </option>
+        </select>
+    </div>
 
     <br />
     <label class="cz-lightgray cz-form-label">Attribution</label>

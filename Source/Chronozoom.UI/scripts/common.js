@@ -421,9 +421,16 @@ var CZ;
 
             if (filetype.match(/video/)) {
                 var base64Thumbnail,
-                    video = document.createElement("video");
+                    video = document.createElement("video"),
+                    thumbnailUploaded = false;
 
                 video.oncanplaythrough = function (event) {
+                    if (thumbnailUploaded) {
+                        return false;
+                    }
+
+                    thumbnailUploaded = true;
+
                     video.currentTime = video.duration / 2;
                     Common.thumbnailCanvasContext.drawImage(video, 0, 0, 256, 256);
                     base64Thumbnail = Common.thumbnailCanvas.toDataURL("image/png");

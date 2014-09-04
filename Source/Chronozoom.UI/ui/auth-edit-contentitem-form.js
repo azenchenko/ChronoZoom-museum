@@ -79,7 +79,6 @@ var CZ;
                     this.mediaList = new CZ.UI.MediaList(this.mediaListContainer, CZ.Media.mediaPickers, this.contentItem, this);
                 }
 
-                var that = this;
                 this.saveButton.prop('disabled', false);
 
                 this.titleInput.change(function () {
@@ -119,14 +118,14 @@ var CZ;
 
                 this.descriptionInput.on('keyup', function (e) {
                     if (e.which == 13) {
-                        that.saveButton.click(function () {
-                            return that.onSaveClick();
+                        _this.saveButton.click(function () {
+                            return _this.onSaveClick();
                         });
                     }
                 });
                 this.descriptionInput.on('keydown', function (e) {
                     if (e.which == 13) {
-                        that.saveButton.off();
+                        _this.saveButton.off();
                     }
                 });
 
@@ -202,7 +201,7 @@ var CZ;
             FormEditCI.prototype.saveContentItem = function (filename) {
                 var _this = this;
 
-                this.mediaInputName = filename;
+                this.mediaInputName.val(filename);
                 this.mediaInput.attr("data-filename", filename);
 
                 var newContentItem = {
@@ -308,9 +307,31 @@ var CZ;
             FormEditCI.prototype.onSaveClick = function () {
                 var _this = this;
 
+                this.mediaInput.hideError();
+                this.mediaTypeInput.hideError();
+
                 // File was not selected.
                 if (this.mediaInputName.val() === "No file selected") {
-                    _this.errorMessage.text("Media file was not selected.").show().delay(7000).fadeOut();
+                    this.mediaInput.showError("Media file was not selected.");
+                    return false;
+                }
+
+                // Selected image, but media type is not image.
+                if (this.file && this.mediaTypeInput.val().match(/image/) && !this.file.type.match(/image/)) {
+                    this.mediaTypeInput.showError("Selected media type is an image, but uploaded file is not an image.");
+                    return false;
+                }
+
+                // Selected video, but media type is not video.
+                if (this.file && this.mediaTypeInput.val().match(/video/) && !this.file.type.match(/video/)) {
+                    this.mediaTypeInput.showError("Selected media type is an video, but uploaded file is not an video.");
+                    return false;
+                }
+
+                // File wasn't changed, but media type changed. Can occur only while editing existing content item,
+                // proper media type was changed to improper.
+                if (!this.file && this.mediaTypeInput.val() !== this.contentItem.mediaType) {
+                    this.mediaTypeInput.showError("Selected media type doesn't match media type of selected file.");
                     return false;
                 }
 

@@ -33,7 +33,8 @@
   font-size: 1em;
   line-height: 2em;
 }
-input.error {
+input.error,
+select.error {
   border: 1px solid #ff4800;
 }
 .form-error-message {
@@ -1365,6 +1366,11 @@ iframe[sutra=picker] + div {
   bottom: 0;
   left: 0;
   overflow-y: auto;
+}
+.cz-input-wrapper div.error {
+  background: #ffdccc;
+  line-height: 1.5em !important;
+  padding: 0 5px;
 }
 /* Profile Form */
 #profile-form {
