@@ -403,6 +403,46 @@ namespace Chronozoom.UI
             });
         }
 
+        public BaseJsonResult<IEnumerable<SearchResult>> DemoSearch(string superCollection, string collection, string searchTerm)
+        {
+            return ApiOperation(delegate(User user, Storage storage)
+            {
+                Guid collectionId = CollectionIdOrDefault(storage, superCollection, collection);
+                searchTerm = searchTerm.ToUpperInvariant();
+                List<SearchResult> searchResults;
+
+                // Show all of the data when searching by empty query.
+                if (string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    var timelines = storage.Timelines.ToList();
+                    searchResults = timelines.Select(timeline => new SearchResult { Id = timeline.Id, Title = timeline.Title, ObjectType = ObjectType.Timeline }).ToList();
+
+                    var exhibits = storage.Exhibits.ToList();
+                    searchResults.AddRange(exhibits.Select(exhibit => new SearchResult { Id = exhibit.Id, Title = exhibit.Title, ObjectType = ObjectType.Exhibit }));
+
+                    var contentItems = storage.ContentItems.ToList();
+                    searchResults.AddRange(contentItems.Select(contentItem => new SearchResult { Id = contentItem.Id, Title = contentItem.Title, ObjectType = ObjectType.ContentItem }));
+                }
+                else
+                {
+                    var timelines = storage.Timelines.Where(_ => _.Title.ToUpper().Contains(searchTerm) && _.Collection.Id == collectionId).Take(MaxSearchLimit).ToList();
+                    searchResults = timelines.Select(timeline => new SearchResult { Id = timeline.Id, Title = timeline.Title, ObjectType = ObjectType.Timeline }).ToList();
+
+                    var exhibits = storage.Exhibits.Where(_ => _.Title.ToUpper().Contains(searchTerm) && _.Collection.Id == collectionId).Take(MaxSearchLimit).ToList();
+                    searchResults.AddRange(exhibits.Select(exhibit => new SearchResult { Id = exhibit.Id, Title = exhibit.Title, ObjectType = ObjectType.Exhibit }));
+
+                    var contentItems = storage.ContentItems.Where(_ =>
+                        (_.Title.ToUpper().Contains(searchTerm) || _.Caption.ToUpper().Contains(searchTerm))
+                         && _.Collection.Id == collectionId
+                        ).Take(MaxSearchLimit).ToList();
+                    searchResults.AddRange(contentItems.Select(contentItem => new SearchResult { Id = contentItem.Id, Title = contentItem.Title, ObjectType = ObjectType.ContentItem }));
+                }
+
+                Trace.TraceInformation("Search called for search term {0}", searchTerm);
+                return new BaseJsonResult<IEnumerable<SearchResult>>(searchResults);
+            });
+        }
+
         /// <summary>
         /// Documentation under IChronozoomSVC
         /// </summary>

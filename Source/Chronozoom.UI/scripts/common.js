@@ -549,6 +549,9 @@ var CZ;
                     CZ.Tours.removeActiveTour();
                     CZ.Tours.activateTour(newTour, true);
                 }
+
+                // Show all of the content in search navigation form.
+                CZ._demoNavigationForm.searchTextbox.val("").trigger("input");
             }, CZ.Settings.theme.idleTimeout * 1000); // Value for idle timeout in seconds, not in milliseconds.
         };
         Common.setupIdleTimeout = setupIdleTimeout;

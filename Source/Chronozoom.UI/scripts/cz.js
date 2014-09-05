@@ -49,6 +49,10 @@ var CZ;
     (function (HomePageViewModel) {
         if (location.search.match(/demo_mode=true/)) {
             CZ._demoMode = true;
+
+            if (CZ.Settings && !$.isEmptyObject(CZ.Settings.theme)) {
+                CZ.Settings.theme.kioskMode = true;
+            }
         }
 
         // Contains mapping: CSS selector -> html file.
@@ -77,7 +81,8 @@ var CZ;
             "#auth-edit-map-view-form": "/ui/auth-edit-map-view-form.html",                     // 21
             "$('<div><!-- New Map Event Listbox --></div>')": "/ui/new-map-event-listbox.html", // 22
             "$('<div><!-- Events On Map Listbox --></div>')": "/ui/events-on-map-listbox.html", // 23
-            "#auth-edit-select-maptype-form": "/ui/auth-edit-select-maptype-form.html"          // 24
+            "#auth-edit-select-maptype-form": "/ui/auth-edit-select-maptype-form.html",         // 24
+            "#demo-navigation-form": "/ui/demo-navigation-form.html"                            // 25
         };
 
         (function (FeatureActivation) {
@@ -405,6 +410,21 @@ var CZ;
                         }
                     }
                 });
+
+                CZ._demoNavigationForm = new CZ.UI.DemoNavigationForm(forms[25], {
+                    activationSource: $(this),
+                    navButton: ".cz-form-nav",
+                    titleTextblock: ".cz-form-title",
+                    searchTextbox: ".cz-form-search-input",
+                    searchResultsBox: ".cz-form-search-results",
+                    progressBar: ".cz-form-progress-bar",
+                    resultSections: ".cz-form-search-results > .cz-form-search-section",
+                    resultsCountTextblock: ".cz-form-search-results-count"
+                });
+
+                if (CZ._demoMode) {
+                    CZ._demoNavigationForm.show();
+                }
 
                 $("#editCollectionButton").click(function () {
                     closeAllForms();

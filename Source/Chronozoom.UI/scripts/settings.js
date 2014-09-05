@@ -230,6 +230,11 @@ var CZ;
                 }
             }
 
+            // Kiosk mode is always on in demo mode.
+            if (CZ._demoMode) {
+                this.theme.kioskMode = true;
+            }
+
             var themeSettings = this.theme;
 
             // Show background image for collection if enabled.

@@ -361,6 +361,8 @@
     <Content Include="scripts\extensions\rinplayer.min.js.map">
       <DependentUpon>rinplayer.js</DependentUpon>
     </Content>
+    <Content Include="ui\demo-navigation-form.html" />
+    <Content Include="ui\demo-navigation-form.js" />
     <Content Include="ui\events-on-map-listbox.html" />
     <Content Include="ui\events-on-map-listbox.js" />
     <Content Include="ui\events-on-map-listbox.min.js">

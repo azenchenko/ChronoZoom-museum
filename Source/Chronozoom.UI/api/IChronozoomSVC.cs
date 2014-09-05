@@ -93,6 +93,10 @@ namespace Chronozoom.UI
         [WebGet(ResponseFormat = WebMessageFormat.Json)]
         BaseJsonResult<IEnumerable<SearchResult>> Search(string superCollection, string collection, string searchTerm);
 
+        [OperationContract]
+        [WebGet(ResponseFormat = WebMessageFormat.Json)]
+        BaseJsonResult<IEnumerable<SearchResult>> DemoSearch(string superCollection, string collection, string searchTerm);
+
         /// <summary>
         /// Returns a list of tours for the default collection and default superCollection.
         /// </summary>

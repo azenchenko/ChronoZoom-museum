@@ -645,6 +645,36 @@ var CZ;
         }
         Service.getSearch = getSearch;
 
+        /** 
+         * Makes a search in demo mode. It supports search by empty query which returns all
+         * of the content. It doesn't limit search results count.
+         *
+         * [GET] /api/demosearch
+         */
+        function getDemoSearch(query) {
+            CZ.Authoring.resetSessionTimer();
+            var request = new Service.Request(_serviceUrl);
+            request.addToPath("DemoSearch");
+
+            var data = {
+                searchTerm: query,
+                supercollection: CZ.Service.superCollectionName,
+                collection: CZ.Service.collectionName
+            };
+
+            console.log("[GET] " + request.url);
+
+            return $.ajax({
+                type: "GET",
+                cache: false,
+                contentType: "application/json",
+                dataType: "json",
+                url: request.url,
+                data: data
+            });
+        }
+        Service.getDemoSearch = getDemoSearch;
+
         // .../bing/getImages
         function getBingImages(query, top, skip) {
             if (typeof top === "undefined") { top = CZ.Settings.defaultBingSearchTop; }
