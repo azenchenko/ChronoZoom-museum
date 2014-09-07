@@ -50,9 +50,13 @@ var CZ;
         if (location.search.match(/demo_mode=true/)) {
             CZ._demoMode = true;
 
+            // Kiosk mode is always on in demo mode.
             if (CZ.Settings && !$.isEmptyObject(CZ.Settings.theme)) {
                 CZ.Settings.theme.kioskMode = true;
             }
+
+            // Hide UI elements that shouldn't be visible in demo mode.
+            $(".elements-demo-disable").hide();
         }
 
         // Contains mapping: CSS selector -> html file.
@@ -162,7 +166,7 @@ var CZ;
             },
             {
                 Name: "StartPage",
-                Activation: 0 /* Enabled */,
+                Activation: 1 /* Disabled */,
                 JQueryReference: ".header-icon.home-icon"
             },
             {
@@ -304,8 +308,9 @@ var CZ;
 
             // hook logo click
             $('.header-logo').click(function () {
-                //$('.home-icon').trigger('click');
-                window.location.href = '/';
+                if (!CZ._demoMode) {
+                    window.location.href = '/';
+                }
             });
 
             // if URL has a supercollection and collection then

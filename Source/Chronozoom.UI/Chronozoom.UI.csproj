@@ -130,6 +130,16 @@
     <Content Include="images\mapview.svg" />
     <Content Include="images\copy.svg" />
     <Content Include="images\paste.svg" />
+    <Content Include="offline-pages\Markdown-Cheatsheet.htm" />
+    <Content Include="offline-pages\Markdown-Cheatsheet\analytics.js" />
+    <Content Include="offline-pages\Markdown-Cheatsheet\api.js" />
+    <Content Include="offline-pages\Markdown-Cheatsheet\frameworks-0c1b00f7935ae85624f5fc5d40d52d60febf92b4.js" />
+    <Content Include="offline-pages\Markdown-Cheatsheet\github-0ee9064842419bc947ae49576d87065a9fa954d5.css" />
+    <Content Include="offline-pages\Markdown-Cheatsheet\github-fbf037c05b1b216496f330cff338007e2f09a2a1.js" />
+    <Content Include="offline-pages\Markdown-Cheatsheet\github2-e9d6954dcfc14392d2596c389c2faf1d1a4e07ef.css" />
+    <Content Include="offline-pages\Markdown-Cheatsheet\icon48.png" />
+    <Content Include="offline-pages\Markdown-Cheatsheet\octocat-spinner-32.gif" />
+    <Content Include="offline-pages\Markdown-Cheatsheet\wiki-7b8dda9d6c0d50767c9673946fd9f67d240c74e6.js" />
     <Content Include="scripts\authoring-ui.min.js">
       <DependentUpon>authoring-ui.js</DependentUpon>
     </Content>
@@ -528,6 +538,7 @@
     <Content Include="css\audio.css.map">
       <DependentUpon>audio.css</DependentUpon>
     </Content>
+    <Content Include="offline-pages\Markdown-Cheatsheet\3428497" />
     <None Include="Properties\PublishProfiles\cz-file-system.pubxml" />
     <None Include="Properties\PublishProfiles\cz-oct2014-alex-museum.pubxml" />
     <Content Include="ui\auth-edit-map-view-form.min.js.map">

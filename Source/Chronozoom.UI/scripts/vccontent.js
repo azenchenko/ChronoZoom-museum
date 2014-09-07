@@ -2316,46 +2316,50 @@ var CZ;
                         numberOfLines: 1
                     }, contentWidth);
 
-                    // Source
-                    var sourceText = this.contentItem.attribution;
-                    var mediaSource = this.contentItem.mediaSource;
-                    if (sourceText) {
-                        var addSourceText = function (sx, sw, sy) {
-                            var sourceItem = addText(container, layerid, id + "__source__", sx, sy, sy + sourceHeight / 2.0, 0.9 * sourceHeight, sourceText, {
-                                fontName: CZ.Settings.contentItemHeaderFontName,
-                                fillStyle: CZ.Settings.contentItemSourceFontColor,
-                                textBaseline: 'middle',
-                                textAlign: 'right',
-                                opacity: 1,
-                                adjustWidth: true
-                            }, sw);
 
-                            if (mediaSource) {
-                                // In demo mode acting with media source is disabled.
-                                if (!CZ._demoMode) {
-                                    sourceItem.reactsOnMouse = true;
+                    /* Disabled in offline mode
+
+                        // Source
+                        var sourceText = this.contentItem.attribution;
+                        var mediaSource = this.contentItem.mediaSource;
+                        if (sourceText) {
+                            var addSourceText = function (sx, sw, sy) {
+                                var sourceItem = addText(container, layerid, id + "__source__", sx, sy, sy + sourceHeight / 2.0, 0.9 * sourceHeight, sourceText, {
+                                    fontName: CZ.Settings.contentItemHeaderFontName,
+                                    fillStyle: CZ.Settings.contentItemSourceFontColor,
+                                    textBaseline: 'middle',
+                                    textAlign: 'right',
+                                    opacity: 1,
+                                    adjustWidth: true
+                                }, sw);
+
+                                if (mediaSource) {
+                                    // In demo mode acting with media source is disabled.
+                                    if (!CZ._demoMode) {
+                                        sourceItem.reactsOnMouse = true;
+                                    }
+
+                                    sourceItem.onmouseclick = function (e) {
+                                        vc.element.css('cursor', 'default');
+                                        window.open(mediaSource);
+                                        return true;
+                                    };
+                                    sourceItem.onmouseenter = function (pv, e) {
+                                        this.settings.fillStyle = CZ.Settings.contentItemSourceHoveredFontColor;
+                                        this.vc.requestInvalidate();
+                                        this.vc.element.css('cursor', 'pointer');
+                                    };
+                                    sourceItem.onmouseleave = function (pv, e) {
+                                        this.settings.fillStyle = CZ.Settings.contentItemSourceFontColor;
+                                        this.vc.requestInvalidate();
+                                        this.vc.element.css('cursor', 'default');
+                                    };
                                 }
+                            };
 
-                                sourceItem.onmouseclick = function (e) {
-                                    vc.element.css('cursor', 'default');
-                                    window.open(mediaSource);
-                                    return true;
-                                };
-                                sourceItem.onmouseenter = function (pv, e) {
-                                    this.settings.fillStyle = CZ.Settings.contentItemSourceHoveredFontColor;
-                                    this.vc.requestInvalidate();
-                                    this.vc.element.css('cursor', 'pointer');
-                                };
-                                sourceItem.onmouseleave = function (pv, e) {
-                                    this.settings.fillStyle = CZ.Settings.contentItemSourceFontColor;
-                                    this.vc.requestInvalidate();
-                                    this.vc.element.css('cursor', 'default');
-                                };
-                            }
-                        };
-
-                        addSourceText(vx + leftOffset, contentWidth, sourceTop);
-                    }
+                            addSourceText(vx + leftOffset, contentWidth, sourceTop);
+                        }
+                    */
 
                     // Description
                     var descrTop = titleTop + titleHeight + verticalMargin;
@@ -2660,40 +2664,43 @@ var CZ;
                         }
                     }
 
-                    var biblBottom = vyc + centralSquareSize + 63.0 / 450 * 2 * radv;
-                    var biblHeight = CZ.Settings.infodotBibliographyHeight * radv * 2;
-                    var biblWidth = titleWidth / 3;
-                    var bibl = addText(contentItem, layerid, id + "__bibliography", time - biblWidth / 2, biblBottom - biblHeight, biblBottom - biblHeight / 2, biblHeight, "Bibliography", {
-                        fontName: CZ.Settings.contentItemHeaderFontName,
-                        fillStyle: CZ.Settings.timelineBorderColor,
-                        textBaseline: 'middle',
-                        textAlign: 'center',
-                        opacity: 1
-                    }, biblWidth);
-                    bibl.reactsOnMouse = true;
-                    bibl.onmouseclick = function (e) {
-                        this.vc.element.css('cursor', 'default');
-                        CZ.Bibliography.showBibliography({ infodot: infodotDescription, contentItems: infodot.contentItems }, contentItem, id + "__bibliography");
-                        return true;
-                    };
-                    bibl.onmouseenter = function (pv, e) {
-                        this.settings.fillStyle = CZ.Settings.infoDotHoveredBorderColor;
-                        this.vc.requestInvalidate();
-                        this.vc.element.css('cursor', 'pointer');
-                    };
-                    bibl.onmouseleave = function (pv, e) {
-                        this.settings.fillStyle = CZ.Settings.infoDotBorderColor;
-                        this.vc.requestInvalidate();
-                        this.vc.element.css('cursor', 'default');
-                    };
+                    /* Disabled in offline mode
 
-                    //Parse url for parameter b (bibliography).
-                    var bid = window.location.hash.match("b=([a-z0-9_\-]+)");
-                    if (bid && bibliographyFlag) {
-                        //bid[0] - source string
-                        //bid[1] - found match
-                        CZ.Bibliography.showBibliography({ infodot: infodotDescription, contentItems: infodot.contentItems }, contentItem, bid[1]);
-                    }
+                        var biblBottom = vyc + centralSquareSize + 63.0 / 450 * 2 * radv;
+                        var biblHeight = CZ.Settings.infodotBibliographyHeight * radv * 2;
+                        var biblWidth = titleWidth / 3;
+                        var bibl = addText(contentItem, layerid, id + "__bibliography", time - biblWidth / 2, biblBottom - biblHeight, biblBottom - biblHeight / 2, biblHeight, "Bibliography", {
+                            fontName: CZ.Settings.contentItemHeaderFontName,
+                            fillStyle: CZ.Settings.timelineBorderColor,
+                            textBaseline: 'middle',
+                            textAlign: 'center',
+                            opacity: 1
+                        }, biblWidth);
+                        bibl.reactsOnMouse = true;
+                        bibl.onmouseclick = function (e) {
+                            this.vc.element.css('cursor', 'default');
+                            CZ.Bibliography.showBibliography({ infodot: infodotDescription, contentItems: infodot.contentItems }, contentItem, id + "__bibliography");
+                            return true;
+                        };
+                        bibl.onmouseenter = function (pv, e) {
+                            this.settings.fillStyle = CZ.Settings.infoDotHoveredBorderColor;
+                            this.vc.requestInvalidate();
+                            this.vc.element.css('cursor', 'pointer');
+                        };
+                        bibl.onmouseleave = function (pv, e) {
+                            this.settings.fillStyle = CZ.Settings.infoDotBorderColor;
+                            this.vc.requestInvalidate();
+                            this.vc.element.css('cursor', 'default');
+                        };
+
+                        //Parse url for parameter b (bibliography).
+                        var bid = window.location.hash.match("b=([a-z0-9_\-]+)");
+                        if (bid && bibliographyFlag) {
+                            //bid[0] - source string
+                            //bid[1] - found match
+                            CZ.Bibliography.showBibliography({ infodot: infodotDescription, contentItems: infodot.contentItems }, contentItem, bid[1]);
+                        }
+                    */
 
                     if (contentItem) {
                         infodot.hasContentItems = true;
