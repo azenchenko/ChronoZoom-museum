@@ -542,6 +542,9 @@
     <Content Include="css\_vars.css.map">
       <DependentUpon>_vars.css</DependentUpon>
     </Content>
+    <Content Include="maps-topojson\asia.json" />
+    <Content Include="maps-topojson\eurasia.json" />
+    <Content Include="maps-topojson\europe.json" />
     <Content Include="css\audio.less" />
     <Content Include="css\audio.css.map">
       <DependentUpon>audio.css</DependentUpon>
