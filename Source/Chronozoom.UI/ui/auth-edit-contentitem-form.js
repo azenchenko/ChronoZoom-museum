@@ -337,6 +337,7 @@ var CZ;
 
                 if (this.mediaFileChanged) {
                     CZ.Service.postLocalFile(this.file).then(function (filename) {
+                        _this.mediaInputName.val(filename)
                         _this.saveContentItem(filename);
                     },
                     function (error) {

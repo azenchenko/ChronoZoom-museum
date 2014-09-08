@@ -212,7 +212,7 @@ var CZ;
                 this.dateContainer.append(this.yearSelector);
                 this.dateContainer.append(this.regimeSelector);
                 this.dateContainer.append('<br />');
-                this.dateContainer.append(this.circaSelector);
+                // this.dateContainer.append(this.circaSelector);
             };
 
             /**

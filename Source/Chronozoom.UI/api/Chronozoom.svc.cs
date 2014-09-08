@@ -414,13 +414,13 @@ namespace Chronozoom.UI
                 // Show all of the data when searching by empty query.
                 if (string.IsNullOrWhiteSpace(searchTerm))
                 {
-                    var timelines = storage.Timelines.ToList();
+                    var timelines = storage.Timelines.Where(timeline => timeline.Collection.Id == collectionId).ToList();
                     searchResults = timelines.Select(timeline => new SearchResult { Id = timeline.Id, Title = timeline.Title, ObjectType = ObjectType.Timeline }).ToList();
 
-                    var exhibits = storage.Exhibits.ToList();
+                    var exhibits = storage.Exhibits.Where(exhibit => exhibit.Collection.Id == collectionId).ToList();
                     searchResults.AddRange(exhibits.Select(exhibit => new SearchResult { Id = exhibit.Id, Title = exhibit.Title, ObjectType = ObjectType.Exhibit }));
 
-                    var contentItems = storage.ContentItems.ToList();
+                    var contentItems = storage.ContentItems.Where(exhibit => exhibit.Collection.Id == collectionId).ToList();
                     searchResults.AddRange(contentItems.Select(contentItem => new SearchResult { Id = contentItem.Id, Title = contentItem.Title, ObjectType = ObjectType.ContentItem }));
                 }
                 else

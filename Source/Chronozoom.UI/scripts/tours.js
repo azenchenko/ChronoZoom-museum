@@ -208,8 +208,8 @@ var CZ;
                     // Going to the next bookmark if we are not at the end
                     if ((self.currentPlace.bookmark == self.bookmarks.length - 1) && !goBack) {
                         // reset tour state
-                        self.state = 'pause';
-                        self.currentPlace = { type: 'goto', bookmark: 0 };
+                        // self.state = 'pause';
+                        // self.currentPlace = { type: 'goto', bookmark: 0 };
                         self.RaiseTourFinished();
                     } else {
                         self.goToTheNextBookmark(goBack);

@@ -495,6 +495,9 @@ var CZ;
             }
 
             Common.idleTimeout = window.setTimeout(function () {
+                // Show all of the content in search navigation form.
+                CZ._demoNavigationForm.searchTextbox.val("").trigger("input");
+
                 // Can't start autoplay since there are not tours.
                 if (CZ.Tours.tours.length === 0) {
                     console.log("No tours to play");
@@ -549,9 +552,6 @@ var CZ;
                     CZ.Tours.removeActiveTour();
                     CZ.Tours.activateTour(newTour, true);
                 }
-
-                // Show all of the content in search navigation form.
-                CZ._demoNavigationForm.searchTextbox.val("").trigger("input");
             }, CZ.Settings.theme.idleTimeout * 1000); // Value for idle timeout in seconds, not in milliseconds.
         };
         Common.setupIdleTimeout = setupIdleTimeout;

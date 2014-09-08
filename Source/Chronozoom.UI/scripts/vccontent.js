@@ -1956,7 +1956,7 @@ var CZ;
                 videoSrc += '&wmode=opaque';
             elem.setAttribute("src", videoSrc);
             elem.setAttribute("visible", 'true');
-            elem.setAttribute("controls", 'true');
+            elem.setAttribute("autoplay", true);
 
             this.initializeContent(elem);
 
