@@ -1186,17 +1186,17 @@ var CZ;
                         btnX = this.x + this.width - 4.0 * this.titleObject.height;
                         btnY = this.titleObject.y + 0.15 * this.titleObject.height;
 
-                        this.mapViewBtn = VCContent.addImage(
-                            this,
-                            layerid,
-                            id + "__mapView",
-                            btnX, 
-                            btnY,
-                            0.7 * this.titleObject.height,
-                            0.7 * this.titleObject.height,
-                            "/images/mapview.svg"
-                        );
-                        this.mapViewBtn.reactsOnMouse = true;
+                    this.mapViewBtn = VCContent.addImage(
+                        this,
+                        layerid,
+                        id + "__mapView",
+                        btnX,
+                        btnY,
+                        this.titleObject.height,
+                        0.7 * this.titleObject.height,
+                        "/images/mapview.svg"
+                    );
+                    this.mapViewBtn.reactsOnMouse = true;
 
                         this.mapViewBtn.onmouseclick = function () {
                             var exhibits = this.parent.exhibits.filter(function (item) {
