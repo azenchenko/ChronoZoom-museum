@@ -71,7 +71,9 @@ var CZ;
                 this.titleTextblock = this.container.find(uiMap.titleTextblock);
                 this.descrTextblock = this.container.find(uiMap.descrTextblock);
 
-                this.iconImg.attr("onerror", "this.src='/images/Temp-Thumbnail2.png';");
+                this.iconImg[0].onerror = function (event) {
+                    this.src = "/images/Temp-Thumbnail2.png";
+                };
                 this.iconImg.attr("src", CZ.Settings.contentItemThumbnailBaseUri + this.data.guid + '.png?' + new Date().getTime());
                 this.titleTextblock.text(this.data.title);
                 this.descrTextblock.text(this.data.description);

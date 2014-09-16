@@ -240,20 +240,27 @@ var CZ;
                             if (this.contentItem.guid) {
                                 var filetype = this.file ? this.file.type : this.contentItem.mediaType;
 
+                                $("#wait2").attr("data-text", "Updating thumbnail... ")
+                                    .show();
+
                                 // Update local thumbnail for existing exhibit (guid is defined).
-                                CZ.Common.generateLocalThumbnail(filetype, filename, this.contentItem.guid, function () {
-                                    _this.isCancel = false;
-                                    var clickedListItem = _this.prevForm.clickedListItem;
-                                    clickedListItem.iconImg.attr("src", newContentItem.uri);
-                                    clickedListItem.titleTextblock.text(newContentItem.title);
-                                    clickedListItem.descrTextblock.text(newContentItem.description);
-                                    $.extend(_this.exhibit.contentItems[_this.contentItem.order], newContentItem);
-                                    _this.prevForm.exhibit = _this.exhibit = CZ.Authoring.renewExhibit(_this.exhibit);
-                                    _this.prevForm.isModified = true;
-                                    CZ.Common.vc.virtualCanvas("requestInvalidate");
-                                    _this.isModified = false;
-                                    _this.back();
-                                });
+                                CZ.Common.generateLocalThumbnail(filetype, filename, this.contentItem.guid)
+                                    .done(function () {
+                                        $("#wait2").hide();
+                                        console.log("Generated local thumbnail for item " + _this.contentItem.guid);
+
+                                        _this.isCancel = false;
+                                        var clickedListItem = _this.prevForm.clickedListItem;
+                                        clickedListItem.iconImg.attr("src", newContentItem.uri);
+                                        clickedListItem.titleTextblock.text(newContentItem.title);
+                                        clickedListItem.descrTextblock.text(newContentItem.description);
+                                        $.extend(_this.exhibit.contentItems[_this.contentItem.order], newContentItem);
+                                        _this.prevForm.exhibit = _this.exhibit = CZ.Authoring.renewExhibit(_this.exhibit);
+                                        _this.prevForm.isModified = true;
+                                        CZ.Common.vc.virtualCanvas("requestInvalidate");
+                                        _this.isModified = false;
+                                        _this.back();
+                                    });
                             }
                             else {
                                 this.isCancel = false;
@@ -273,30 +280,35 @@ var CZ;
 
                             var filetype = this.file ? this.file.type : this.contentItem.mediaType;
 
+                            $("#wait2").attr("data-text", "Updating thumbnail... ")
+                                .show();
+
                             // Update local thumbnail for existing exhibit (guid is defined).
-                            CZ.Common.generateLocalThumbnail(filetype, filename, this.contentItem.guid, function () {
-                                console.log("generated local thumbnail for item with guid" + _this.contentItem.guid);
+                            CZ.Common.generateLocalThumbnail(filetype, filename, this.contentItem.guid)
+                                .done(function () {
+                                    $("#wait2").hide();
+                                    console.log("Generated local thumbnail for item " + _this.contentItem.guid);
 
-                                _this.saveButton.prop('disabled', true);
-                                CZ.Authoring.updateContentItem(_this.exhibit, _this.contentItem, newContentItem).then(function (response) {
-                                    _this.isCancel = false;
-                                    _this.isModified = false;
-                                    _this.close();
-                                }, function (error) {
-                                    var errorMessage = error.statusText;
+                                    _this.saveButton.prop('disabled', true);
+                                    CZ.Authoring.updateContentItem(_this.exhibit, _this.contentItem, newContentItem).then(function (response) {
+                                        _this.isCancel = false;
+                                        _this.isModified = false;
+                                        _this.close();
+                                    }, function (error) {
+                                        var errorMessage = error.statusText;
 
-                                    if (errorMessage.match(/Media Source/)) {
-                                        _this.errorMessage.text("One or more fields filled wrong");
-                                        _this.mediaSourceInput.showError("Media Source URL is not a valid URL");
-                                    } else {
-                                        _this.errorMessage.text("Sorry, internal server error :(");
-                                    }
+                                        if (errorMessage.match(/Media Source/)) {
+                                            _this.errorMessage.text("One or more fields filled wrong");
+                                            _this.mediaSourceInput.showError("Media Source URL is not a valid URL");
+                                        } else {
+                                            _this.errorMessage.text("Sorry, internal server error :(");
+                                        }
 
-                                    _this.errorMessage.show().delay(7000).fadeOut();
-                                }).always(function () {
-                                    _this.saveButton.prop('disabled', false);
+                                        _this.errorMessage.show().delay(7000).fadeOut();
+                                    }).always(function () {
+                                        _this.saveButton.prop('disabled', false);
+                                    });
                                 });
-                            });
                         }
                     }
                 } else {
@@ -377,6 +389,8 @@ var CZ;
                         return;
                     }
                 }
+
+                $("#wait2").hide();
 
                 _super.prototype.close.call(this, noAnimation ? undefined : {
                     effect: "slide",

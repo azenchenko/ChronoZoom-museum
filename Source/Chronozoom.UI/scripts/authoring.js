@@ -581,18 +581,32 @@ var CZ;
                     $(response.ContentItemId).each(function (contentItemIdIndex, contentItemId) {
                         newExhibit.contentItems[contentItemIdIndex].id = contentItemId;
                         newExhibit.contentItems[contentItemIdIndex].guid = contentItemId;
-
-                        CZ.Common.generateLocalThumbnail(newExhibit.contentItems[contentItemIdIndex].mediaType,
-                            newExhibit.contentItems[contentItemIdIndex].uri,
-                            newExhibit.contentItems[contentItemIdIndex].guid
-                        );
                     });
 
-                    newExhibit = renewExhibit(newExhibit);
-                    newExhibit.id = "e" + response.ExhibitId;
+                    var contentItems = newExhibit.contentItems.map(function (ci) {
+                            return {
+                                mediaType: ci.mediaType,
+                                guid: ci.guid,
+                                uri: ci.uri
+                            };
+                        }),
 
-                    CZ.Common.vc.virtualCanvas("requestInvalidate");
-                    deferred.resolve(newExhibit);
+                        // Deferred object for thumbnails generation.
+                        sync = $.Deferred();
+
+                    sync.done(function () {
+                        console.log("Finished updating of thumbnails for " + newExhibit.guid);
+
+                        newExhibit = renewExhibit(newExhibit);
+                        newExhibit.id = "e" + response.ExhibitId;
+
+                        CZ.Common.vc.virtualCanvas("requestInvalidate");
+                        $("#wait2").hide();
+
+                        deferred.resolve(newExhibit);
+                    });
+
+                    updateCIThumbnails(contentItems, sync);
                 }, function (error) {
                     console.log("Error connecting to service: update exhibit.\n" + error.responseText);
                     deferred.reject(error);
@@ -604,6 +618,39 @@ var CZ;
             return deferred.promise();
         }
         Authoring.updateExhibit = updateExhibit;
+
+        /**
+         * Updates local thumbnails for a list of content items.
+         * @param   {Array}     contentItems    Array of content items to update
+         *                                      their thumbnails.
+         * @param   {Deferred}  syncObject      Deferred object to resolve when
+         *                                      all thumbnails wil be generated.
+         */
+        function updateCIThumbnails (contentItems, syncObject) {
+            // Pop last item to update its thumbnail.
+            var current = contentItems.pop();
+
+            // No more items left to update thumbnail.
+            if (typeof current === "undefined") {
+                console.log("Finished generation of all thumbnails");
+                syncObject.resolve();
+                $("#wait2").removeAttr("data-text");
+
+                return true;
+            }
+
+            $("#wait2").attr("data-text", "Updating thumbnails... " + (contentItems.length + 1) + " left.")
+                .show();
+            console.log("Updating thumbnails... " + (contentItems.length + 1) + " left.");
+
+            CZ.Common.generateLocalThumbnail(current.mediaType,
+                current.uri,
+                current.guid)
+            .always(function () {
+                console.log("Finished generation of thumbnail for " + current.guid);
+                updateCIThumbnails(contentItems, syncObject);
+            });
+        }
 
         /**
         * Removes an exhibit from virtual canvas.

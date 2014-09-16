@@ -2003,8 +2003,9 @@ a:visited {
   text-decoration: none;
 }
 /* Loading Hourglass */
-#wait {
-  display: block;
+#wait,
+#wait2 {
+  display: none;
   position: fixed;
   width: 100%;
   height: 100%;
@@ -2012,6 +2013,19 @@ a:visited {
   text-align: center;
   margin-top: 100px;
   z-index: 1000;
+}
+#wait2:after {
+  margin: 75px auto 0 auto;
+  left: 0;
+  right: 0;
+  padding: 0 10px;
+  border-radius: 4px;
+  color: #000;
+  width: 250px;
+  background-color: #bfbfbf;
+  content: attr(data-text);
+  position: fixed;
+  text-align: center;
 }
 a.help-link {
   color: #25a1ea !important;

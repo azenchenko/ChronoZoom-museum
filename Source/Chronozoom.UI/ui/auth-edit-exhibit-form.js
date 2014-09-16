@@ -375,6 +375,8 @@ var CZ;
                     }
                 }
 
+                $("#wait2").hide();
+
                 _super.prototype.close.call(this, noAnimation ? undefined : {
                     effect: "slide",
                     direction: "left",
