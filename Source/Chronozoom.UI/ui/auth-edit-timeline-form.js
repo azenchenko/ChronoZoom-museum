@@ -128,8 +128,18 @@ var CZ;
                             self.isCancel = false;
                             self.close();
 
+                            // if (CZ.Authoring.mode === "createTimeline") {
+                                var vp = CZ.Common.vc.virtualCanvas("getViewport");
+                                var nav = CZ.UrlNav.vcelementToNavString(self.timeline, vp).split("@")[0];
+                                console.log(nav);
+                                console.log(window.location.href.split("#")[0] + "#" + nav);
+                                window.location.href = window.location.href.split("#")[0] +
+                                    "#" + nav;
+                                window.location.reload();
+                            // }
+
                             //Move to new created timeline
-                            self.timeline.onmouseclick();
+                            // self.timeline.onmouseclick();
                         }, function (error) {
                             if (error !== undefined && error !== null) {
                                 self.errorMessage.text(error).show().delay(7000).fadeOut();

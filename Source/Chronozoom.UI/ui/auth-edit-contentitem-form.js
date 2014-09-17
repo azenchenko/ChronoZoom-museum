@@ -116,19 +116,6 @@ var CZ;
                     _this.file = file || null;
                 });
 
-                this.descriptionInput.on('keyup', function (e) {
-                    if (e.which == 13) {
-                        _this.saveButton.click(function () {
-                            return _this.onSaveClick();
-                        });
-                    }
-                });
-                this.descriptionInput.on('keydown', function (e) {
-                    if (e.which == 13) {
-                        _this.saveButton.off();
-                    }
-                });
-
                 if (CZ.Media.SkyDriveMediaPicker.isEnabled && this.mediaTypeInput.find("option[value='skydrive-image']").length === 0) {
                     $("<option></option>", {
                         value: "skydrive-image",
@@ -237,44 +224,20 @@ var CZ;
                         if (this.prevForm && this.prevForm instanceof UI.FormEditExhibit) {
                             // Updating exhibit.
 
-                            if (this.contentItem.guid) {
-                                var filetype = this.file ? this.file.type : this.contentItem.mediaType;
-
-                                $("#wait2").attr("data-text", "Updating thumbnail... ")
-                                    .show();
-
-                                // Update local thumbnail for existing exhibit (guid is defined).
-                                CZ.Common.generateLocalThumbnail(filetype, filename, this.contentItem.guid)
-                                    .done(function () {
-                                        $("#wait2").hide();
-                                        console.log("Generated local thumbnail for item " + _this.contentItem.guid);
-
-                                        _this.isCancel = false;
-                                        var clickedListItem = _this.prevForm.clickedListItem;
-                                        clickedListItem.iconImg.attr("src", newContentItem.uri);
-                                        clickedListItem.titleTextblock.text(newContentItem.title);
-                                        clickedListItem.descrTextblock.text(newContentItem.description);
-                                        $.extend(_this.exhibit.contentItems[_this.contentItem.order], newContentItem);
-                                        _this.prevForm.exhibit = _this.exhibit = CZ.Authoring.renewExhibit(_this.exhibit);
-                                        _this.prevForm.isModified = true;
-                                        CZ.Common.vc.virtualCanvas("requestInvalidate");
-                                        _this.isModified = false;
-                                        _this.back();
-                                    });
-                            }
-                            else {
-                                this.isCancel = false;
-                                var clickedListItem = this.prevForm.clickedListItem;
+                            if (!this.contentItem.guid) {
                                 clickedListItem.iconImg.attr("src", newContentItem.uri);
-                                clickedListItem.titleTextblock.text(newContentItem.title);
-                                clickedListItem.descrTextblock.text(newContentItem.description);
-                                $.extend(this.exhibit.contentItems[this.contentItem.order], newContentItem);
-                                this.prevForm.exhibit = this.exhibit = CZ.Authoring.renewExhibit(this.exhibit);
-                                this.prevForm.isModified = true;
-                                CZ.Common.vc.virtualCanvas("requestInvalidate");
-                                this.isModified = false;
-                                this.back();
                             }
+
+                            this.isCancel = false;
+                            var clickedListItem = this.prevForm.clickedListItem;
+                            clickedListItem.titleTextblock.text(newContentItem.title);
+                            clickedListItem.descrTextblock.text(newContentItem.description);
+                            $.extend(this.exhibit.contentItems[this.contentItem.order], newContentItem);
+                            this.prevForm.exhibit = this.exhibit = CZ.Authoring.renewExhibit(this.exhibit);
+                            this.prevForm.isModified = true;
+                            CZ.Common.vc.virtualCanvas("requestInvalidate");
+                            this.isModified = false;
+                            this.back();
                         } else {
                             // Editing single content item.
 

@@ -77,13 +77,6 @@ var CZ;
                 _super.call(this, container, formInfo);
 
                 this.saveButton = this.container.find(formInfo.saveButton);
-
-                this.container.keypress(function (event) {
-                    // trigger click on save button if ENTER was pressed
-                    if (event.keyCode === 13) {
-                        _this.saveButton.trigger("click");
-                    }
-                });
             }
             return FormUpdateEntity;
         })(FormBase);

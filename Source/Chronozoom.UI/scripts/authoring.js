@@ -467,7 +467,7 @@ var CZ;
                 type: "rectangle"
             };
 
-            if (checkTimelineIntersections(t.parent, temp, true)) {
+            // if (checkTimelineIntersections(t.parent, temp, true)) {
                 t.x = temp.x;
                 t.width = temp.width;
                 t.endDate = prop.end;
@@ -524,9 +524,9 @@ var CZ;
                 }, function (error) {
                     deffered.reject(error);
                 });
-            } else {
-                deffered.reject('Timeline intersects with parent timeline or other siblings');
-            }
+            // } else {
+            //     deffered.reject('Timeline intersects with parent timeline or other siblings');
+            // }
 
             return deffered.promise();
         }
