@@ -10,6 +10,8 @@ var CZ;
         var DemoNavigationForm = (function (_super) {
             __extends(DemoNavigationForm, _super);
             function DemoNavigationForm(container, formInfo) {
+                var _this = this;
+
                 _super.call(this, container, formInfo);
 
                 this.searchTextbox = container.find(formInfo.searchTextbox);
@@ -17,6 +19,13 @@ var CZ;
                 this.progressBar = container.find(formInfo.progressBar);
                 this.resultSections = container.find(formInfo.resultSections);
                 this.resultsCountTextblock = container.find(formInfo.resultsCountTextblock);
+
+                this.closeButton = this.container.find(formInfo.closeButton);
+                this.closeButton.off();
+
+                this.closeButton.click(function (event) {
+                    _this.close();
+                });
 
                 this.initialize();
             }
@@ -112,6 +121,27 @@ var CZ;
                     var resultId = idPrefixes[resultType] + item.id;
                     var resultTitle = item.title;
 
+                    // Show date for exhibits.
+                    if (resultType === "exhibit") {
+                        var year = CZ.Dates.convertCoordinateToYear(item.year);
+                        
+                        // Show month and day.
+                        if (year.regime === "CE" && item.year % 1 !== 0) {
+                            var ymd = CZ.Dates.getYMDFromCoordinate(item.year);
+                            ymd.month++;
+
+                            resultTitle += " (" +
+                                    ymd.month + "." +
+                                    ymd.day   + "." +
+                                    ymd.year  + " CE)";
+                        }
+                        else {
+                            resultTitle += " (" +
+                                    year.year   + " " +
+                                    year.regime + ")";
+                        }
+                    }
+
                     sections[resultType].append($("<div></div>", {
                         class: "cz-form-search-result",
                         text: resultTitle,
@@ -119,6 +149,7 @@ var CZ;
                         "result-type": resultType,
                         click: function () {
                             var self = $(this);
+                            CZ._demoNavigationForm.close();
                             CZ.Search.goToSearchResult(self.attr("result-id"), self.attr("result-type"));
                         }
                     }));
@@ -220,7 +251,7 @@ var CZ;
             DemoNavigationForm.prototype.close = function () {
                 _super.prototype.close.call(this, {
                     effect: "slide",
-                    direction: "left",
+                    direction: "right",
                     duration: 500
                 });
 

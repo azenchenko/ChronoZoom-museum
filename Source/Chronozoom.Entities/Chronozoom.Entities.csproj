@@ -98,6 +98,7 @@
     <Compile Include="Bitmask.cs" />
     <Compile Include="Bookmark.cs" />
     <Compile Include="Collection.cs" />
+    <Compile Include="DemoSearchResult.cs" />
     <Compile Include="ManualMigrationCheck.cs" />
     <Compile Include="Member.cs" />
     <Compile Include="ContentItem.cs" />

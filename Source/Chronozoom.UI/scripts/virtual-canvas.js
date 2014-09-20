@@ -80,6 +80,7 @@ var CZ;
                         self.mouseMove(e);
                     });
                     self.element.bind('mousedown.' + this.widgetName, function (e) {
+                        CZ._demoNavigationForm.close();
                         switch (e.which) {
                             case 1:
                                 self._mouseDown(e); //means that only left click will be interpreted
@@ -87,6 +88,7 @@ var CZ;
                         }
                     });
                     self.element.bind('mouseup.' + this.widgetName, function (e) {
+                        CZ._demoNavigationForm.close();
                         switch (e.which) {
                             case 1:
                                 self._mouseUp(e);

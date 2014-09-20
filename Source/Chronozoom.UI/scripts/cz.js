@@ -421,6 +421,7 @@ var CZ;
                     navButton: ".cz-form-nav",
                     titleTextblock: ".cz-form-title",
                     searchTextbox: ".cz-form-search-input",
+                    closeButton: ".cz-form-close-btn > .cz-form-btn",
                     searchResultsBox: ".cz-form-search-results",
                     progressBar: ".cz-form-progress-bar",
                     resultSections: ".cz-form-search-results > .cz-form-search-section",

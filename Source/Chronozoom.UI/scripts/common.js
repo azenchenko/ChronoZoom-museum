@@ -554,6 +554,7 @@ var CZ;
             Common.idleTimeout = window.setTimeout(function () {
                 // Show all of the content in search navigation form.
                 CZ._demoNavigationForm.searchTextbox.val("").trigger("input");
+                CZ._demoNavigationForm.show();
 
                 // Can't start autoplay since there are not tours.
                 if (CZ.Tours.tours.length === 0) {

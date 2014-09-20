@@ -403,43 +403,66 @@ namespace Chronozoom.UI
             });
         }
 
-        public BaseJsonResult<IEnumerable<SearchResult>> DemoSearch(string superCollection, string collection, string searchTerm)
+        public BaseJsonResult<IEnumerable<DemoSearchResult>> DemoSearch(string superCollection, string collection, string searchTerm)
         {
             return ApiOperation(delegate(User user, Storage storage)
             {
                 Guid collectionId = CollectionIdOrDefault(storage, superCollection, collection);
                 searchTerm = searchTerm.ToUpperInvariant();
-                List<SearchResult> searchResults;
+                List<DemoSearchResult> searchResults;
 
                 // Show all of the data when searching by empty query.
                 if (string.IsNullOrWhiteSpace(searchTerm))
                 {
-                    var timelines = storage.Timelines.Where(timeline => timeline.Collection.Id == collectionId).ToList();
-                    searchResults = timelines.Select(timeline => new SearchResult { Id = timeline.Id, Title = timeline.Title, ObjectType = ObjectType.Timeline }).ToList();
+                    var timelines = storage.Timelines.Where(timeline => timeline.Collection.Id == collectionId)
+                        .ToList();
+                    searchResults = timelines.Select(timeline => new DemoSearchResult { Id = timeline.Id, Title = timeline.Title, ObjectType = ObjectType.Timeline })
+                        .ToList();
 
-                    var exhibits = storage.Exhibits.Where(exhibit => exhibit.Collection.Id == collectionId).ToList();
-                    searchResults.AddRange(exhibits.Select(exhibit => new SearchResult { Id = exhibit.Id, Title = exhibit.Title, ObjectType = ObjectType.Exhibit }));
+                    var exhibits = storage.Exhibits.Where(exhibit => exhibit.Collection.Id == collectionId)
+                        .OrderBy(exhibit => exhibit.Year)
+                        .ToList();
+                    searchResults.AddRange(exhibits.Select(exhibit => new DemoSearchResult
+                        {
+                            Id = exhibit.Id,
+                            Title = exhibit.Title,
+                            ObjectType = ObjectType.Exhibit,
+                            Year = exhibit.Year
+                        }));
 
-                    var contentItems = storage.ContentItems.Where(exhibit => exhibit.Collection.Id == collectionId).ToList();
-                    searchResults.AddRange(contentItems.Select(contentItem => new SearchResult { Id = contentItem.Id, Title = contentItem.Title, ObjectType = ObjectType.ContentItem }));
+                    // Temporary disabled showing media items in demo search results.
+                    //var contentItems = storage.ContentItems.Where(exhibit => exhibit.Collection.Id == collectionId)
+                    //    .ToList();
+                    //searchResults.AddRange(contentItems.Select(contentItem => new DemoSearchResult { Id = contentItem.Id, Title = contentItem.Title, ObjectType = ObjectType.ContentItem }));
                 }
                 else
                 {
                     var timelines = storage.Timelines.Where(_ => _.Title.ToUpper().Contains(searchTerm) && _.Collection.Id == collectionId).Take(MaxSearchLimit).ToList();
-                    searchResults = timelines.Select(timeline => new SearchResult { Id = timeline.Id, Title = timeline.Title, ObjectType = ObjectType.Timeline }).ToList();
+                    searchResults = timelines.Select(timeline => new DemoSearchResult { Id = timeline.Id, Title = timeline.Title, ObjectType = ObjectType.Timeline })
+                        .ToList();
 
-                    var exhibits = storage.Exhibits.Where(_ => _.Title.ToUpper().Contains(searchTerm) && _.Collection.Id == collectionId).Take(MaxSearchLimit).ToList();
-                    searchResults.AddRange(exhibits.Select(exhibit => new SearchResult { Id = exhibit.Id, Title = exhibit.Title, ObjectType = ObjectType.Exhibit }));
+                    var exhibits = storage.Exhibits.Where(_ => _.Title.ToUpper().Contains(searchTerm) && _.Collection.Id == collectionId).Take(MaxSearchLimit)
+                        .ToList();
+                    searchResults.AddRange(exhibits.Select(exhibit => new DemoSearchResult
+                        {
+                            Id = exhibit.Id,
+                            Title = exhibit.Title,
+                            ObjectType = ObjectType.Exhibit,
+                            Year = exhibit.Year
+                        }));
 
-                    var contentItems = storage.ContentItems.Where(_ =>
-                        (_.Title.ToUpper().Contains(searchTerm) || _.Caption.ToUpper().Contains(searchTerm))
-                         && _.Collection.Id == collectionId
-                        ).Take(MaxSearchLimit).ToList();
-                    searchResults.AddRange(contentItems.Select(contentItem => new SearchResult { Id = contentItem.Id, Title = contentItem.Title, ObjectType = ObjectType.ContentItem }));
+                    // Temporary disabled showing media items in demo search results.
+                    //var contentItems = storage.ContentItems.Where(_ =>
+                    //        (_.Title.ToUpper().Contains(searchTerm) || _.Caption.ToUpper().Contains(searchTerm))
+                    //            && _.Collection.Id == collectionId
+                    //    )
+                    //    .Take(MaxSearchLimit)
+                    //    .ToList();
+                    //searchResults.AddRange(contentItems.Select(contentItem => new DemoSearchResult { Id = contentItem.Id, Title = contentItem.Title, ObjectType = ObjectType.ContentItem }));
                 }
 
                 Trace.TraceInformation("Search called for search term {0}", searchTerm);
-                return new BaseJsonResult<IEnumerable<SearchResult>>(searchResults);
+                return new BaseJsonResult<IEnumerable<DemoSearchResult>>(searchResults);
             });
         }
 
