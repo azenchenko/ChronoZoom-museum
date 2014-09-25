@@ -23,6 +23,9 @@ var CZ;
         Settings.allowedMathImprecisionDecimals = parseInt(Settings.allowedMathImprecision.toExponential().split("-")[1]);
         Settings.canvasElementAnimationTime = 1300;
         Settings.canvasElementFadeInTime = 400;
+        Settings.mouseClickImpressision = 3; // Radius of circle with center in
+            // mouse down position. If mouse up position within this circle then
+            // mouse click happened.
 
         Settings.contentScaleMargin = 20;
 

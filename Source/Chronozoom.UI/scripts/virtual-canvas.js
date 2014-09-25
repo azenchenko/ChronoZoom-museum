@@ -124,8 +124,13 @@ var CZ;
                     var origin = CZ.Common.getXBrowserMouseOrigin(this.element, e);
                     var posv = viewport.pointScreenToVirtual(origin.x, origin.y);
 
-                    if (this.lastClickPosition && this.lastClickPosition.x == origin.x && this.lastClickPosition.y == origin.y)
+                    // Mouse click if current mouse position is within circle
+                    // of allowed imprecision.
+                    if (Math.exp(this.lastClickPosition.x - origin.x, 2) +
+                        Math.exp(this.lastClickPosition.y - origin.y, 2) <=
+                        Math.exp(CZ.Settings.mouseClickImpressision, 2)) {
                         this._mouseClick(e);
+                    }
 
                     //Bug (176751): Infodots/video. Mouseup event handling.
                     //Chrome/Firefox solution
