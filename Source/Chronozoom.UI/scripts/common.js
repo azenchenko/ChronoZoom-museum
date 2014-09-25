@@ -552,13 +552,18 @@ var CZ;
             }
 
             Common.idleTimeout = window.setTimeout(function () {
-                // Show all of the content in search navigation form.
-                CZ._demoNavigationForm.searchTextbox.val("").trigger("input");
-                CZ._demoNavigationForm.show();
-
                 // Can't start autoplay since there are not tours.
                 if (CZ.Tours.tours.length === 0) {
                     console.log("No tours to play");
+
+                    // Show main timeline.
+                    CZ.Search.goToSearchResult(CZ.Common.vc.virtualCanvas("getLayerContent").children[0].id,
+                        CZ.Common.vc.virtualCanvas("getLayerContent").children[0].type);
+
+                    // Show all of the content in search navigation form.
+                    CZ._demoNavigationForm.searchTextbox.val("").trigger("input");
+                    CZ._demoNavigationForm.show();
+
                     return;
                 }
 

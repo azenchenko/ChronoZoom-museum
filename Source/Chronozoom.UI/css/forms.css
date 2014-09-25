@@ -511,19 +511,49 @@ select.error {
 }
 /* Demo Search Form */
 .cz-demo-navigation-form {
-  min-width: 380px;
-  max-width: 450px;
-  width: 30.2734375%;
   bottom: 25px;
   right: 0;
 }
-.cz-demo-navigation-form > .cz-form-content {
+.cz-demo-navigation-form .minor-container {
+  min-width: 380px;
+  max-width: 450px;
+  overflow: hidden;
+  width: 0;
+}
+.cz-demo-navigation-form .cz-form-content {
   position: absolute;
   top: 36px;
   right: 0;
   bottom: 0;
   left: 0;
   overflow-y: hidden;
+  box-sizing: border-box;
+}
+.cz-demo-navigation-form .cz-form-side-button {
+  position: absolute;
+  top: 38px;
+  color: white;
+  background: #0464a2;
+  right: -50px;
+  bottom: 0;
+  transition: right linear .5s;
+  width: 50px;
+  overflow: hidden;
+}
+.cz-demo-navigation-form .cz-form-side-button .cz-form-side-button-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 168px;
+  bottom: 0;
+  margin: auto;
+  width: 50px;
+  height: 50px;
+  transform: rotate(-90deg);
+  transform-origin: 0 0;
+  font-size: 30px;
+  margin-left: 2px;
+  cursor: pointer;
 }
 .cz-form-progress-bar {
   display: block;
@@ -753,4 +783,3 @@ select.error {
 .cz-form-current-map-events .cz-map-event-listitem-date {
   float: right;
 }
-/*# sourceMappingURL=forms.css.map */

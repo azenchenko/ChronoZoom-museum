@@ -433,6 +433,10 @@ var CZ;
             //param visible (Visible2D) a visible region to zoom into
             //param noAnimation (bool) - method performs instant transition without any animation if true
             this.moveToVisible = function (visible, noAnimation) {
+                if (CZ._demoMode) {
+                    CZ._demoNavigationForm.close();
+                }
+
                 var currentViewport = getViewport();
                 var targetViewport = new CZ.Viewport.Viewport2d(currentViewport.aspectRatio, currentViewport.width, currentViewport.height, visible);
                 var vbox = CZ.Common.viewportToViewBox(targetViewport);

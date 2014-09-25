@@ -14,18 +14,25 @@ var CZ;
 
                 _super.call(this, container, formInfo);
 
+                this.minorContainer = container.find(formInfo.minorContainer);
                 this.searchTextbox = container.find(formInfo.searchTextbox);
                 this.searchResultsBox = container.find(formInfo.searchResultsBox);
                 this.progressBar = container.find(formInfo.progressBar);
                 this.resultSections = container.find(formInfo.resultSections);
                 this.resultsCountTextblock = container.find(formInfo.resultsCountTextblock);
+                this.sideButton = container.find(formInfo.sideButton);
+                this.formHeader = container.find(formInfo.formHeader);
 
                 this.closeButton = this.container.find(formInfo.closeButton);
-                this.closeButton.off();
+                this.closeButton.off()
+                    .click(function (event) {
+                        _this.close();
+                    });
 
-                this.closeButton.click(function (event) {
-                    _this.close();
-                });
+                this.sideButton.off()
+                    .click(function (event) {
+                        _this.show();
+                    });
 
                 this.initialize();
             }
@@ -119,7 +126,7 @@ var CZ;
                     var form = _this;
                     var resultType = resultTypes[item.objectType];
                     var resultId = idPrefixes[resultType] + item.id;
-                    var resultTitle = item.title;
+                    var resultTitle = "";
 
                     // Show date for exhibits.
                     if (resultType === "exhibit") {
@@ -130,10 +137,10 @@ var CZ;
                             var ymd = CZ.Dates.getYMDFromCoordinate(item.year);
                             ymd.month++;
 
-                            resultTitle += " (" +
-                                    ymd.month + "." +
-                                    ymd.day   + "." +
-                                    ymd.year  + " CE)";
+                            resultTitle += "(" +
+                                     ymd.month + "." +
+                                     ymd.day   + "." +
+                                     ymd.year  + " CE)";
                         }
                         else {
                             resultTitle += " (" +
@@ -141,6 +148,8 @@ var CZ;
                                     year.regime + ")";
                         }
                     }
+
+                    resultTitle += " " + item.title;
 
                     sections[resultType].append($("<div></div>", {
                         class: "cz-form-search-result",
@@ -235,9 +244,12 @@ var CZ;
 
             DemoNavigationForm.prototype.show = function () {
                 var _this = this;
-                _super.prototype.show.call(this, {
-                    effect: "slide",
-                    direction: "left",
+
+                this.container.show();
+
+                this.minorContainer.animate({
+                    "min-width": "380px"
+                }, {
                     duration: 500,
                     complete: function () {
                         _this.searchTextbox.focus();
@@ -245,18 +257,23 @@ var CZ;
                     }
                 });
 
+                this.sideButton.css("right", "-50px");
+
                 this.activationSource.addClass("active");
             };
 
             DemoNavigationForm.prototype.close = function () {
-                _super.prototype.close.call(this, {
-                    effect: "slide",
-                    direction: "right",
+                this.minorContainer.animate({
+                    "min-width": "0"
+                }, {
                     duration: 500
                 });
 
+                 this.sideButton.css("right", "0");
+
                 this.activationSource.removeClass("active");
             };
+
             return DemoNavigationForm;
         })(CZ.UI.FormBase);
         UI.DemoNavigationForm = DemoNavigationForm;
