@@ -1,0 +1,242 @@
+﻿var CZ;
+(function (CZ) {
+    (function (UI) {
+        // var ExhibitFullscreenViewer = (function () {
+            var _this,
+                index = -1;
+
+            function ExhibitFullscreenViewer(control) {
+                _this = this;
+
+               this.exhibits = [];
+
+               this.$control = control;
+               this.$title = this.$control.find(".viewer-header-title");
+               this.$closeBtn = this.$control.find(".viewer-header-close-btn");
+               this.$contentContainer = this.$control.find(".viewer-items-container");
+               this.$navBtnL = this.$control.find(".viewer-nav-btn_left");
+               this.$navBtnR = this.$control.find(".viewer-nav-btn_right");
+               this.$itemTemplate = this.$control.find("#viewer-item-template")
+                    .find(".viewer-item");
+
+                _init();
+
+                return this;
+            }
+
+            /**
+             * Shows exhibit fullscreen viewer, loads exhibits array and
+             * displays item with given id.
+             *
+             * @param exhibits  (array) An array of exhibits to show in viewer.
+             * @param id        (id)    ID of element to display.
+             */
+            ExhibitFullscreenViewer.prototype.show = function (exhibits, id) {
+                var exhibit;
+
+                if (typeof exhibits === "undefined") {
+                    throw "ExhibitFullscreenViewer.show() can't be called " +
+                          "with no params";
+                    return;
+                }
+
+                if (exhibits.length === 0) {
+                    throw "No exhibits were given to ExhibitFullscreenViewer.";
+                    return;
+                }
+
+                // this.$contentContainer.empty();
+                this.exhibits = exhibits;
+
+                if (typeof id === "undefined") {
+                    index = 0;
+                    exhibit = exhibits[0];
+                }
+                else {
+                    exhibit = this.exhibits.filter(function (el) {
+                        return el.id === id;
+                    })[0];
+
+                    index = this.exhibits.indexOf(exhibit);
+                }
+
+                _showExhibit(exhibit);
+
+                this.$control.show("clip", {
+                    complete: function () {
+                        _this.$contentContainer.parent()
+                            .nanoScroller({
+                                iOSNativeScrolling: true,
+                                sliderMinHeight: 40,
+                                alwaysVisible: true
+                            });
+                    }
+                }, "200");
+                // this.$control.show();
+            };
+
+            ExhibitFullscreenViewer.prototype.hide = function () {
+                this.$control.hide("clip", {}, "200");
+            };
+
+            function _init () {
+                _this.$navBtnL.click(function () {
+                    if (index > 0) {
+                        index--;
+                        _showExhibit(_this.exhibits[index]);
+                    }
+                    // console.log("Navigation btn LEFT click");
+                });
+
+                _this.$navBtnR.click(function () {
+                    if (index < _this.exhibits.length) {
+                        index++;
+                        _showExhibit(_this.exhibits[index]);
+                    }
+                    // console.log("Navigation btn RIGHT click");
+                });
+
+                _this.$closeBtn.click(function () {
+                    _this.hide();
+                });
+            }
+
+            function _showExhibit (exhibit) {
+                _this.$contentContainer.empty();
+
+                var item,
+                    $item,
+                    title,
+                    year;
+
+                title = exhibit.title;
+                year = CZ.Dates.convertCoordinateToYear(exhibit.date);
+
+                if (year.regime === "CE" && year.year % 1 !== 0) {
+                    var ymd = CZ.Dates.getYMDFromCoordinate(year.year);
+                    ymd.month++;
+
+                    title += "("  +
+                        ymd.month + "." +
+                        ymd.day   + "." +
+                        ymd.year  + ")";
+                }
+                else {
+                    title += " ("   +
+                        year.year   + " " +
+                        year.regime + ")";
+                }
+
+                _this.$title.text(title);
+
+                for (var i = 0; i < exhibit.contentItems.length; i++) {
+                    item = exhibit.contentItems[i];
+                    $item = _this.$itemTemplate.clone(true, true);
+
+                    var $media = $item.find(".viewer-item-media"),
+                        $title = $item.find(".viewer-item-title"),
+                        $descr = $item.find(".viewer-item-description");
+
+                    $title.text(item.title);
+                    $descr.html(marked(item.description));
+
+                    switch (item.mediaType) {
+                        case "video":
+                            var video = document.createElement("video");
+
+                            video.oncanplay = function (event) {
+                                var width = 640,
+                                    height = 480,
+                                    nWidth = event.target.clientWidth,
+                                    nHeight = event.target.clientHeight,
+                                    arW = width / nWidth,
+                                    arH = height / nHeight;
+
+                                if (nHeight * arW > height) {
+                                    event.target.setAttribute("width", nWidth * arH);
+                                    event.target.setAttribute("height", height);
+                                }
+                                else {
+                                    event.target.setAttribute("width", width);
+                                    event.target.setAttribute("height", nHeight * arW);
+                                }
+                            };
+
+                            video.src = item.media;
+                            $media.addClass("media-video")
+                                .attr("data-state", "paused")
+                                .append(video);
+
+                            $media.click(function (event) {
+                                var _video = $(this).find("video");
+
+                                if ($(this).attr("data-state") === "paused") {
+                                    _video[0].play();
+                                    $(this).attr("data-state", "playing")
+                                        .toggleClass("media-video");
+                                }
+                                else {
+                                    _video[0].pause();
+                                    $(this).attr("data-state", "paused")
+                                        .toggleClass("media-video");
+                                }
+                            });
+
+                            break;
+                        case "image":
+                            var img = document.createElement("img");
+
+                            img.onload = function (event) {
+                                var width = 640,
+                                    height = 480,
+                                    nWidth = event.target.naturalWidth,
+                                    nHeight = event.target.naturalHeight,
+                                    arW = width / nWidth,
+                                    arH = height / nHeight;
+
+                                if (nHeight * arW > height) {
+                                    event.target.setAttribute("width", nWidth * arH);
+                                    event.target.setAttribute("height", height);
+                                }
+                                else {
+                                    event.target.setAttribute("width", width);
+                                    event.target.setAttribute("height", nHeight * arW);
+                                }
+                            };
+
+                            $media.click(function (event) {
+                                var _img = $(this).find("img");
+
+                                CZ.Common.$imgFullscreen.find(".img").css("background",
+                                        "url(" + _img.attr("src") + ")" +
+                                        "no-repeat center center")
+                                    .css("background-size", "100% 100%");
+                                CZ.Common.$imgFullscreen.show("clip", {}, "100");
+                            });
+
+                            img.src = item.media;
+                            $media.addClass("media-img")
+                                  .append(img);
+
+                            break;
+                    }
+
+                    _this.$contentContainer.append($item);
+                }
+
+                window.setTimeout(function () {
+                    _this.$contentContainer.parent()
+                        .nanoScroller({
+                            iOSNativeScrolling: true,
+                            sliderMinHeight: 40,
+                            alwaysVisible: true
+                    });
+                }, 0);
+            }
+        // })();
+        UI.ExhibitFullscreenViewer = ExhibitFullscreenViewer;
+    })(CZ.UI || (CZ.UI = {}));
+    var UI = CZ.UI;
+
+    CZ._ExhibitFullscreenViewer = new UI.ExhibitFullscreenViewer($("#exhibit-fullscreen-viewer"));
+})(CZ || (CZ = {}));

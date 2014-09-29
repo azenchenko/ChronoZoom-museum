@@ -23,6 +23,7 @@
     <script type="text/javascript" src="/scripts/external/audiojs/audiojs/audio.min.js"></script>
     <script type="text/javascript" src="/scripts/external/jquery.autonumeric-1.9.24.min.js"></script>
     <script type="text/javascript" src="/scripts/external/jquery.tooltipster.min.js"></script>
+    <script type="text/javascript" src="/scripts/external/jquery.nanoscroller.min.js"></script>
 
     <!-- D3 and topojson for map view. -->
     <script type="text/javascript" src="/scripts/external/d3.v3.min.js"></script>
@@ -30,6 +31,7 @@
     <script type="text/javascript" src="/scripts/external/marked-0.3.2.min.js"></script>
 
     <link type="text/css" rel="stylesheet" href="/css/tooltipster.css" />
+    <link type="text/css" rel="stylesheet" href="/css/nanoscroller.css" />
 
     <script type="text/javascript">
 
@@ -104,6 +106,7 @@
             AddScript("/ui/controls/listboxbase.js");
             AddScript("/ui/controls/formbase.js");
             AddScript("/ui/controls/medialist.js");
+            AddScript("/ui/controls/exhibit-viewer.js");
             AddScript("/ui/media/bing-mediapicker.js");
             AddScript("/ui/media/skydrive-mediapicker.js");
             AddScript("/ui/contentitem-listbox.js");
@@ -211,7 +214,36 @@
             </div>
         </div>
     </nav>
+     <div id="img-fullscreen">
+        <div class="img"></div>
+    </div>
     <div id="content" class="fleft">
+        <div id="exhibit-fullscreen-viewer">
+            <div class="viewer-header">
+                <div class="viewer-header-title"></div>
+                <div class="viewer-header-close-btn">X</div>
+            </div>
+            <div class="nano">
+                <div class="viewer-items-container nano-content">
+                    <!-- Exhibit's content goes here. -->
+                </div>
+            </div>
+            <div class="viewer-nav-btn viewer-nav-btn_left"></div>
+            <div class="viewer-nav-btn viewer-nav-btn_right"></div>
+
+            <div id="viewer-item-template">
+                <div class="viewer-item">
+                    <div class="viewer-item-media-container">
+                        <div class="viewer-item-media"></div>
+                    </div>
+                    <div class="viewer-item-content-container">
+                        <h2 class="viewer-item-title"></h2>
+                        <div class="viewer-item-description"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="wait"><img src="/images/wait.gif" alt="Loading - Please Wait..." /></div>
         <div id="wait2"><img src="/images/wait.gif" alt="Loading - Please Wait..." /></div>
         <div id="axis" style="position: relative;">

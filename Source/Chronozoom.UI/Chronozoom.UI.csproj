@@ -81,6 +81,7 @@
     <Content Include="css\media.min.css">
       <DependentUpon>media.css</DependentUpon>
     </Content>
+    <Content Include="css\nanoscroller.css" />
     <Content Include="css\start-page.css">
       <DependentUpon>start-page.less</DependentUpon>
     </Content>
@@ -125,8 +126,11 @@
     <Content Include="css\cz.css.map">
       <DependentUpon>cz.less</DependentUpon>
     </Content>
+    <Content Include="images\arrow-nav-left.png" />
+    <Content Include="images\arrow-nav-right.png" />
     <Content Include="images\arrow-navigation-back.png" />
     <Content Include="images\close.png" />
+    <Content Include="images\expand.svg" />
     <Content Include="images\mapview.svg" />
     <Content Include="images\copy.svg" />
     <Content Include="images\paste.svg" />
@@ -200,6 +204,7 @@
     <Content Include="scripts\external\d3.v3.min.js" />
     <Content Include="scripts\external\jquery-ui-1.10.2.js" />
     <Content Include="scripts\external\jquery.autonumeric-1.9.24.min.js" />
+    <Content Include="scripts\external\jquery.nanoscroller.min.js" />
     <Content Include="scripts\external\jquery.tooltipster.min.js" />
     <Content Include="scripts\external\marked-0.3.2.min.js" />
     <Content Include="scripts\external\modernizr-2.0.6-development-only.js" />
@@ -229,6 +234,7 @@
     <Content Include="scripts\plugins\error-plugin.min.js">
       <DependentUpon>error-plugin.js</DependentUpon>
     </Content>
+    <Content Include="ui\controls\exhibit-viewer.js" />
     <Content Include="scripts\plugins\utility-plugins.min.js">
       <DependentUpon>utility-plugins.js</DependentUpon>
     </Content>

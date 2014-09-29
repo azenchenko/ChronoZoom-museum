@@ -2664,42 +2664,165 @@ var CZ;
                         }
                     }
 
+                    // Full screen view mode button.
+                    var biblBottom = vyc + centralSquareSize + 63.0 / 450 * 2 * radv;
+                    var biblHeight = 10.0 / 489.0 * radv * 2;
+                    var biblWidth = titleWidth / 3;
+                    var bibl = addText
+                        (
+                            contentItem,
+                            layerid,
+                            id + "__fullscreen-text",
+                            time - biblWidth / 2,
+                            biblBottom - biblHeight,
+                            biblBottom - biblHeight / 2,
+                            biblHeight,
+                            "View full screen",
+                            {
+                                fontName: CZ.Settings.contentItemHeaderFontName,
+                                fillStyle: "#fbfbfb",
+                                textBaseline: 'middle',
+                                textAlign: 'center',
+                                opacity: 1
+                            },
+                            biblWidth
+                        );
+                    bibl.reactsOnMouse = true;
+
+                    bibl.onmouseclick = function (e) {
+                        var _exhibits = [],
+                            timeline = infodot.parent;
+
+                        timeline.children.forEach(function (el) {
+                            var cis = [];
+
+                            if (el.type === "infodot") {
+                                cis = el.contentItems.map(function (ci) {
+                                    return {
+                                        title: ci.title,
+                                        mediaType: ci.mediaType,
+                                        media: ci.uri,
+                                        description: ci.description
+                                    };
+                                });
+
+                                _exhibits.push({
+                                    id: el.infodotDescription.guid,
+                                    title: el.infodotDescription.title,
+                                    date: el.infodotDescription.date,
+                                    contentItems: cis
+                                });
+                            }
+                        });
+
+                        _exhibits = _exhibits.sort(function (a, b) {
+                            if (a.date < b.date) {
+                                return -1;
+                            } 
+                            else if (a.date === b.date) {
+                                return 0;
+                            }
+                            else {
+                                return 1;
+                            }
+                        });
+
+                        CZ._ExhibitFullscreenViewer.show(_exhibits, infodot.infodotDescription.guid);
+
+                        return true;
+                    };
+
+                    var fsImg = VCContent.addImage
+                        (
+                            contentItem,
+                            layerid,
+                            id + "__fullscreen-img",
+                            time + 1.6 * (biblWidth / 2),
+                            biblBottom - biblHeight,
+                            1.2 * biblHeight,
+                            1.2 * biblHeight,
+                            "/images/expand.svg"
+                        );
+                    fsImg.reactsOnMouse = true;
+                    fsImg.onmouseclick = function (e) {
+                        bibl.onmouseclick(e);
+
+                        return true;
+                    };
+
                     /* Disabled in offline mode
 
-                        var biblBottom = vyc + centralSquareSize + 63.0 / 450 * 2 * radv;
-                        var biblHeight = CZ.Settings.infodotBibliographyHeight * radv * 2;
-                        var biblWidth = titleWidth / 3;
-                        var bibl = addText(contentItem, layerid, id + "__bibliography", time - biblWidth / 2, biblBottom - biblHeight, biblBottom - biblHeight / 2, biblHeight, "Bibliography", {
-                            fontName: CZ.Settings.contentItemHeaderFontName,
-                            fillStyle: CZ.Settings.timelineBorderColor,
-                            textBaseline: 'middle',
-                            textAlign: 'center',
-                            opacity: 1
-                        }, biblWidth);
-                        bibl.reactsOnMouse = true;
-                        bibl.onmouseclick = function (e) {
-                            this.vc.element.css('cursor', 'default');
-                            CZ.Bibliography.showBibliography({ infodot: infodotDescription, contentItems: infodot.contentItems }, contentItem, id + "__bibliography");
-                            return true;
-                        };
-                        bibl.onmouseenter = function (pv, e) {
-                            this.settings.fillStyle = CZ.Settings.infoDotHoveredBorderColor;
-                            this.vc.requestInvalidate();
-                            this.vc.element.css('cursor', 'pointer');
-                        };
-                        bibl.onmouseleave = function (pv, e) {
-                            this.settings.fillStyle = CZ.Settings.infoDotBorderColor;
-                            this.vc.requestInvalidate();
-                            this.vc.element.css('cursor', 'default');
-                        };
+                    var biblBottom = vyc + centralSquareSize + 63.0 / 450 * 2 * radv;
+                    var biblHeight = CZ.Settings.infodotBibliographyHeight * radv * 2;
+                    var biblWidth = titleWidth / 3;
+                    var bibl = addText(contentItem, layerid, id + "__bibliography", time - biblWidth / 2, biblBottom - biblHeight, biblBottom - biblHeight / 2, biblHeight, "Bibliography", {
+                        fontName: CZ.Settings.contentItemHeaderFontName,
+                        fillStyle: CZ.Settings.timelineBorderColor,
+                        textBaseline: 'middle',
+                        textAlign: 'center',
+                        opacity: 1
+                    }, biblWidth);
+                    bibl.reactsOnMouse = true;
+                    bibl.onmouseclick = function (e) {
+                        var _exhibits = [],
+                            timeline = infodot.parent;
 
-                        //Parse url for parameter b (bibliography).
-                        var bid = window.location.hash.match("b=([a-z0-9_\-]+)");
-                        if (bid && bibliographyFlag) {
-                            //bid[0] - source string
-                            //bid[1] - found match
-                            CZ.Bibliography.showBibliography({ infodot: infodotDescription, contentItems: infodot.contentItems }, contentItem, bid[1]);
-                        }
+                        timeline.children.forEach(function (el) {
+                            var cis = [];
+
+                            if (el.type === "infodot") {
+                                cis = el.contentItems.map(function (ci) {
+                                    return {
+                                        title: ci.title,
+                                        mediaType: ci.mediaType,
+                                        media: ci.uri,
+                                        description: ci.description
+                                    };
+                                });
+
+                                _exhibits.push({
+                                    id: el.infodotDescription.guid,
+                                    title: el.infodotDescription.title,
+                                    date: el.infodotDescription.date,
+                                    contentItems: cis
+                                });
+                            }
+                        });
+
+                        _exhibits = _exhibits.sort(function (a, b) {
+                            if (a.date < b.date) {
+                                return -1;
+                            } 
+                            else if (a.date === b.date) {
+                                return 0;
+                            }
+                            else {
+                                return 1;
+                            }
+                        });
+
+                        CZ._ExhibitFullscreenViewer.show(_exhibits, infodot.infodotDescription.guid);
+
+                        return true;
+                    };
+                    bibl.onmouseenter = function (pv, e) {
+                        this.settings.fillStyle = CZ.Settings.infoDotHoveredBorderColor;
+                        this.vc.requestInvalidate();
+                        this.vc.element.css('cursor', 'pointer');
+                    };
+                    bibl.onmouseleave = function (pv, e) {
+                        this.settings.fillStyle = CZ.Settings.infoDotBorderColor;
+                        this.vc.requestInvalidate();
+                        this.vc.element.css('cursor', 'default');
+                    };
+
+                    //Parse url for parameter b (bibliography).
+                    var bid = window.location.hash.match("b=([a-z0-9_\-]+)");
+                    if (bid && bibliographyFlag) {
+                        //bid[0] - source string
+                        //bid[1] - found match
+                        CZ.Bibliography.showBibliography({ infodot: infodotDescription, contentItems: infodot.contentItems }, contentItem, bid[1]);
+                    }
                     */
 
                     if (contentItem) {

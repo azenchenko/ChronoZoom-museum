@@ -76,6 +76,11 @@ var CZ;
 
             AddScript("/scripts/maps/map-africa.js");
             AddScript("/scripts/maps/map-usa.js");
+
+            Common.$imgFullscreen = $("#img-fullscreen");
+            Common.$imgFullscreen.click(function () {
+                Common.$imgFullscreen.hide("clip", {}, 200);
+            });
         }
         Common.initialize = initialize;
 
