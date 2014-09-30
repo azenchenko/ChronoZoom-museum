@@ -1,4 +1,4 @@
-﻿/* The height of the page header */
+/* The height of the page header */
 /* The width of the logo area */
 /* The width of the tour player area */
 /* The width of the regimes area */
@@ -3433,18 +3433,23 @@ a {
   margin: auto;
   max-width: 640px;
   max-height: 480px;
+  transition: opacity ease-in 0.4s;
+  opacity: 0;
 }
-#exhibit-fullscreen-viewer .viewer-item-media.media-img:after {
+#exhibit-fullscreen-viewer .viewer-item-media.media-img:after,
+#exhibit-fullscreen-viewer .viewer-item-media .video-fs-btn {
   position: absolute;
   top: 15px;
   right: 15px;
-  content: "";
   width: 40px;
   height: 40px;
   background-size: 30px 30px;
-  background: url(/images/expand.svg) no-repeat center center, rgba(80, 80, 80, 0.9);
+  background: url(/images/fullscreen_on.png) no-repeat center center, rgba(250, 250, 250, 0.85);
   box-shadow: 0 5px 5px rgba(80, 80, 80, 0.5);
   cursor: pointer;
+}
+#exhibit-fullscreen-viewer .viewer-item-media.media-img:after {
+  content: "";
 }
 #exhibit-fullscreen-viewer .viewer-item-media.media-video {
   cursor: pointer;
@@ -3484,6 +3489,10 @@ a {
   width: 30px;
   cursor: pointer;
 }
+#exhibit-fullscreen-viewer .viewer-nav-btn.disabled {
+  cursor: default;
+  opacity: 0.1;
+}
 #exhibit-fullscreen-viewer .viewer-nav-btn_left {
   left: 0;
   box-shadow: 5px 0 5px 0 rgba(80, 80, 80, 0.1);
@@ -3500,7 +3509,8 @@ a {
 #exhibit-fullscreen-viewer .viewer-nav-btn_right:hover {
   background: url(/images/arrow-nav-right.png) center center no-repeat, rgba(178, 178, 178, 0.9);
 }
-#img-fullscreen {
+#img-fullscreen,
+#video-fullscreen {
   display: none;
   position: absolute;
   left: 0;
@@ -3510,11 +3520,114 @@ a {
   z-index: 100000003;
   background-color: rgba(80, 80, 80, 0.8);
 }
+#img-fullscreen .close-fs-btn,
+#video-fullscreen .close-fs-btn {
+  position: fixed;
+  top: 48px;
+  right: 48px;
+  width: 40px;
+  height: 40px;
+  background-size: 30px 30px;
+  background: url(/images/fullscreen_exit.png) no-repeat center center, rgba(250, 250, 250, 0.85);
+  box-shadow: 0 5px 5px rgba(200, 200, 200, 0.5);
+  cursor: pointer;
+}
 #img-fullscreen .img {
-  content: "";
   position: absolute;
   left: 20px;
   top: 20px;
   right: 20px;
   bottom: 20px;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 20px 0;
+  box-sizing: border-box;
+  margin: auto;
 }
+#video-fullscreen .video {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  bottom: 20px;
+  left: 20px;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 20px 0;
+  box-sizing: border-box;
+  margin: auto;
+  cursor: pointer;
+}
+#video-fullscreen .video video {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+}
+#video-fullscreen .video.media-video:after,
+#video-fullscreen .video.media-video:before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  content: "";
+}
+#video-fullscreen .video:after {
+  height: 69px;
+  width: 69px;
+  border-radius: 69px;
+  background-color: rgba(222, 89, 37, 0.6);
+}
+#video-fullscreen .video:before {
+  z-index: 1;
+  height: 0;
+  width: 0;
+  left: 8px !important;
+  border-bottom: 13px solid transparent;
+  border-top: 13px solid transparent;
+  border-left: 19px solid #fff;
+}
+#video-fullscreen .video:hover:after {
+  background-color: rgba(222, 89, 37, 0.95);
+}
+.vc-video-container video {
+  width: 100%;
+  height: 100%;
+}
+.vc-video-container.video-play {
+  cursor: pointer;
+}
+.vc-video-container.video-play:after,
+.vc-video-container.video-play:before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  content: "";
+}
+.vc-video-container.video-play:after {
+  height: 69px;
+  width: 69px;
+  border-radius: 69px;
+  background-color: rgba(222, 89, 37, 0.6);
+}
+.vc-video-container.video-play:before {
+  z-index: 1;
+  height: 0;
+  width: 0;
+  left: 8px;
+  border-bottom: 13px solid transparent;
+  border-top: 13px solid transparent;
+  border-left: 19px solid #fff;
+}
+.vc-video-container.video-play:hover:after {
+  background-color: rgba(222, 89, 37, 0.95);
+}
+/*# sourceMappingURL=cz.css.map */

@@ -1947,18 +1947,44 @@ var CZ;
             this.base = CanvasDomItem;
             this.base(vc, layerid, id, vx, vy, vw, vh, z);
 
-            // var elem = document.createElement('iframe');
-            var elem = document.createElement("video");
-            elem.setAttribute("id", id);
+            var container = document.createElement("div"),
+                video = document.createElement("video");
+
+            video.setAttribute("id", id);
             if (videoSrc.indexOf('?') == -1)
                 videoSrc += '?wmode=opaque';
             else
                 videoSrc += '&wmode=opaque';
-            elem.setAttribute("src", videoSrc);
-            elem.setAttribute("visible", 'true');
-            elem.setAttribute("autoplay", true);
+            video.setAttribute("src", videoSrc);
 
-            this.initializeContent(elem);
+            // Start/pause video playback by clicking over video.
+            container.onclick = function () {
+                if (this.getAttribute("data-state") === "paused") {
+                    video.play();
+                    this.setAttribute("data-state", "playing");
+                    this.classList.remove("video-play");
+                }
+                else {
+                    video.pause();
+                    this.setAttribute("data-state", "paused");
+                    this.classList.add("video-play");
+                }
+
+                return true;
+            };
+
+            container.classList.add("vc-video-container");
+            container.setAttribute("visible", "true");
+            container.setAttribute("data-state", "paused");
+            container.classList.add("video-play");
+            container.appendChild(video);
+
+            this.initializeContent(container);
+
+            this.reactsOnMouse = true;
+            this.onmouseclick = function () {
+                return true;
+            };
 
             this.prototype = new CanvasDomItem(vc, layerid, id, vx, vy, vw, vh, z);
         }

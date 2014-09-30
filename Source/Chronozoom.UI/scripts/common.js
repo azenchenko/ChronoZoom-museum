@@ -78,9 +78,41 @@ var CZ;
             AddScript("/scripts/maps/map-usa.js");
 
             Common.$imgFullscreen = $("#img-fullscreen");
-            Common.$imgFullscreen.click(function () {
-                Common.$imgFullscreen.hide("clip", {}, 200);
+            Common.$imgFullscreen.find(".close-fs-btn")
+                .click(function () {
+                    Common.$imgFullscreen.hide("clip", {}, 200);
+                });
+
+            Common.$videoFullscreen = $("#video-fullscreen");
+            Common.$videoFullscreen.find(".close-fs-btn").click(function () {
+                Common.$videoFullscreen.hide("clip", {
+                    complete: function () {
+                        Common.$videoFullscreen.find("video").parent()
+                            .attr("data-state", "paused")
+                            .addClass("media-video");
+                        
+                        Common.$videoFullscreen.find("video").attr("src", "")
+                            [0].pause();
+                    }
+                }, 200);
             });
+            Common.$videoFullscreen.find(".video")
+                .click(function () {
+                    var video = $(this).find("video")[0];
+
+                    if ($(this).attr("data-state") === "paused") {
+                        video.play();
+                        $(this).attr("data-state", "playing")
+                            .removeClass("media-video");
+                    }
+                    else {
+                        video.pause();
+                        $(this).attr("data-state", "paused")
+                            .addClass("media-video");
+                    }
+
+                    return false;
+                });
         }
         Common.initialize = initialize;
 

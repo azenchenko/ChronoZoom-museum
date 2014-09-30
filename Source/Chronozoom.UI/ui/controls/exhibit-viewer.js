@@ -84,16 +84,22 @@
                     if (index > 0) {
                         index--;
                         _showExhibit(_this.exhibits[index]);
+                        _this.$navBtnR.removeClass("disabled");
                     }
-                    // console.log("Navigation btn LEFT click");
+                    else {
+                        _this.$navBtnL.addClass("disabled");
+                    }
                 });
 
                 _this.$navBtnR.click(function () {
-                    if (index < _this.exhibits.length) {
+                    if (index < _this.exhibits.length - 1) {
                         index++;
                         _showExhibit(_this.exhibits[index]);
+                        _this.$navBtnL.removeClass("disabled");
                     }
-                    // console.log("Navigation btn RIGHT click");
+                    else {
+                        _this.$navBtnR.addClass("disabled");
+                    }
                 });
 
                 _this.$closeBtn.click(function () {
@@ -142,7 +148,38 @@
 
                     switch (item.mediaType) {
                         case "video":
-                            var video = document.createElement("video");
+                            var video = document.createElement("video"),
+                                fsBtn = document.createElement("div");
+
+                            fsBtn.classList.add("video-fs-btn");
+                            $(fsBtn).click(function () {
+                                var _video = $(this).parent()
+                                    .find("video")[0];
+
+                                // Pause all playing videos inside viewer.
+                                $(this).parent().parent().parent().find("video")
+                                    .each(function () {
+                                        $(this)[0].pause();
+                                        $(this).parent()
+                                            .attr("data-state", "paused")
+                                            .addClass("media-video");
+                                    });
+
+                                CZ.Common.$videoFullscreen.find("video")
+                                    .attr("src", $(_video).attr("src") +
+                                        "?" + new Date().getTime());
+
+                                CZ.Common.$videoFullscreen.find("video")[0].load();
+                                CZ.Common.$videoFullscreen.show("clip", {
+                                    complete: function () {
+                                        CZ.Common.$videoFullscreen.find(".video")
+                                            .attr("data-state", "paused")
+                                            .addClass("media-video");
+                                    }
+                                }, "100");
+
+                                return false;
+                            });
 
                             video.oncanplay = function (event) {
                                 var width = 640,
@@ -160,12 +197,14 @@
                                     event.target.setAttribute("width", width);
                                     event.target.setAttribute("height", nHeight * arW);
                                 }
+
+                                $(this).css("opacity", "1");
                             };
 
-                            video.src = item.media;
+                            video.src = item.media + "?" + new Date().getTime();;
                             $media.addClass("media-video")
                                 .attr("data-state", "paused")
-                                .append(video);
+                                .append([video, fsBtn]);
 
                             $media.click(function (event) {
                                 var _video = $(this).find("video");
@@ -202,15 +241,24 @@
                                     event.target.setAttribute("width", width);
                                     event.target.setAttribute("height", nHeight * arW);
                                 }
+
+                                $(this).css("opacity", "1");
                             };
 
                             $media.click(function (event) {
                                 var _img = $(this).find("img");
 
-                                CZ.Common.$imgFullscreen.find(".img").css("background",
-                                        "url(" + _img.attr("src") + ")" +
-                                        "no-repeat center center")
-                                    .css("background-size", "100% 100%");
+                                // Pause all playing videos inside viewer.
+                                $(this).parent().parent().parent().find("video")
+                                    .each(function () {
+                                        $(this)[0].pause();
+                                        $(this).parent()
+                                            .attr("data-state", "paused")
+                                            .addClass("media-video");
+                                    });
+
+                                CZ.Common.$imgFullscreen.find("img")
+                                    .attr("src", _img.attr("src"));
                                 CZ.Common.$imgFullscreen.show("clip", {}, "100");
                             });
 

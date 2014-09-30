@@ -131,6 +131,8 @@
     <Content Include="images\arrow-navigation-back.png" />
     <Content Include="images\close.png" />
     <Content Include="images\expand.svg" />
+    <Content Include="images\fullscreen_exit.png" />
+    <Content Include="images\fullscreen_on.png" />
     <Content Include="images\mapview.svg" />
     <Content Include="images\copy.svg" />
     <Content Include="images\paste.svg" />

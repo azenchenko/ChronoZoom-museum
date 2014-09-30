@@ -1709,19 +1709,26 @@ a
             margin: auto;
             max-width: 640px;
             max-height: 480px;
+            transition: opacity ease-in .4s;
+            opacity: 0;
         }
 
-        &.media-img:after {
+        &.media-img:after,
+        .video-fs-btn {
             position: absolute;
             top: 15px;
             right: 15px;
-            content: "";
             width: 40px;
             height: 40px;
             background-size: 30px 30px;
-            background: url(/images/expand.svg) no-repeat center center, rgba(80,80,80,.9);
-            box-shadow: 0 5px 5px rgba(80,80,80,.5);
+            background: url(/images/fullscreen_on.png) no-repeat center center,
+                        rgba(250, 250, 250, .85);
+            box-shadow: 0 5px 5px rgba(80, 80, 80, .5);
             cursor: pointer;
+        }
+
+        &.media-img:after {
+            content: "";
         }
 
         &.media-video {
@@ -1768,6 +1775,11 @@ a
         bottom: 0;
         width: 30px;
         cursor: pointer;
+
+        &.disabled {
+            cursor: default;
+            opacity: 0.1;
+        }
         
     }
         .viewer-nav-btn_left {
@@ -1796,7 +1808,8 @@ a
 }
 
 
-#img-fullscreen {
+#img-fullscreen,
+#video-fullscreen {
     display: none;
     position: absolute;
     left: 0;
@@ -1806,12 +1819,142 @@ a
     z-index: 100000003;
     background-color: rgba(80, 80, 80, .8);
 
+    .close-fs-btn {
+        position: fixed;
+        top: 48px;
+        right: 48px;
+        width: 40px;
+        height: 40px;
+        background-size: 30px 30px;
+        background: url(/images/fullscreen_exit.png) no-repeat center center,
+                    rgba(250, 250, 250, .85);
+        box-shadow: 0 5px 5px rgba(200, 200, 200,.5);
+        cursor: pointer;
+    }
+}
+
+#img-fullscreen {
     .img {
-        content: "";
         position: absolute;
         left: 20px;
         top: 20px;
         right: 20px;
         bottom: 20px;
+
+
+        max-width: 100%;
+        max-height: 100%;
+        padding: 20px 0;
+        box-sizing: border-box;
+
+        margin: auto;
+    }
+}
+
+#video-fullscreen {
+    .video {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        bottom: 20px;
+        left: 20px;
+
+
+        max-width: 100%;
+        max-height: 100%;
+        padding: 20px 0;
+        box-sizing: border-box;
+
+        margin: auto;
+
+        cursor: pointer;
+ 
+        video {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            margin: auto;
+            width: 100%;
+            height: 100%;
+        }
+
+        &.media-video:after,
+        &.media-video:before {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            margin: auto;
+            content: "";
+        }
+
+        &:after {
+            height: 69px;
+            width: 69px;
+            border-radius: 69px;
+            background-color: rgba(222,89,37,.6);
+        }
+
+        &:before {
+            z-index: 1;
+            height: 0;
+            width: 0;
+            left: 8px !important;
+            border-bottom: 13px solid transparent;
+            border-top: 13px solid transparent;
+            border-left: 19px solid #fff;
+        }
+            
+
+        &:hover:after {
+            background-color: rgba(222,89,37,.95);
+        }
+    }
+}
+
+.vc-video-container {
+    video {
+        width: 100%;
+        height: 100%;
+    }
+
+    &.video-play {
+        cursor: pointer;
+ 
+        &:after,
+        &:before {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            margin: auto;
+            content: "";
+        }
+
+        &:after {
+            height: 69px;
+            width: 69px;
+            border-radius: 69px;
+            background-color: rgba(222,89,37,.6);
+        }
+
+        &:before {
+            z-index: 1;
+            height: 0;
+            width: 0;
+            left: 8px;
+            border-bottom: 13px solid transparent;
+            border-top: 13px solid transparent;
+            border-left: 19px solid #fff;
+        }
+            
+
+        &:hover:after {
+            background-color: rgba(222,89,37,.95);
+        }
     }
 }
