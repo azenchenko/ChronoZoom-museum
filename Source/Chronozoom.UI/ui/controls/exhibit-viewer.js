@@ -60,6 +60,14 @@
                     index = this.exhibits.indexOf(exhibit);
                 }
 
+                if (index === exhibits.length - 1) {
+                    _this.$navBtnR.addClass("disabled");
+                }
+
+                if (index === 0) {
+                    _this.$navBtnL.addClass("disabled");
+                }
+
                 _showExhibit(exhibit);
 
                 this.$control.show("clip", {
@@ -72,7 +80,6 @@
                             });
                     }
                 }, "200");
-                // this.$control.show();
             };
 
             ExhibitFullscreenViewer.prototype.hide = function () {
@@ -259,7 +266,12 @@
 
                                 CZ.Common.$imgFullscreen.find("img")
                                     .attr("src", _img.attr("src"));
-                                CZ.Common.$imgFullscreen.show("clip", {}, "100");
+                                CZ.Common.$imgFullscreen.show("clip", {
+                                    complete: function () {
+                                        $("body").css("-ms-touch-action", "auto")
+                                            .css("-ms-content-zooming", "zoom");
+                                    }
+                                }, "100");
                             });
 
                             img.src = item.media;
@@ -272,6 +284,7 @@
                     _this.$contentContainer.append($item);
                 }
 
+                // Wait until panel will become visible to prevent issues with nanoscroller.
                 window.setTimeout(function () {
                     _this.$contentContainer.parent()
                         .nanoScroller({

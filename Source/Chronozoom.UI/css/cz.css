@@ -2017,6 +2017,7 @@ body {
   background-color: #232323;
   font-family: 'Segoe UI', Helvetica, Arial, 'Trebuchet MS', San Serif;
   -ms-touch-action: none;
+  -ms-content-zooming: none;
 }
 a {
   color: #fff;

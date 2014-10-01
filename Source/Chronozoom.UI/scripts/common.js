@@ -80,7 +80,12 @@ var CZ;
             Common.$imgFullscreen = $("#img-fullscreen");
             Common.$imgFullscreen.find(".close-fs-btn")
                 .click(function () {
-                    Common.$imgFullscreen.hide("clip", {}, 200);
+                    Common.$imgFullscreen.hide("clip", {
+                        complete: function () {
+                            $("body").css("-ms-touch-action", "none")
+                                .css("-ms-content-zooming", "none");
+                        }
+                    }, 200);
                 });
 
             Common.$videoFullscreen = $("#video-fullscreen");

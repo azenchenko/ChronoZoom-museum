@@ -247,6 +247,7 @@ var CZ;
 
                 this.container.show();
 
+                this.minorContainer.css("display", "block");
                 this.minorContainer.animate({
                     "min-width": "380px"
                 }, {
@@ -263,10 +264,15 @@ var CZ;
             };
 
             DemoNavigationForm.prototype.close = function () {
+                var _this = this;
+
                 this.minorContainer.animate({
                     "min-width": "0"
                 }, {
-                    duration: 500
+                    duration: 500,
+                    complete: function () {
+                        // _this.minorContainer.css("display", "none");
+                    }
                 });
 
                  this.sideButton.css("right", "0");

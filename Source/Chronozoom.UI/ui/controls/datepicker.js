@@ -262,7 +262,7 @@ var CZ;
                 this.dateContainer.append(this.daySelector);
                 this.dateContainer.append(this.yearSelector);
                 this.dateContainer.append('<br />');
-                this.dateContainer.append(this.circaSelector);
+                // this.dateContainer.append(this.circaSelector);
             };
 
             /**
