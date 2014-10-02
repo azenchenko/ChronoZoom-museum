@@ -184,7 +184,11 @@ var CZ;
             "touchmove",
             "touchend",
             "touchcancel",
-            "keypressed"
+            "keypressed",
+            "MSPointerMove",
+            "MSGestureHold",
+            "MSGestureStart",
+            "MSGestureTap"
         ];
 
         // NOTE: IE version detection.

@@ -594,6 +594,32 @@ var CZ;
             }
 
             Common.idleTimeout = window.setTimeout(function () {
+                if (Common.$imgFullscreen.is(":visible")) {
+                    Common.$imgFullscreen.hide("clip", {
+                        complete: function () {
+                            $("body").css("-ms-touch-action", "none")
+                                .css("-ms-content-zooming", "none");
+                        }
+                    }, 200);
+                }
+
+                if (Common.$videoFullscreen.is(":visible")) {
+                    Common.$videoFullscreen.hide("clip", {
+                        complete: function () {
+                            Common.$videoFullscreen.find("video").parent()
+                                .attr("data-state", "paused")
+                                .addClass("media-video");
+                            
+                            Common.$videoFullscreen.find("video").attr("src", "")
+                                [0].pause();
+                        }
+                    }, 200);
+                }
+
+                if (CZ._ExhibitFullscreenViewer.$control.is(":visible")) {
+                    CZ._ExhibitFullscreenViewer.hide();
+                }
+
                 // Can't start autoplay since there are not tours.
                 if (CZ.Tours.tours.length === 0) {
                     console.log("No tours to play");

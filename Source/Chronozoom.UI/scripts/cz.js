@@ -332,7 +332,7 @@ var CZ;
             CZ.UILoader.loadAll(_uiMap).done(function () {
                 // Setting up idling definition if it's demo mode.
                 if (CZ._demoMode) {
-                    $(document).on(CZ.Settings.idleBreakingEvents, function () {
+                    $(document).on(CZ.Settings.idleBreakingEvents.join(" "), function () {
                         CZ.Common.setupIdleTimeout();
                     });
 
