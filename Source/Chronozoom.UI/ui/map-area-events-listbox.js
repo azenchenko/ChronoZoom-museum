@@ -41,16 +41,22 @@ var CZ;
                     _this.listboxSelectedItem = item;
                     _this.listboxSelectedItemIndex = index;
 
-                    var exhibit = item.data,
-                        date = CZ.Dates.convertCoordinateToYear(exhibit.infodotDescription.date);
+                    var cis = item.data.contentItems.map(function (ci) {
+                            return {
+                                title: ci.title,
+                                mediaType: ci.mediaType,
+                                media: ci.uri,
+                                description: ci.description
+                            };
+                        }),
+                        exhibit = {
+                            id: item.data.infodotDescription.guid,
+                            title: item.data.infodotDescription.title,
+                            date: item.data.infodotDescription.date,
+                            contentItems: cis
+                        };
 
-                    CZ.Common.map.showMapAreaInfo({
-                        data: {
-                            id: exhibit.mapAreaId,
-                            info: exhibit.contentItems,
-                            title: exhibit.infodotDescription.title + " (" + date.year + " " + date.regime + ")"
-                        }
-                    });
+                    CZ._ExhibitFullscreenViewer.show([exhibit], item.data.infodotDescription.guid);
                 });
             };
 

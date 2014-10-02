@@ -419,7 +419,10 @@ var CZ;
                     _dragPrev = _dragCur;
                     _dragCur = posv;
 
-                    CZ.Authoring.modeMouseHandlers[CZ.Authoring.mode]["mousemove"]();
+                    try {
+                        CZ.Authoring.modeMouseHandlers[CZ.Authoring.mode]["mousemove"]();
+                    }
+                    catch (ex) {};
                 }
             });
 

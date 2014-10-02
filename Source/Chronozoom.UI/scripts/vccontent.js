@@ -1709,7 +1709,10 @@ var CZ;
                     return;
                 var p = viewport2d.pointVirtualToScreen(this.x, this.y);
                 ctx.globalAlpha = opacity;
-                ctx.drawImage(this.img, p.x, p.y, size_p.x, size_p.y);
+                try {
+                    ctx.drawImage(this.img, p.x, p.y, size_p.x, size_p.y);
+                }
+                catch (ex) {};
             };
             this.onRemove = function () {
                 this.img.removeEventListener("load", onCanvasImageLoad, false);

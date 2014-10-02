@@ -86,7 +86,7 @@ var CZ;
             "$('<div><!-- New Map Event Listbox --></div>')": "/ui/new-map-event-listbox.html",     // 22
             "$('<div><!-- Events On Map Listbox --></div>')": "/ui/events-on-map-listbox.html",     // 23
             "#auth-edit-select-maptype-form": "/ui/auth-edit-select-maptype-form.html",             // 24
-			"#demo-navigation-form": "/ui/demo-navigation-form.html",								// 25
+			"#demo-navigation-form": "/ui/demo-navigation-form.html",                               // 25
             "#map-area-exhibits-form": "/ui/map-area-exhibits-form.html",                           // 26
             "$('<div><!-- Map Area Events Listbox --></div>')": "/ui/map-area-events-listbox.html"  // 27
         };

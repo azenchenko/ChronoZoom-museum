@@ -166,14 +166,14 @@
          */
         Map.prototype.show = function (args) {
             $('#wait').show();
-            this.$map.show();
+            this.$map.show("clip", {}, 200);
         };
 
         /**
          * Hide map.
          */
         Map.prototype.hide = function (args) {
-            this.$map.hide();
+            this.$map.hide("clip", {}, 200);
         };
 
         /**
@@ -324,6 +324,7 @@
          */
         var onCloseBtnClick = function (event) {
             Map.prototype.hide.call(event.data);
+            window._MapAreaExhibitsForm.close();
         };
 
         return Map;
