@@ -434,8 +434,13 @@ var CZ;
                     resultsCountTextblock: ".cz-form-search-results-count"
                 });
 
+                CZ._demoNavigationOpener = $("#demo-navigation-opener");
+
                 if (CZ._demoMode) {
                     CZ._demoNavigationForm.show();
+                    CZ._demoNavigationOpener.click(function (event) {
+                        CZ._demoNavigationForm.show();
+                    });
                 }
 
                 $("#editCollectionButton").click(function () {

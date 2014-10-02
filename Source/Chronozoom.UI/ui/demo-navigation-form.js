@@ -245,12 +245,9 @@ var CZ;
             DemoNavigationForm.prototype.show = function () {
                 var _this = this;
 
-                this.container.show();
-
-                this.minorContainer.css("display", "block");
-                this.minorContainer.animate({
-                    "min-width": "380px"
-                }, {
+                _super.prototype.show.call(this, {
+                    effect: "slide",
+                    direction: "right",
                     duration: 500,
                     complete: function () {
                         _this.searchTextbox.focus();
@@ -258,7 +255,11 @@ var CZ;
                     }
                 });
 
-                this.sideButton.css("right", "-50px");
+                CZ._demoNavigationOpener.hide({
+                    effect: "slide",
+                    direction: "right",
+                    duration: 500
+                });
 
                 this.activationSource.addClass("active");
             };
@@ -266,16 +267,19 @@ var CZ;
             DemoNavigationForm.prototype.close = function () {
                 var _this = this;
 
-                this.minorContainer.animate({
-                    "min-width": "0"
-                }, {
+                _super.prototype.close.call(this, {
+                    effect: "slide",
+                    direction: "right",
                     duration: 500,
                     complete: function () {
-                        // _this.minorContainer.css("display", "none");
                     }
                 });
 
-                 this.sideButton.css("right", "0");
+                CZ._demoNavigationOpener.show({
+                    effect: "slide",
+                    direction: "right",
+                    duration: 500
+                });
 
                 this.activationSource.removeClass("active");
             };

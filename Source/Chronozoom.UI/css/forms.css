@@ -1,4 +1,4 @@
-/* The height of the page header */
+﻿/* The height of the page header */
 /* The width of the logo area */
 /* The width of the tour player area */
 /* The width of the regimes area */
@@ -513,12 +513,12 @@ select.error {
 .cz-demo-navigation-form {
   bottom: 25px;
   right: 0;
-}
-.cz-demo-navigation-form .minor-container {
   min-width: 380px;
   max-width: 450px;
   overflow: hidden;
-  width: 0;
+}
+.cz-demo-navigation-form .minor-container {
+  overflow: hidden;
 }
 .cz-demo-navigation-form .cz-form-content {
   position: absolute;
@@ -529,18 +529,20 @@ select.error {
   overflow-y: hidden;
   box-sizing: border-box;
 }
-.cz-demo-navigation-form .cz-form-side-button {
+#demo-navigation-opener {
+  z-index: 10000;
+  display: none;
   position: absolute;
-  top: 38px;
+  top: 91px;
   color: white;
   background: #0464a2;
-  right: -50px;
-  bottom: 0;
-  transition: right linear .5s;
+  right: 0;
+  bottom: 25px;
   width: 50px;
   overflow: hidden;
+  cursor: pointer;
 }
-.cz-demo-navigation-form .cz-form-side-button .cz-form-side-button-text {
+#demo-navigation-opener .cz-form-side-button-text {
   position: absolute;
   left: 0;
   right: 0;
@@ -792,4 +794,3 @@ select.error {
 .cz-form-current-map-events .cz-map-event-listitem-date {
   float: right;
 }
-/*# sourceMappingURL=forms.css.map */
