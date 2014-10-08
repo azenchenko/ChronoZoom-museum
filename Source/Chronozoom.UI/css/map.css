@@ -1,4 +1,4 @@
-/* The height of the page header */
+﻿/* The height of the page header */
 /* The width of the logo area */
 /* The width of the tour player area */
 /* The width of the regimes area */
@@ -81,7 +81,7 @@ select.error {
   z-index: 160;
 }
 #map-layer .active-selected {
-  fill: blue;
+  fill: #666666;
 }
 .map-title {
   -webkit-box-sizing: border-box;
@@ -134,11 +134,11 @@ select.error {
   stroke: #553;
 }
 .subunit {
-  fill: #fff;
+  fill: #E6E6E6;
   transition: fill ease-in 0.3s;
 }
 .subunit:hover {
-  fill: yellow;
+  fill: #B3B3B3;
 }
 .subunit-label {
   fill: #222;
@@ -241,6 +241,5 @@ select.error {
   height: 200px;
 }
 .selected {
-  fill: rgba(100, 255, 100, 0.3);
+  fill: #EAA4A4;
 }
-/*# sourceMappingURL=map.css.map */
