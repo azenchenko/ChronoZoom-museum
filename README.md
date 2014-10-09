@@ -1,41 +1,53 @@
-ChronoZoom
+ChronoZoom for museums
 ==========
 
-ChronoZoom is an interactive timeline for all of history: [http://www.chronozoom.com](http://www.chronozoom.com)
+This is a main repository for ChronoZoom for museums bundle. Here you will find a source code for ChronoZoom's version for museums.
 
-Explore all of the past - from the Big Bang, to the dinosaurs, to ancient and modern history.
+To use ChronoZoom's version for museums you need to deploy project from this repository locally or use 'ready to use' version of this repository which is located [here](https://github.com/alex-zen/ChronoZoom-museum-deploy). Also you need to use client application __CZ Museum Client__  in store (not available at store yet) or use source code for this application to which you can find [here](https://github.com/alex-zen/ChronoZoom-museum-client).
 
-Current version is built on Microsoft .NET Framework and requires Visual Studio Package Manager to install packages for the first run. 
+Requirements
+------------
 
-Community
-----------
+* Visual Studio 2013
+* SQL Server 2012
 
-* [Mailing List for Developers](https://groups.google.com/d/forum/chronozoom-dev)
-* [Skype General Chat](skype:?chat&blob=BHGGx-O6KF-_wx3bsy9BG9xACOfhtqAkBxo1_ajRCIW1PO0ZbU87MJt0ZhM)
-* IRC: `#ChronoZoom` channel on Freenode
-* [Documentation](ChronoZoom/tree/master/Doc)
-* [File a Bug](https://github.com/alterm4nn/ChronoZoom/issues)
-
-For Developers
-----------
-
-* If you are new to Github, [Learning To Use Github](LearningToUseGithub.md) will help get you started.
-* You can follow ChronoZoom's bugs and activity [here](https://github.com/alterm4nn/ChronoZoom/issues).
-* Work items and goals are managed on Trello [here](https://trello.com/chronozoom).
-* Project workflow and developer guidelines are available [here](Doc/ChronoZoom_Developer_Guide.md).
-* Skype "ChronoZoom Development" group [here](skype:?chat&blob=zzTEF-H_3Be_mkI2LO-vhWMIdOMjRCf01z4BwcCq_eYDqbspqX8Pu2rlYo3-M5Qqvdi60eFg57Z8p-kETiu5XQ48XtVVW0t8pgmdUBoJr-KRPNd-DIV9PLrcVqxtWaQ7iiSCEiOS5oVMw-nS_X_nlsk1Vg-jgDBKi7QaB3YlXGpRNTPyZft3C3U4MF_3A6gePBGZ1pp-7BlM4vuH-JF03cOaX5WDNNXRjrvZzQFZ4ka6).
-
-Installation
-----------
+Usage
+-----
 
 * Make a fork of ChronoZoom. 
 * Run `git clone git://github.com/<your-username>/ChronoZoom.git` to clone it to local computer (Case Sensitive)
-* Install Windows Identity Foundation (Control Panel, Programs and Features, Turn Windows Feature on or off, Turn on Windows Identity Foundation 3.5)
 * Launch `Source\Chronozoom.sln`
 * Enable EnableNuGetPackageRestore (Right click on VS Solution - Enable NuGet Package Restore)
+* Open `web.config`, in connection strings locate
+```
+<add name="Storage" connectionString="Data Source=.\SQLExpress;Initial Catalog=ChronoZoom;Trusted_Connection=True" providerName="System.Data.SqlClient" />
+```
+and replace values for `Data Source` and `Catalog` with your local SQL Server and database names
 * Use `[F5]` to compile and run ChronoZoom locally
+* Publish `ChronoZoom.UI` using `File System` as a publish method to deploy it to other devices or to use locally in museum experience mode
+
 
 For detailed instructions, see the [ChronoZoom Developer's Guide](Doc/ChronoZoom_Developer_Guide.md).
+
+Start ChronoZoom for museums locally
+------------------------------------
+
+#### Without using client application
+
+* Run iis
+* open in browser to edit [] to view []
+ 
+#### Using client application
+
+In this case you need to have two Windows users - one for authoring content and running local service (__author__), other for running application in museum exhibit experience (__museum__).
+
+* Create museum local Windows user with restricted access - steps are here: []
+* Login to museum user and launch *.sln
+* Run application to install it for this user
+* Logout from museum user, login to author user
+* Apply restricted access for museum user and use application as the only application this user can run
+* Run iis
+* Switch user to museum user to see museum experience
 
 Acknowledgements
 ----------
