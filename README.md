@@ -48,7 +48,7 @@ Start ChronoZoom for museums locally
 In this case you need to have two Windows users - one for authoring content and running local service (__author__), other for running application in museum exhibit experience (__museum__). __Museum__ user is a local windows user with restricted access.
 
 * Create museum local Windows user with restricted access - steps are [here](http://www.techrepublic.com/blog/windows-and-office/set-up-a-pc-as-a-kiosk-using-windows-81s-assigned-access/). To install application to use for kiosk mode follow these steps first:
- - Login to __museum__ user and launch *.sln
+ - Login to __museum__ user and launch `Source/Chronozoom.sln`
  - Run application to install it for this user
  - Logout from __museum__ user, login to __author__ user
  - Apply restricted access for __museum__ user and use application as the only application this user can run
